@@ -1,0 +1,16 @@
+{% block title %}<title>Student Schedule Planner</title>{% endblock %}
+{% block header %}
+    <!-- Add any links, stylesheets, or scripts here -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <script src="{{url_for('static', filename='js/base.js')}}" type="text/javascript"></script>
+{% endblock %}
+{% block page_content %}
+    <!-- Code HTML in this block -->
+   <h1>THE START OF A MAGICAL CAPSTONE PROJECT</h1>
+    <img src="/static/images/dancing_cat.gif" alt="Cat">
+{% endblock %}
+{% block js_block %}
+    <!-- This block is for page specific JS you can add base js in header block -->
+{% endblock %}
