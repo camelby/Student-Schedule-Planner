@@ -1,2 +1,6 @@
 
 .DS_Store
+.idea/libraries/R_User_Library.xml
+*.xml
+.idea/Student-Schedule-Planner-UALR.iml
+SSP_UALR/.idea/SSP_UALR.iml
