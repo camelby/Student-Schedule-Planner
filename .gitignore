@@ -4,3 +4,4 @@
 *.xml
 .idea/Student-Schedule-Planner-UALR.iml
 SSP_UALR/.idea/SSP_UALR.iml
+SSP_UALR/SSP/__pycache__/app.cpython-37.pyc
