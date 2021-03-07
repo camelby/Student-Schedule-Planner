@@ -54,6 +54,20 @@
     right: auto;
 }
 
+button {
+  color: white;
+    text-align: center;
+    font-weight: bold;
+    font-size:1.3rem;
+    text-transform: uppercase;
+    background-color: #065dad;
+    letter-spacing: 1px;
+  padding: 20px 70px;
+  margin: 8px 0;
+  border: 2px solid black;
+  cursor: pointer;
+}
+
 .u-section-1 .u-btn-2 {
     background-image: none;
     border-style: none none solid;
