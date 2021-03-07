@@ -62,9 +62,9 @@ button {
     text-transform: uppercase;
     background-color: #065dad;
     letter-spacing: 1px;
-  padding: 20px 70px;
+  padding: 11px 70px;
   margin: 8px 0;
-  border: 2px solid black;
+  border: 3px solid grey;
   cursor: pointer;
 }
 
