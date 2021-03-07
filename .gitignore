@@ -5,3 +5,9 @@
 .idea/Student-Schedule-Planner-UALR.iml
 SSP_UALR/.idea/SSP_UALR.iml
 SSP_UALR/SSP/__pycache__/app.cpython-37.pyc
+*.pyc
+*.py
+SSP_UALR/SSP/env/bin/python3
+SSP_UALR/venv/lib/python3.9/site-packages/typing_extensions-3.7.4.3.dist-info/RECORD
+SSP_UALR/venv/lib/python3.9/site-packages/typing_inspect-0.6.0.dist-info/INSTALLER
+*.exe

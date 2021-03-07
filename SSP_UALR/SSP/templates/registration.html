@@ -7,7 +7,6 @@
         <meta name="page_type" content="np-template-header-footer-from-plugin">
         <!-- Flask method for static URLs -->
         <link rel="stylesheet" href="{{ url_for('static', filename='css/nicepage.css') }}" media="screen">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/registration.css') }}" media="screen">
         <script class="u-script" type="text/javascript" src="{{url_for('static', filename='js/jquery.js')}}" defer=""></script>
         <script class="u-script" type="text/javascript" src="{{url_for('static', filename='js/nicepage.js')}}" defer=""></script>
         <meta name="generator" content="Nicepage 3.7.2, nicepage.com">
@@ -26,9 +25,10 @@
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/registration.css') }}" media="screen">
 {% endblock %}
 {% block page_content %}
-    <!--<body class="u-body u-image" style="background-position: 50% 50%; background-image: url("../images/StudentPlanning.jpg");">-->
+    <body class="u-body u-image" style="background-position: 50% 50%; ">
         <section class="registration u-align-center u-clearfix u-image u-shading u-section-1" id="sec-c43a" data-image-width="1920" data-image-height="1080">
             <div class="u-clearfix u-sheet u-sheet-1">
                 <div class="u-container-style u-grey-5 u-group u-radius-25 u-shape-round u-group-1">
@@ -37,13 +37,13 @@
                         <h1 class="u-align-center u-text u-text-1" style="margin-bottom: 30px;">CREATE ACCOUNT</h1>
                         <div class="form-group">
                             <div class="form-left" style="text-align: center;">
-                                <input type="text" class="form-1 form-control " placeholder="First Name" value="" style="width: 49.35%;"/>
-                                <input type="text" class="form-1 form-control " placeholder="Last Name" value="" style="width: 49.35%;"/>
+                                <input type="text" class="form-1 form-control" placeholder="First Name" value="" style="width: 49.35%;"/>
+                                <input type="text" class="form-1 form-control" placeholder="Last Name" value="" style="width: 49.35%;"/>
                             </div>
                         </div>
                         <input type="email" class="form-control" placeholder="Email" value="" style="margin-bottom: 15px;"/>
                         <div class="form-group">
-                            <select class="form-control" style="background-color: #c1c1c1; color: #707070;">
+                            <select class="form-control" style="background-color: white; color: #707070;">
                                 <option class="hidden" selected disabled>Requested Access Level</option>
                                 <option>Student Access</option>
                                 <option>Administrator Access</option>
@@ -56,7 +56,7 @@
                         </div>
                         <div class="form-group">
                             <div class="maxl">
-</div>
+                        </div>
                         </div>
                         <input type="submit" class="u-border-2 u-border-black u-btn u-btn-round u-button-style u-color-scheme-summer-time u-color-style-multicolor-1 u-custom-color-2 u-radius-10 u-btn-1" value="SIGN UP" style="margin-top: 40px;"/>
                         <a href="{{ url_for('login') }}" class="u-active-none u-border-3 u-border-grey-60 u-btn u-btn-rectangle u-button-style u-hover-none u-none u-text-black u-btn-2">Login Here</a>
