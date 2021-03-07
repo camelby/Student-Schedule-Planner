@@ -1,0 +1,71 @@
+{% block title %}<title>Registration</title>{% endblock %}
+{% block header %}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+        <meta name="keywords" content="">
+        <meta name="description" content="">
+        <meta name="page_type" content="np-template-header-footer-from-plugin">
+        <title>Registration</title>
+        <link rel="stylesheet" href="nicepage.css" media="screen">
+        <link rel="stylesheet" href="Registration.css" media="screen">
+        <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
+        <script class="u-script" type="text/javascript" src="nicepage.js" defer=""></script>
+        <meta name="generator" content="Nicepage 3.7.2, nicepage.com">
+        <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i">
+        <script type="application/ld+json">{
+		"@context": "http://schema.org",
+		"@type": "Organization",
+		"name": "Site1",
+		"url": "index.html"
+}</script>
+        <meta property="og:title" content="Registration">
+        <meta property="og:type" content="website">
+        <meta name="theme-color" content="#478ac9">
+        <link rel="canonical" href="index.html">
+        <meta property="og:url" content="index.html">
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+{% endblock %}
+{% block page_content %}
+    <!--<body class="u-body u-image" style="background-position: 50% 50%; background-image: url("../images/StudentPlanning.jpg");">-->
+        <section class="registration u-align-center u-clearfix u-image u-shading u-section-1" id="sec-c43a" data-image-width="1920" data-image-height="1080">
+            <div class="u-clearfix u-sheet u-sheet-1">
+                <div class="u-container-style u-grey-5 u-group u-radius-25 u-shape-round u-group-1">
+                    <div class="u-container-layout u-valign-bottom-sm u-container-layout-1"> 
+                        <!--REGISTER HERE PLEASE---->
+                        <h1 class="u-align-center u-text u-text-1" style="margin-bottom: 30px;">CREATE ACCOUNT</h1>
+                        <div class="form-group">
+                            <div class="form-left" style="text-align: center;">
+                                <input type="text" class="form-1 form-control " placeholder="First Name" value="" style="width: 49.35%;"/>
+                                <input type="text" class="form-1 form-control " placeholder="Last Name" value="" style="width: 49.35%;"/>
+                            </div>
+                        </div>
+                        <input type="email" class="form-control" placeholder="Email" value="" style="margin-bottom: 15px;"/>
+                        <div class="form-group">
+                            <select class="form-control" style="background-color: #c1c1c1; color: #707070;">
+                                <option class="hidden" selected disabled>Requested Access Level</option>
+                                <option>Student Access</option>
+                                <option>Administrator Access</option>
+                                <option>ROOT Access</option>
+                            </select>
+                        </div>
+                        <input type="password" class="form-control" placeholder="Password" value="" style="padding: .375rem .75rem;"/>
+                        <div class="form-group">
+                            <input type="password" class="form-control" placeholder="Confirm Password" value="" style="padding-left: .75rem; padding-right: .75rem; padding-bottom: .375rem; margin-top: 15px;"/>
+                        </div>
+                        <div class="form-group">
+                            <div class="maxl">
+</div>
+                        </div>
+                        <input type="submit" class="u-border-2 u-border-black u-btn u-btn-round u-button-style u-color-scheme-summer-time u-color-style-multicolor-1 u-custom-color-2 u-radius-10 u-btn-1" value="SIGN UP" style="margin-top: 40px;"/>
+                        <a href="base.html" class="u-active-none u-border-3 u-border-grey-60 u-btn u-btn-rectangle u-button-style u-hover-none u-none u-text-black u-btn-2">Login Here</a>
+                        <p class="u-text u-text-2">Already have an account?</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+ {% endblock %}
+{% block js_block %}
+    <!-- This block is for page specific JS you can add base js in header block -->
+{% endblock %}
