@@ -5,11 +5,11 @@
         <meta name="keywords" content="">
         <meta name="description" content="">
         <meta name="page_type" content="np-template-header-footer-from-plugin">
-        <title>Registration</title>
-        <link rel="stylesheet" href="nicepage.css" media="screen">
-        <link rel="stylesheet" href="Registration.css" media="screen">
-        <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
-        <script class="u-script" type="text/javascript" src="nicepage.js" defer=""></script>
+        <!-- Flask method for static URLs -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/nicepage.css') }}" media="screen">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/registration.css') }}" media="screen">
+        <script class="u-script" type="text/javascript" src="{{url_for('static', filename='js/jquery.js')}}" defer=""></script>
+        <script class="u-script" type="text/javascript" src="{{url_for('static', filename='js/nicepage.js')}}" defer=""></script>
         <meta name="generator" content="Nicepage 3.7.2, nicepage.com">
         <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i">
         <script type="application/ld+json">{
@@ -59,7 +59,7 @@
 </div>
                         </div>
                         <input type="submit" class="u-border-2 u-border-black u-btn u-btn-round u-button-style u-color-scheme-summer-time u-color-style-multicolor-1 u-custom-color-2 u-radius-10 u-btn-1" value="SIGN UP" style="margin-top: 40px;"/>
-                        <a href="base.html" class="u-active-none u-border-3 u-border-grey-60 u-btn u-btn-rectangle u-button-style u-hover-none u-none u-text-black u-btn-2">Login Here</a>
+                        <a href="{{ url_for('login') }}" class="u-active-none u-border-3 u-border-grey-60 u-btn u-btn-rectangle u-button-style u-hover-none u-none u-text-black u-btn-2">Login Here</a>
                         <p class="u-text u-text-2">Already have an account?</p>
                     </div>
                 </div>

@@ -8,10 +8,17 @@ app = Flask(__name__)
 app.secret_key = os.urandom(12)
 bootstrap = Bootstrap(app)
 
-
+# First route users go to
+# TODO: Program authentication mechanism
 @app.route('/')
 def login():
     page_template = 'base.html'
+    return render_template(page_template)
+
+
+@app.route('/register')
+def register():
+    page_template = 'registration.html'
     return render_template(page_template)
 
 
