@@ -21,10 +21,6 @@ def register():
     page_template = 'registration.html'
     return render_template(page_template)
 
-@app.route('/admin')
-def adminBase():
-    page_template = 'adminBase.html'
-    return render_template(page_template)
 
 @app.errorhandler(404)
 def page_not_found_error(error):
