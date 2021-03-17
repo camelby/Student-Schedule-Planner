@@ -1,6 +1,6 @@
-<!DOCTYPE html>
+{% block title %}<title>HomeLogin</title>{% endblock %}
+{% block header %}
 <html class="fontawesome-i2svg-active fontawesome-i2svg-complete">
-    <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,8 +14,9 @@
         <script defer="" src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
         <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
         <!-- Our Custom CSS -->
-        <link rel="stylesheet" href="testadminsidebar.css">
-    </head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/rootHome.css') }}" media="screen">
+{% endblock %}
+{% block page_content %}
     <body>
         <div class="wrapper">
             <!-- Sidebar  -->
@@ -23,7 +24,7 @@
                 <div class="sidebar-header">
                     <h3 class="h3">Woo U</h3>
                     <h3 class="h3">SPP</h3>
-                    <strong><center>Woo U</center></strong>
+                    <strong>Woo U</strong>
                 </div>
                 <ul class="list-unstyled components">
                     <li>
@@ -97,5 +98,4 @@
             });
         });
     </script>
-    </body>
-</html>
+{% endblock %}

@@ -21,9 +21,9 @@ def register():
     page_template = 'registration.html'
     return render_template(page_template)
 
-@app.route('/admin')
-def adminBase():
-    page_template = 'adminBase.html'
+@app.route('/root')
+def rootHome():
+    page_template = 'rootHome.html'
     return render_template(page_template)
 
 @app.errorhandler(404)
