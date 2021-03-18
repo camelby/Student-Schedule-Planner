@@ -22,8 +22,28 @@ def register():
     return render_template(page_template)
 
 @app.route('/root')
-def rootHome():
-    page_template = 'rootHome.html'
+def rootAuth():
+    page_template = 'rootAuth.html'
+    return render_template(page_template)
+
+@app.route('/rootcourse')
+def rootCourse():
+    page_template = 'rootCourse.html'
+    return render_template(page_template)
+
+@app.route('/rootsection')
+def rootSection():
+    page_template = 'rootSection.html'
+    return render_template(page_template)
+
+@app.route('/admincourse')
+def adminCourse():
+    page_template = 'adminCourse.html'
+    return render_template(page_template)
+
+@app.route('/adminsection')
+def adminSection():
+    page_template = 'adminSection.html'
     return render_template(page_template)
 
 @app.errorhandler(404)
