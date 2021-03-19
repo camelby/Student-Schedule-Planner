@@ -204,6 +204,70 @@ a.article:hover {
     color: #fff !important;
 }
 
+.wrapper .sidebar-header2 {
+  padding: 20px;
+  overflow: hidden;
+}
+
+.wrapper .sidebar-header2 .user-pic {
+  float: left;
+  width: 60px;
+  padding: 2px;
+  border-radius: 12px;
+  margin-right: 15px;
+  overflow: hidden;
+}
+
+.wrapper .sidebar-header2 .user-pic img {
+  object-fit: cover;
+  width: 100%;
+}
+
+.wrapper .sidebar-header2 .user-info {
+  float: left;
+}
+
+.wrapper .sidebar-header2 .user-info > span {
+  display: block;
+}
+
+.wrapper .sidebar-header2 .user-info .user-role {
+  font-size: 12px;
+}
+
+#sidebar.active .user-pic {
+    margin-left: 16px;
+    object-fit: cover;
+    width: 60%;
+}
+
+#sidebar.active .user-info{
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
