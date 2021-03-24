@@ -46,6 +46,21 @@ def adminSection():
     page_template = 'adminSection.html'
     return render_template(page_template)
 
+@app.route('/studentplan')
+def studentPlanner():
+    page_template = 'studentPlanner.html'
+    return render_template(page_template)
+
+@app.route('/studentgen')
+def studentGenerate():
+    page_template = 'studentGenerate.html'
+    return render_template(page_template)
+
+@app.route('/studentcur')
+def studentCurrent():
+    page_template = 'studentCurrent.html'
+    return render_template(page_template)
+
 @app.errorhandler(404)
 def page_not_found_error(error):
     page_template = '404.html'
