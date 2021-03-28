@@ -56,7 +56,7 @@
             </ul>
         </nav>
 
-        <!-- Page Content  -->
+                <!-- Page Content  -->
         <div id="content">
 
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -66,10 +66,162 @@
                     </button>
                 </div>
             </nav>
+            <!-- TODO: COPY FROM BELOW TO  -->
+            <div id="wrapper">
+                <h2 style="display: inline-block;">Setup Course Section</h2>
+                <button href="#addSectionModal" class="btn btn-primary badge-pill" style="display: inline-block;" data-toggle="modal">Add Section</button>
+                <div>
 
-            <h2>Setup Section Catalog</h2>
-            <p>Placeholder</p>
-
+                    <div class="container">
+                        <div class="card-body">
+                            <table class="table table-hover table-bordered">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">Course Title</th>
+                                        <th scope="col">Department ID</th>
+                                        <th scope="col">Section ID</th>
+                                        <th scope="col">Instructor</th>
+                                        <th scope="col">Class Period</th>
+                                        <th>ACTIONS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Course</td>
+                                        <td>Depart ID</td>
+                                        <td>Section ID</td>
+                                        <td>Instructor Name</td>
+                                        <td>MWF time-time</td>
+                                        <td>
+                                            <button href="#editSectionModal" class="btn btn-primary badge-pill" style="width:80px;" data-toggle="modal">EDIT</button>
+                                            <button href="#deleteSectionModal" class="btn btn-danger badge-pill" style="width:80px;" data-toggle="modal">DELETE</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="clearfix">
+                                <div class="hint-text">Showing <b>5</b> out of <b>100</b> entries</div>
+                                <ul class="pagination">
+                                    <li class="page-item disabled"><a href="#">Previous</a></li>
+                                    <li class="page-item"><a href="#" class="page-link">1</a></li>
+                                    <li class="page-item"><a href="#" class="page-link">2</a></li>
+                                    <li class="page-item active"><a href="#" class="page-link">3</a></li>
+                                    <li class="page-item"><a href="#" class="page-link">4</a></li>
+                                    <li class="page-item"><a href="#" class="page-link">5</a></li>
+                                    <li class="page-item"><a href="#" class="page-link">Next</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Add Modal HTML -->
+            <div id="addSectionModal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form>
+                            <div class="modal-header">
+                                <h4 class="modal-title">Add New Course</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>Department ID</label>
+                                    <input type="text" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Course Title</label>
+                                    <input type="text" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Section ID</label>
+                                    <input type="text" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Intstructor Name</label>
+                                    <input type="text" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Start Time</label>
+                                    <input type="time" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>End Time</label>
+                                    <input type="time" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                                <input type="submit" class="btn btn-info" value="Add Course">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Edit Modal HTML -->
+            <div id="editSectionModal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form>
+                            <div class="modal-header">
+                                <h4 class="modal-title">Edit Section</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>Department ID</label>
+                                    <input type="text" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Course Title</label>
+                                    <input type="text" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Section ID</label>
+                                    <input type="text" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Intstructor Name</label>
+                                    <input type="text" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Start Time</label>
+                                    <input type="time" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>End Time</label>
+                                    <input type="time" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                                <input type="submit" class="btn btn-info" value="Save">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Delete Modal HTML -->
+            <div id="deleteSectionModal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form>
+                            <div class="modal-header">
+                                <h4 class="modal-title">Delete Section</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete these Records?</p>
+                                <p class="text-warning"><small>This action cannot be undone.</small></p>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                                <input type="submit" class="btn btn-danger" value="Delete">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
