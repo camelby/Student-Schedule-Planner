@@ -3,6 +3,12 @@
     url("../images/StudentPlanning.jpg");
 }
 
+p{
+    position:relative;
+    top:195px;
+    left:100px;
+}
+
 .u-section-1 .u-sheet-1 {
     min-height: 100vh;
 }
@@ -107,6 +113,8 @@ button {
 
 @media (max-width: 1199px) {
     /* laptop */
+
+
     .u-section-1 .u-layout-cell-1 {
         min-height: 548px;
     }
@@ -136,6 +144,9 @@ button {
         margin-top: 0;
         margin-right: -30px;
         margin-left: -30px;
+    }
+    p{
+    left:67px;
     }
 }
 
@@ -192,6 +203,10 @@ button {
         margin-left: 0;
         margin-right: 0;
     }
+    p{
+    left:49px;
+}
+
 }
 
 @media (max-width: 767px) {
@@ -303,6 +318,9 @@ button {
         margin-top: -709px;
         margin-left: 0;
         margin-right: 0;
+    }
+    p{
+    left:46px;
     }
 }
 

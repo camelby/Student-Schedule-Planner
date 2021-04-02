@@ -3,6 +3,18 @@
     url("../images/StudentPlanning.jpg");
 }
 
+p{
+text-align: center;
+}
+
+input#submit.btn.btn-default {
+  display:block;
+    margin-right: auto;
+    margin-left:auto;
+    background-color:#065dad;
+    color: #dddddd;
+}
+
 .u-section-1 .u-sheet-1 {
     min-height: 100vh;
 }

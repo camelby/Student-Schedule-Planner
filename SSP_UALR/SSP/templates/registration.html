@@ -10,10 +10,7 @@
         -->
         <!-- Flask method for static URLs -->
         <link rel="stylesheet" href="{{ url_for('static', filename='css/nicepage.css') }}" media="screen">
-    <!--
-        <script class="u-script" type="text/javascript" src="{{url_for('static', filename='js/jquery.js')}}" defer=""></script>
-        <script class="u-script" type="text/javascript" src="{{url_for('static', filename='js/nicepage.js')}}" defer=""></script>
-        -->
+
         <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i">
        <!--
         <script type="application/ld+json">{
@@ -41,7 +38,11 @@
             <div class="u-clearfix u-sheet u-sheet-1">
                 <div class="u-container-style u-grey-5 u-group u-radius-25 u-shape-round u-group-1">
                     <div class="u-container-layout u-valign-bottom-sm u-container-layout-1">
+                    <h1 class="u-align-center u-text u-text-1" style="margin-bottom: 30px;">CREATE ACCOUNT</h1>
                             {{ wtf.quick_form(form) }}
+                        <p>Already have an account? &emsp; &emsp;
+                        <a href="{{ url_for('login') }}">Login Here</a>
+                        </p>
                     </div>
                 </div>
             </div>
