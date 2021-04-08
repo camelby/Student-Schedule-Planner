@@ -77,7 +77,7 @@ class RegisterForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(1, 64)])
     email = StringField('Email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
-    password_again = PasswordField('Password again',
+    password_again = PasswordField('Confirm Password',
                                    validators=[DataRequired(), EqualTo('password')])
     access = SelectField('Access', choices=[('STUDENT', 'STUDENT'), ('ROOT', 'ROOT'), ('ADMIN', 'ADMIN')])
     submit = SubmitField('Register')
@@ -95,7 +95,7 @@ class ChangePasswordForm(FlaskForm):
         validators=[DataRequired(), Length(min=6, max=25)]
     )
     confirm = PasswordField(
-        'Repeat password',
+        'Confirm Password',
         validators=[
             DataRequired(),
             EqualTo('password', message='Passwords must match.')
@@ -261,3 +261,28 @@ db.create_all()
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=4000)
 
+
+#root/admin add catalog/course database
+class Catalog(db.Model):
+    __tablename__ = 'catalog'
+    course_title = db.Column(db.String(64), primary_key=True)
+    dept_id = db.Column(db.Integer, primary_key=True)
+    course_id = db.Column(db.Integer)
+
+class Course(db.Model):
+    __tablename__ = 'course'
+    course_title = db.Column(db.String(64), primary_key=True)
+    dept_id = db.Column(db.Integer, primary_key=True)
+    sect_id = db.Column(db.Integer)
+    instructor = db.Column(db.String(64))
+    class_period = db.Column(db.String(64))
+
+  # catalog = Catalog(
+  #  title=form.title.data,
+  #  email=form.email.data,
+  #  password=form.password.data,
+   # access=form.access.data,
+  #  confirmed=False
+  #  )
+
+  #  db.session.commit()

@@ -30,15 +30,19 @@
        	        </div>
                 <div class="user-info">
           		<span class="user-name">Jhon Smith</span>
-          		<span class="user-role">Administrator</span>
+          		<span class="user-role">Student</span>
                 </div>
             </div>
 
-            <ul class="list-unstyled components">
+              <ul class="list-unstyled components">
                 <li class="active">
-                    <a href="{{ url_for('studentPlanner') }}">Plan Schedule</a>
-                    <a href="{{ url_for('studentGenerate') }}">Generate Schedule</a>
-                    <a href="{{ url_for('studentCurrent') }}">Current Schedule</a>
+                    <a href="{{ url_for('studentPlanner') }}"> <i class="fas fa-clock"></i>
+                        Plan Schedule</a>
+                    <a href="{{ url_for('studentGenerate') }}">
+                         <i class="fas fa-clock"></i>
+                        Generate Schedule</a>
+                    <a href="{{ url_for('studentCurrent') }}"><i class="fas fa-calendar-alt"></i>
+                        Current Schedule</a>
                     <a href="#">
                         <i class="fas fa-sign-out-alt"></i>
                         Sign Out

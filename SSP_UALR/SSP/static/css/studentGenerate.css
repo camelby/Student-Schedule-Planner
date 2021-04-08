@@ -5,6 +5,30 @@ body {
     background: #fafafa;
 }
 
+h2{
+    margin:0px 0px 35px;
+}
+
+.button-generate {
+    background-color: #485676;
+    border-radius: 6px;
+    color: white;
+    padding: 8px 10px;
+    border: none;
+    margin:0px 0px 30px;
+}
+
+.button-save {
+    border-radius: 6px;
+    color: #424242;
+    background-color: #e0e0e0;
+    border: none;
+    display: inline-block;
+    padding: 8px 10px;
+    float: right;
+    margin-right: 25px;
+}
+
 h3 {
     font-size: 2.75em;
     text-align: center;
@@ -253,7 +277,7 @@ a.article:hover {
 
 #content {
     width: 100%;
-    padding: 20px;
+    padding: 35px;
     min-height: 100vh;
     transition: all 0.3s;
 }
@@ -314,3 +338,4 @@ a.article:hover {
 
     }
 }
+
