@@ -1,3 +1,4 @@
+{% import "bootstrap/wtf.html" as wtf %}
 {% block title %}<title>Woosamotta U | Login</title>{% endblock %}
 {% block header %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/nicepage.css') }}" media="screen">
@@ -24,19 +25,11 @@
                                 <div class="u-container-layout u-valign-middle-lg u-valign-middle-md u-valign-middle-xl u-container-layout-1">
                                     <div class="u-container-style u-grey-10 u-group u-opacity u-opacity-95 u-radius-27 u-shape-round u-group-1">
                                         <div class="u-container-layout u-container-layout-2" style="margin-top: -109px; bottom: -8px;">
-                                            <form id="login" style="top: 18px;">
-                                                <div class="wrap-input100 validate-input " data-validate="Password is required">
-                                                    <h1 class="u-align-center u-heading-font u-text u-title u-text-1">LOGIN</h1>
-                                                    <span class="focus-input100"></span>
-                                                    <span class="symbol-input100"> <i class="fa fa-lock" aria-hidden="true"></i> </span>
-                                                </div>
-                                                <input class="input100" type="email" name="email" placeholder="Email" style="border: 3px solid grey; top: 150px; position: relative; font-size: 18px; text-transform: none; background-color:white; text-indent: 30px; right: 3px; left: 13px; margin-right: 20px; background-size: 39px; background-repeat: no-repeat; padding-top: 15px; padding-right: 10px; padding-bottom: 15px; background-image: url('../static/images/icon-email-512.png'); background-position: left center;">
-                                                <input class="input100" type="password" name="pass" placeholder="Password" style="border: 3px solid grey; top: 177px; position: relative; font-size: 18px; text-transform: none; background-color:white; text-align: left; text-indent: 30px; padding-top: 15px; padding-right: 81px; padding-bottom: 15px; right: 9px; left: 13px; margin-right: 19px; background-image: url('../static/images/lock.png'); background-repeat: no-repeat; background-size: 39px 35px; background-position: left center;">
-                                                <button type="submit" style="position:relative; top: 180px; margin: auto;">Login</button>
+                                            <!-- Need this block -->
+                                            {{ wtf.quick_form(form) }}
                                                 <p>No account? &emsp; &emsp;
                                                 <a href="{{ url_for('register') }}" >Sign Up Here</a>
                                                 </p>
-                                            </form>
                                         </div>
                                     </div>
                                 </div>

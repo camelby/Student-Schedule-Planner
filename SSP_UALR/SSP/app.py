@@ -25,7 +25,7 @@ bootstrap = Bootstrap(app)
 DEBUG = True
 TESTING = True
 BCRYPT_LOG_ROUNDS = 13
-WTF_CSRF_ENABLED = False
+WTF_CSRF_ENABLED = True
 SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -41,7 +41,8 @@ mail_settings = {
 
 app.config.update(mail_settings)
 mail = Mail(app)
-lm = LoginManager()
+login_manager = LoginManager()
+login_manager.init_app(app)
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 
@@ -68,7 +69,16 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
 
-@lm.user_loader
+class Course(db.Model):
+    __tablename__ = 'course'
+    course_title = db.Column(db.String(64), primary_key=True)
+    dept_id = db.Column(db.Integer, primary_key=True)
+    sect_id = db.Column(db.Integer)
+    instructor = db.Column(db.String(64))
+    class_period = db.Column(db.String(64))
+
+
+@login_manager.user_loader
 def load_user(user_id):
     """User loader callback for Flask-Login."""
     return User.query.get(int(user_id))
@@ -86,8 +96,18 @@ class RegisterForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    username = StringField('username', validators=[DataRequired()])
-    password = PasswordField('password', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Login')
+
+
+class CourseForm(FlaskForm):
+    course_title = StringField('Course Title', validators=[DataRequired()])
+    dept_id = StringField('Department ID', validators=[DataRequired()])
+    sect_id = StringField('Section ID', validators=[DataRequired()])
+    instructor = StringField('Instructor', validators=[DataRequired()])
+    class_period = StringField('Class Period', validators=[DataRequired()])
+    submit = SubmitField('Add')
 
 
 class ChangePasswordForm(FlaskForm):
@@ -134,10 +154,24 @@ def send_email(to, subject, template):
 
 
 # Default route
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def login():
     page_template = 'base.html'
-    return render_template(page_template)
+    form = LoginForm(request.form)
+    if current_user.is_authenticated:
+        # if user is logged in we get out of here
+        return redirect(url_for('studentPlanner'))
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user is None or not user.verify_password(form.password.data):
+            flash('Invalid username or password.')
+            return redirect(url_for('login'))
+            # log user in
+        # TODO add access level if/else
+        login_user(user)
+        flash('You are now logged in!')
+        return redirect(url_for('studentPlanner'))
+    return render_template(page_template, form=form)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -160,7 +194,6 @@ def register():
             access=form.access.data,
             confirmed=False
         )
-        print(user)
         db.session.add(user)
         db.session.commit()
         token = generate_confirmation_token(user.email)
@@ -168,12 +201,7 @@ def register():
         html = render_template('activate.html', confirm_url=confirm_url)
         subject = "Please confirm your email"
         send_email(user.email, subject, html)
-        print(token)
-        print(confirm_url)
-        print(send_email)
         return redirect(url_for('login'))
-    else:
-        print("No Validation")
 
     return render_template(page_template, form=form)
 
@@ -202,10 +230,22 @@ def rootAuth():
     return render_template(page_template)
 
 
-@app.route('/rootcourse')
+@app.route('/rootcourse', methods=['GET', 'POST'])
 def rootCourse():
     page_template = 'rootCourse.html'
-    return render_template(page_template)
+    add_form = CourseForm(request.form)
+    if add_form.validate_on_submit():
+        course = Course(
+            course_title=add_form.course_title.data,
+            dept_id=add_form.dept_id.data,
+            sect_id=add_form.sect_id.data,
+            instructor=add_form.instructor.data,
+            class_period=add_form.class_period.data
+        )
+        db.session.add(course)
+        db.session.commit()
+
+    return render_template(page_template, form=add_form)
 
 
 @app.route('/rootsection')
@@ -215,31 +255,31 @@ def rootSection():
 
 
 @app.route('/admincourse')
-def adminCourse():
+def admin_course():
     page_template = 'adminCourse.html'
     return render_template(page_template)
 
 
 @app.route('/adminsection')
-def adminSection():
+def admin_section():
     page_template = 'adminSection.html'
     return render_template(page_template)
 
 
 @app.route('/studentplan')
-def studentPlanner():
+def student_planner():
     page_template = 'studentPlanner.html'
     return render_template(page_template)
 
 
 @app.route('/studentgen')
-def studentGenerate():
+def student_generate():
     page_template = 'studentGenerate.html'
     return render_template(page_template)
 
 
 @app.route('/studentcur')
-def studentCurrent():
+def student_current():
     page_template = 'studentCurrent.html'
     return render_template(page_template)
 
@@ -270,14 +310,6 @@ class Catalog(db.Model):
     course_title = db.Column(db.String(64), primary_key=True)
     dept_id = db.Column(db.Integer, primary_key=True)
     course_id = db.Column(db.Integer)
-
-class Course(db.Model):
-    __tablename__ = 'course'
-    course_title = db.Column(db.String(64), primary_key=True)
-    dept_id = db.Column(db.Integer, primary_key=True)
-    sect_id = db.Column(db.Integer)
-    instructor = db.Column(db.String(64))
-    class_period = db.Column(db.String(64))
 
   # catalog = Catalog(
   #  title=form.title.data,
