@@ -18,29 +18,31 @@ import datetime
 # application instance
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
+app.config['SECURITY_PASSWORD_SALT'] = 'salty'
+SECRET_KEY = app.secret_key
 bootstrap = Bootstrap(app)
 
-SECURITY_PASSWORD_SALT = 'salty_salt_salt'
 DEBUG = True
 TESTING = True
 BCRYPT_LOG_ROUNDS = 13
-WTF_CSRF_ENABLED = True
+WTF_CSRF_ENABLED = False
 SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
-MAIL_SERVER = 'smtp.googlemail.com'
-MAIL_PORT = 465
-MAIL_USE_TLS = False
-MAIL_USE_SSL = True
 
-# gmail authentication
-MAIL_USERNAME = os.environ['APP_MAIL_USERNAME']
-MAIL_PASSWORD = os.environ['APP_MAIL_PASSWORD']
+# Email Settings for Verification
+mail_settings = {
+    "MAIL_SERVER": 'smtp.gmail.com',
+    "MAIL_PORT": 465,
+    "MAIL_USE_TLS": False,
+    "MAIL_USE_SSL": True,
+    "MAIL_USERNAME": os.environ['EMAIL_USER'],
+    "MAIL_PASSWORD": os.environ['EMAIL_PASSWORD']
+}
 
-# mail accounts
-MAIL_DEFAULT_SENDER = '3codeeteers@gmail.com'
+app.config.update(mail_settings)
+mail = Mail(app)
 lm = LoginManager()
 bcrypt = Bcrypt(app)
-mail = Mail(app)
 db = SQLAlchemy(app)
 
 
@@ -104,12 +106,12 @@ class ChangePasswordForm(FlaskForm):
 
 
 def generate_confirmation_token(email):
-    serializer = URLSafeTimedSerializer(app.config[app.secret_key])
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
     return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
 
 
 def confirm_token(token, expiration=3600):
-    serializer = URLSafeTimedSerializer(app.config[app.secret_key])
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
     try:
         email = serializer.loads(
             token,
@@ -126,7 +128,7 @@ def send_email(to, subject, template):
         subject,
         recipients=[to],
         html=template,
-        sender=app.config['MAIL_DEFAULT_SENDER']
+        sender=app.config.get("MAIL_USERNAME")
     )
     mail.send(msg)
 
