@@ -15,6 +15,15 @@
 {% endblock %}
 {% block page_content %}
     <body class="u-body u-image" style="background-position: 50% 50%; ">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
         <section class="registration u-align-center u-clearfix u-image u-shading u-section-1" id="sec-c43a" data-image-width="1920" data-image-height="1080">
             <div class="u-clearfix u-sheet u-sheet-1">
                 <div class="u-container-style u-grey-5 u-group u-radius-25 u-shape-round u-group-1">
