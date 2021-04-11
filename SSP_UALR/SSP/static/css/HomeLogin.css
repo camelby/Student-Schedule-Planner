@@ -3,10 +3,54 @@
     url("../images/StudentPlanning.jpg");
 }
 
+.form .form{
+    margin-top:10%;
+}
+
+#login {
+    display: grid;
+}
+
 p{
-    position:relative;
-    top:195px;
-    left:100px;
+   width:220px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form-control{
+    display:inline-block;
+    border: 2px solid grey;
+    border-radius: 8px;
+    height: 2em;
+    width:70%;
+    float:right;
+}
+
+.form-group.required{
+    padding: 10px;
+}
+
+
+#submit.btn.btn-default{
+    display:block;
+    margin-right: auto;
+    margin-left:auto;
+    background-color:#065dad;
+    color: #dddddd;
+    border: none;
+    border-radius: 5px;
+    padding: 2%;
+    font-weight: 600;
+    width: 65px;
+    cursor: pointer;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 17px;
+    font-weight: lighter;
+}
+
+h2{
+    margin-left: 42%
 }
 
 .u-section-1 .u-sheet-1 {
@@ -23,17 +67,19 @@ p{
 }
 
 .u-section-1 .u-container-layout-1 {
-    padding: 30px;
+    padding-top: 32%;
 }
 
 .u-section-1 .u-group-1 {
     width: 475px;
-    min-height: 632px;
+    min-height: 285px;
     margin: -7px auto;
 }
 
 .u-section-1 .u-container-layout-2 {
-    padding: 30px;
+    padding-top: 37px;
+    padding-left: 8px;
+    padding-bottom: 12px;
 }
 
 .u-section-1 .u-text-1 {
@@ -45,42 +91,6 @@ p{
     top: 85px;
     left: auto;
     right: auto;
-}
-
-.u-section-1 .u-btn-1 {
-    font-size: 1.5rem;
-    border-style: solid;
-    font-weight: 700;
-    background-image: none;
-    margin: 341px auto 0;
-    padding: 10px 83px 10px 93px;
-    left: auto;
-    width: 90px;
-    position: relative;
-    right: auto;
-}
-
-button {
-  color: white;
-    text-align: center;
-    font-weight: bold;
-    font-size:1.3rem;
-    text-transform: uppercase;
-    background-color: #065dad;
-    letter-spacing: 1px;
-  padding: 11px 70px;
-  margin: 8px 0;
-  border: 3px solid grey;
-  cursor: pointer;
-}
-
-.u-section-1 .u-btn-2 {
-    background-image: none;
-    border-style: none none solid;
-    font-size: 0.8125rem;
-    font-weight: 700;
-    margin: 13px 62px 0 auto;
-    padding: 0;
 }
 
 .u-section-1 .u-text-2 {
@@ -111,9 +121,17 @@ button {
     margin: -10px 23px 0;
 }
 
+@media (min-width: 991px) {
+    .control-label {
+        margin-left: 16px;
+    }
+}
+
 @media (max-width: 1199px) {
     /* laptop */
-
+    .u-section-1 .u-container-layout-1 {
+    padding-top: 40%;
+}
 
     .u-section-1 .u-layout-cell-1 {
         min-height: 548px;
@@ -121,10 +139,6 @@ button {
 
     .u-section-1 .u-group-1 {
         width: 410px;
-    }
-
-    .u-section-1 .u-btn-2 {
-        margin-right: 28px;
     }
 
     .u-section-1 .u-text-2 {
@@ -145,13 +159,18 @@ button {
         margin-right: -30px;
         margin-left: -30px;
     }
-    p{
-    left:67px;
-    }
 }
 
 @media (max-width: 991px) {
     /* tablet */
+    .u-section-1 .u-container-layout-1 {
+    padding-top: 56%;
+    }
+
+    h2{
+    margin-left: 37%
+    }
+
     #login {
         position: relative;
         left: -36px;
@@ -183,17 +202,6 @@ button {
         padding-left: 11px;
     }
 
-    .u-section-1 .u-btn-1 {
-        margin-right: 25px;
-        padding-right: 84px;
-        position: relative;
-    }
-
-    .u-section-1 .u-btn-2 {
-        margin-right: 33px;
-        left: 0;
-    }
-
     .u-section-1 .u-text-2 {
         margin-right: 0;
         right: 12px;
@@ -203,9 +211,7 @@ button {
         margin-left: 0;
         margin-right: 0;
     }
-    p{
-    left:49px;
-}
+
 
 }
 
@@ -215,6 +221,10 @@ button {
         position: relative;
         left: -16px;
     }
+    .u-section-1 .u-container-layout-1 {
+    padding-top: 22%;
+    }
+
 
     .u-section-1 .u-layout-wrap-1 {
         width: 540px;
@@ -240,18 +250,6 @@ button {
     .u-section-1 .u-container-layout-2 {
         padding-left: 10px;
         padding-right: 10px;
-    }
-
-    .u-section-1 .u-btn-1 {
-        margin-left: auto;
-        margin-right: auto;
-        position: relative;
-        left: -1px;
-    }
-
-    .u-section-1 .u-btn-2 {
-        margin-top: 7px;
-        margin-right: 59px;
     }
 
     .u-section-1 .u-text-2 {
@@ -295,14 +293,7 @@ button {
         margin-bottom: -208px;
     }
 
-    .u-section-1 .u-btn-1 {
-        margin-top: 342px;
-    }
 
-    .u-section-1 .u-btn-2 {
-        margin-top: 6px;
-        margin-right: 56px;
-    }
 
     .u-section-1 .u-text-2 {
         margin-right: -30px;
@@ -319,11 +310,5 @@ button {
         margin-left: 0;
         margin-right: 0;
     }
-    p{
-    left:46px;
-    }
 }
 
-#login {
-    display: grid;
-}

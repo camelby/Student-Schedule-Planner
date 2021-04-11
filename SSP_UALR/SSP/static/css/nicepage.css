@@ -14,18 +14,6 @@ body {
 
 
 
-button,
-input {
-    /* overflow: visible */
-    padding-left: 12px;
-    padding-right: 154px;
-    background-color: #c1c1c1;
-    text-align: left;
-    border-radius: 10px;
-    padding-bottom: 5px;
-    margin-bottom: 25px;
-    background-size: auto;
-}
 
 
 /* Fade effect */
@@ -460,14 +448,6 @@ h1,h2,h3,h4,h5,h6 {
     background-color: #e5e5e5;
 }
 
-.u-button-style.u-border-grey-60 {
-    border-color: #666666 !important;
-    color: #666666 !important;
-    background-color: transparent !important;
-}
-
-
-
 /*REGISTER CUSTOM CSS*/
 
 /* end-commonstyles library */
@@ -476,14 +456,6 @@ html {
     font-family: sans-serif;
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
-}
-
-button,
-input {
-    background-color: #c1c1c1;
-    border-radius: 10px;
-    padding-bottom: 5px;
-    margin-bottom: 25px;
 }
 
 .u-clearfix:after,
