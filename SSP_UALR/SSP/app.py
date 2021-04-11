@@ -166,11 +166,16 @@ def login():
         if user is None or not user.verify_password(form.password.data):
             flash('Invalid username or password.')
             return redirect(url_for('login'))
-            # log user in
-        # TODO add access level if/else
+        # log user in
         login_user(user)
         flash('You are now logged in!')
-        return redirect(url_for('studentPlanner'))
+        if user.access == 'STUDENT':
+            return redirect(url_for('studentPlanner'))
+        elif user.access == 'ADMIN':
+            return redirect(url_for('admin_course'))
+        elif user.access == 'ROOT':
+            return redirect(url_for('rootAuth'))
+
     return render_template(page_template, form=form)
 
 
@@ -198,9 +203,14 @@ def register():
         db.session.commit()
         token = generate_confirmation_token(user.email)
         confirm_url = url_for('confirm_email', token=token, _external=True)
-        html = render_template('activate.html', confirm_url=confirm_url)
-        subject = "Please confirm your email"
-        send_email(user.email, subject, html)
+        if user.access == 'STUDENT':
+            html = render_template('activate.html', confirm_url=confirm_url)
+            subject = "Please confirm your email"
+            send_email(user.email, subject, html)
+        elif user.access == 'STUDENT' or user.access == 'ROOT':
+            html = render_template('activateRoot.html')
+            subject = "Your privileged request has be received"
+            send_email(user.email, subject, html)
         return redirect(url_for('login'))
 
     return render_template(page_template, form=form)
