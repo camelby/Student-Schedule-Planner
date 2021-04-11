@@ -172,7 +172,7 @@ def login():
         if user.access == 'STUDENT':
             return redirect(url_for('studentPlanner'))
         elif user.access == 'ADMIN':
-            return redirect(url_for('admin_course'))
+            return redirect(url_for('adminCourse'))
         elif user.access == 'ROOT':
             return redirect(url_for('rootAuth'))
 
@@ -265,31 +265,31 @@ def rootSection():
 
 
 @app.route('/admincourse')
-def admin_course():
+def adminCourse():
     page_template = 'adminCourse.html'
     return render_template(page_template)
 
 
 @app.route('/adminsection')
-def admin_section():
+def adminSection():
     page_template = 'adminSection.html'
     return render_template(page_template)
 
 
 @app.route('/studentplan')
-def student_planner():
+def studentPlanner():
     page_template = 'studentPlanner.html'
     return render_template(page_template)
 
 
 @app.route('/studentgen')
-def student_generate():
+def studentGenerate():
     page_template = 'studentGenerate.html'
     return render_template(page_template)
 
 
 @app.route('/studentcur')
-def student_current():
+def studentCurrent():
     page_template = 'studentCurrent.html'
     return render_template(page_template)
 
