@@ -10,7 +10,6 @@ from wtforms.validators import DataRequired, Email, Length, EqualTo
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
 import os
 import datetime
 
@@ -254,7 +253,7 @@ def rootCourse():
         )
         db.session.add(course)
         db.session.commit()
-
+        return redirect(url_for('rootCourse'))
     return render_template(page_template, form=add_form)
 
 
@@ -264,10 +263,22 @@ def rootSection():
     return render_template(page_template)
 
 
-@app.route('/admincourse')
+@app.route('/admincourse', methods=['GET', 'POST'])
 def adminCourse():
     page_template = 'adminCourse.html'
-    return render_template(page_template)
+    admin_add_form = CourseForm(request.form)
+    if admin_add_form.validate_on_submit():
+        course = Course(
+            course_title=admin_add_form.course_title.data,
+            dept_id=admin_add_form.dept_id.data,
+            sect_id=admin_add_form.sect_id.data,
+            instructor=admin_add_form.instructor.data,
+            class_period=admin_add_form.class_period.data
+        )
+        db.session.add(course)
+        db.session.commit()
+        return redirect(url_for('adminCourse'))
+    return render_template(page_template, admin_form=admin_add_form)
 
 
 @app.route('/adminsection')
@@ -312,21 +323,3 @@ db.create_all()
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=4000)
-
-
-#root/admin add catalog/course database
-class Catalog(db.Model):
-    __tablename__ = 'catalog'
-    course_title = db.Column(db.String(64), primary_key=True)
-    dept_id = db.Column(db.Integer, primary_key=True)
-    course_id = db.Column(db.Integer)
-
-  # catalog = Catalog(
-  #  title=form.title.data,
-  #  email=form.email.data,
-  #  password=form.password.data,
-   # access=form.access.data,
-  #  confirmed=False
-  #  )
-
-  #  db.session.commit()
