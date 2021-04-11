@@ -207,7 +207,7 @@ def register():
             html = render_template('activate.html', confirm_url=confirm_url)
             subject = "Please confirm your email"
             send_email(user.email, subject, html)
-        elif user.access == 'STUDENT' or user.access == 'ROOT':
+        elif user.access == 'ADMIN' or user.access == 'ROOT':
             html = render_template('activateRoot.html')
             subject = "Your privileged request has be received"
             send_email(user.email, subject, html)
