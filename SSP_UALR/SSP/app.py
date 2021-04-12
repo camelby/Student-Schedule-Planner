@@ -114,12 +114,25 @@ class SectionForm(FlaskForm):
     class_period = StringField('Class Period -- MWF or TR HH.MM (UTC)', validators=[DataRequired()])
     submit = SubmitField('Add')
 
+class UpdateSectionForm(FlaskForm):
+    course_title = StringField('Course Title', validators=[DataRequired()])
+    dept_id = StringField('Department ID', validators=[DataRequired()])
+    sect_id = StringField('Section ID', validators=[DataRequired()])
+    instructor = StringField('Instructor', validators=[DataRequired()])
+    class_period = StringField('Class Period -- MWF or TR HH.MM (UTC)', validators=[DataRequired()])
+    submit = SubmitField('Update')
+
 class CourseForm(FlaskForm):
     course_title = StringField('Course Title', validators=[DataRequired()])
     dept_id = StringField('Department ID', validators=[DataRequired()])
     course_id = StringField('Course ID', validators=[DataRequired()])
     submit = SubmitField('Add')
 
+class UpdateCourseForm(FlaskForm):
+    course_title = StringField('Course Title', validators=[DataRequired()])
+    dept_id = StringField('Department ID', validators=[DataRequired()])
+    course_id = StringField('Course ID', validators=[DataRequired()])
+    submit = SubmitField('Update')
 
 class ChangePasswordForm(FlaskForm):
     password = PasswordField(
@@ -272,17 +285,31 @@ def rootCourse():
     page_template = 'rootCourse.html'
     rt_crs_add_form = CourseForm(request.form)
     if rt_crs_add_form.validate_on_submit():
-        rt_add_section = Section(
+        rt_add_course = Course(
             course_title=rt_crs_add_form.course_title.data,
             dept_id=rt_crs_add_form.dept_id.data,
             sect_id=rt_crs_add_form.sect_id.data,
             instructor=rt_crs_add_form.instructor.data,
-            class_period=rt_crs_add_form.class_period.data,
+            class_period=rt_crs_add_form.class_period.data
         )
-        db.session.add(rt_add_section)
+        db.session.add(rt_add_course)
         db.session.commit()
         return redirect(url_for('rootSection'))
     return render_template(page_template, new_root_course_form=rt_crs_add_form)
+
+
+# TEST & ADD HERE --------------------------------------------------------------------------
+    rt_crs_upd_form = UpdateCourseForm(request.form)
+    if rt_crs_upd_form.validate_on_submit():
+        rt_upd_course = Course(
+            course_title=rt_crs_upd_form.course_title['course_title'],
+            dept_id=rt_crs_upd_form.dept_id.data,
+            sect_id=rt_crs_upd_form.sect_id.data,
+            instructor=rt_crs_upd_form.instructor.data,
+            class_period=rt_crs_upd_form.class_period.data
+        )
+
+
 
 @app.route('/rootsection', methods=['GET', 'POST'])
 def rootSection():
@@ -294,7 +321,7 @@ def rootSection():
             dept_id=rt_sect_add_form.dept_id.data,
             sect_id=rt_sect_add_form.sect_id.data,
             instructor=rt_sect_add_form.instructor.data,
-            class_period=rt_sect_add_form.class_period.data,
+            class_period=rt_sect_add_form.class_period.data
         )
         db.session.add(rt_add_section)
         db.session.commit()
@@ -306,17 +333,19 @@ def adminCourse():
     page_template = 'adminCourse.html'
     ad_crs_add_form = CourseForm(request.form)
     if ad_crs_add_form.validate_on_submit():
-        ad_add_section = Section(
+        ad_add_course = Course(
             course_title=ad_crs_add_form.course_title.data,
             dept_id=ad_crs_add_form.dept_id.data,
             sect_id=ad_crs_add_form.sect_id.data,
             instructor=ad_crs_add_form.instructor.data,
-            class_period=ad_crs_add_form.class_period.data,
+            class_period=ad_crs_add_form.class_period.data
         )
-        db.session.add(ad_add_section)
+        db.session.add(ad_add_course)
         db.session.commit()
         return redirect(url_for('adminCourse'))
     return render_template(page_template, new_admin_course_form=ad_crs_add_form)
+
+
 
 @app.route('/adminsection', methods=['GET', 'POST'])
 def adminSection():
