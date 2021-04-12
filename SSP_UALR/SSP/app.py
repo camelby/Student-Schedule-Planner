@@ -2,7 +2,6 @@ from flask import Flask, render_template, flash, request, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
-from flask_bcrypt import Bcrypt
 from flask_mail import Mail, Message
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SelectField, SubmitField
@@ -14,21 +13,21 @@ import os
 import datetime
 
 
-# application instance
+# Set application instance
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
-app.config['SECURITY_PASSWORD_SALT'] = 'salty'
-SECRET_KEY = app.secret_key
+app.config['SECURITY_PASSWORD_SALT'] = os.urandom(12)
 bootstrap = Bootstrap(app)
 
-DEBUG = True
-TESTING = True
-BCRYPT_LOG_ROUNDS = 13
-WTF_CSRF_ENABLED = True
-SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite')
-SQLALCHEMY_TRACK_MODIFICATIONS = False
+# Enable Cross-Site Request Forgery token validation
+app.config['WTF_CSRF_ENABLED'] = True
 
-# Email Settings for Verification
+# Set application configuration for database to reside in memory (data is gone after restart)
+# TODO if needed: Change database URI from :memory to db.sqlite to save data on restart
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///:memory')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Email settings for verification
 mail_settings = {
     "MAIL_SERVER": 'smtp.gmail.com',
     "MAIL_PORT": 465,
@@ -38,16 +37,16 @@ mail_settings = {
     "MAIL_PASSWORD": os.environ['EMAIL_PASSWORD']
 }
 
+# Set application configurations
 app.config.update(mail_settings)
 mail = Mail(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
-bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 
 
+# User database model
 class User(UserMixin, db.Model):
-    """User model."""
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True)
@@ -60,6 +59,7 @@ class User(UserMixin, db.Model):
     def password(self):
         raise AttributeError('password is not a readable attribute')
 
+    # Definitions for password hashes for database storage and verification
     @password.setter
     def password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -68,6 +68,7 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
 
+# Course database model
 class Course(db.Model):
     __tablename__ = 'course'
     course_title = db.Column(db.String(64), primary_key=True)
@@ -76,17 +77,16 @@ class Course(db.Model):
     instructor = db.Column(db.String(64))
     class_period = db.Column(db.String(64))
 
-
+# User loader callback for Flask-Login
 @login_manager.user_loader
 def load_user(user_id):
-    """User loader callback for Flask-Login."""
     return User.query.get(int(user_id))
 
 
+# WTF flask forms
 class RegisterForm(FlaskForm):
-    """Registration form."""
     username = StringField('Username', validators=[DataRequired(), Length(1, 64)])
-    email = StringField('Email', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     password_again = PasswordField('Confirm Password',
                                    validators=[DataRequired(), EqualTo('password')])
@@ -95,7 +95,7 @@ class RegisterForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
 
@@ -124,24 +124,27 @@ class ChangePasswordForm(FlaskForm):
     )
 
 
+# Create confirmation token
 def generate_confirmation_token(email):
-    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    # serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    serializer = URLSafeTimedSerializer(app.secret_key)
     return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
 
 
 def confirm_token(token, expiration=3600):
-    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    serializer = URLSafeTimedSerializer(app.secret_key)
     try:
         email = serializer.loads(
             token,
             salt=app.config['SECURITY_PASSWORD_SALT'],
             max_age=expiration
         )
-    except:
+    except token.DoesNotExist:
         return False
     return email
 
 
+# Email message template
 def send_email(to, subject, template):
     msg = Message(
         subject,
@@ -152,7 +155,7 @@ def send_email(to, subject, template):
     mail.send(msg)
 
 
-# Default route
+# Landing page route for SSP
 @app.route('/', methods=['GET', 'POST'])
 def login():
     page_template = 'base.html'
@@ -161,20 +164,26 @@ def login():
         # if user is logged in we get out of here
         return redirect(url_for('studentPlanner'))
     if form.validate_on_submit():
+        # Verify if user entered correct password
         user = User.query.filter_by(email=form.email.data).first()
         if user is None or not user.verify_password(form.password.data):
             flash('Invalid username or password.')
             return redirect(url_for('login'))
-        # log user in
-        login_user(user)
-        flash('You are now logged in!')
-        if user.access == 'STUDENT':
+        # Check user access level and if user is confirmed before logging in
+        if user.confirmed is False:
+            flash('Please confirm your email.')
+        if user.access == 'STUDENT' and user.confirmed is True:
+            login_user(user)
+            flash('You are now logged in!')
             return redirect(url_for('studentPlanner'))
-        elif user.access == 'ADMIN':
+        elif user.access == 'ADMIN' and user.confirmed is True:
+            login_user(user)
+            flash('You are now logged in!')
             return redirect(url_for('adminCourse'))
-        elif user.access == 'ROOT':
+        elif user.access == 'ROOT' and user.confirmed is True:
+            login_user(user)
+            flash('You are now logged in!')
             return redirect(url_for('rootAuth'))
-
     return render_template(page_template, form=form)
 
 
@@ -183,6 +192,7 @@ def register():
     page_template = 'registration.html'
     form = RegisterForm(request.form)
     if form.validate_on_submit():
+        # Check if username or email are already registered
         user = User.query.filter_by(username=form.username.data).first()
         if user is not None:
             flash('Username already exists.')
@@ -191,6 +201,7 @@ def register():
         if user is not None:
             flash('Email already exists.')
             return redirect(url_for('register'))
+        # Add user into database
         user = User(
             username=form.username.data,
             email=form.email.data,
@@ -200,8 +211,10 @@ def register():
         )
         db.session.add(user)
         db.session.commit()
+        # Generate confirmation token and url
         token = generate_confirmation_token(user.email)
         confirm_url = url_for('confirm_email', token=token, _external=True)
+        # Send confirmation request to students and notification email to root or admin
         if user.access == 'STUDENT':
             html = render_template('activate.html', confirm_url=confirm_url)
             subject = "Please confirm your email"
@@ -217,14 +230,17 @@ def register():
 
 @app.route('/confirm/<token>')
 def confirm_email(token):
+    # Check integrity of email token/url
     try:
         email = confirm_token(token)
-    except:
+    except token.DoesNotExist:
         flash('The confirmation link is invalid or has expired.', 'danger')
+    # Check if user has already confirmed
     user = User.query.filter_by(email=email).first_or_404()
     if user.confirmed:
         flash('Account already confirmed. Please login.', 'success')
     else:
+        # Once user is confirmed set confirmed to true and allow them access to application
         user.confirmed = True
         user.confirmed_on = datetime.datetime.now()
         db.session.add(user)
@@ -232,7 +248,7 @@ def confirm_email(token):
         flash('You have confirmed your account. Thanks!', 'success')
     return redirect(url_for('login'))
 
-
+# TODO set @login_required for all routes for production
 @app.route('/root')
 def rootAuth():
     page_template = 'rootAuth.html'
@@ -304,7 +320,7 @@ def studentCurrent():
     page_template = 'studentCurrent.html'
     return render_template(page_template)
 
-
+# TODO OPTIONAL edit error handling pages to be more acceptable
 @app.errorhandler(404)
 def page_not_found_error(error):
     page_template = '404.html'
@@ -317,7 +333,7 @@ def internal_server_error(error):
     return render_template(page_template, error=error)
 
 
-# Create database if does not exist
+# Create database if it does not exist
 db.create_all()
 
 
