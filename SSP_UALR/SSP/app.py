@@ -24,7 +24,7 @@ app.config['WTF_CSRF_ENABLED'] = True
 
 # Set application configuration for database to reside in memory (data is gone after restart)
 # TODO if needed: Change database URI from :memory to db.sqlite to save data on restart
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///:memory')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Email settings for verification
@@ -138,7 +138,6 @@ class ChangePasswordForm(FlaskForm):
 
 # Create confirmation token
 def generate_confirmation_token(email):
-    # serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
     serializer = URLSafeTimedSerializer(app.secret_key)
     return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
 
