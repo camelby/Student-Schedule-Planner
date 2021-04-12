@@ -69,13 +69,19 @@ class User(UserMixin, db.Model):
 
 
 # Course database model
-class Course(db.Model):
-    __tablename__ = 'course'
+class Section(db.Model):
+    __tablename__ = 'section'
     course_title = db.Column(db.String(64), primary_key=True)
     dept_id = db.Column(db.Integer, primary_key=True)
     sect_id = db.Column(db.Integer)
     instructor = db.Column(db.String(64))
-    class_period = db.Column(db.String(64))
+    class_days = db.Column(db.String(64))
+
+class Course(db.Model):
+    __tablename__ = 'course'
+    course_title = db.Column(db.String(64), primary_key=True)
+    dept_id = db.Column(db.Integer, primary_key=True)
+    course_id = db.Column(db.Integer)
 
 # User loader callback for Flask-Login
 @login_manager.user_loader
@@ -100,12 +106,18 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 
-class CourseForm(FlaskForm):
+class SectionForm(FlaskForm):
     course_title = StringField('Course Title', validators=[DataRequired()])
     dept_id = StringField('Department ID', validators=[DataRequired()])
     sect_id = StringField('Section ID', validators=[DataRequired()])
     instructor = StringField('Instructor', validators=[DataRequired()])
-    class_period = StringField('Class Period', validators=[DataRequired()])
+    class_period = StringField('Class Period -- MWF or TR HH.MM (UTC)', validators=[DataRequired()])
+    submit = SubmitField('Add')
+
+class CourseForm(FlaskForm):
+    course_title = StringField('Course Title', validators=[DataRequired()])
+    dept_id = StringField('Department ID', validators=[DataRequired()])
+    course_id = StringField('Course ID', validators=[DataRequired()])
     submit = SubmitField('Add')
 
 
@@ -258,50 +270,70 @@ def rootAuth():
 @app.route('/rootcourse', methods=['GET', 'POST'])
 def rootCourse():
     page_template = 'rootCourse.html'
-    add_form = CourseForm(request.form)
-    if add_form.validate_on_submit():
-        course = Course(
-            course_title=add_form.course_title.data,
-            dept_id=add_form.dept_id.data,
-            sect_id=add_form.sect_id.data,
-            instructor=add_form.instructor.data,
-            class_period=add_form.class_period.data
+    rt_crs_add_form = CourseForm(request.form)
+    if rt_crs_add_form.validate_on_submit():
+        rt_add_section = Section(
+            course_title=rt_crs_add_form.course_title.data,
+            dept_id=rt_crs_add_form.dept_id.data,
+            sect_id=rt_crs_add_form.sect_id.data,
+            instructor=rt_crs_add_form.instructor.data,
+            class_period=rt_crs_add_form.class_period.data,
         )
-        db.session.add(course)
+        db.session.add(rt_add_section)
         db.session.commit()
-        return redirect(url_for('rootCourse'))
-    return render_template(page_template, form=add_form)
+        return redirect(url_for('rootSection'))
+    return render_template(page_template, new_root_course_form=rt_crs_add_form)
 
-
-@app.route('/rootsection')
+@app.route('/rootsection', methods=['GET', 'POST'])
 def rootSection():
     page_template = 'rootSection.html'
-    return render_template(page_template)
+    rt_sect_add_form = SectionForm(request.form)
+    if rt_sect_add_form.validate_on_submit():
+        rt_add_section = Section(
+            course_title=rt_sect_add_form.course_title.data,
+            dept_id=rt_sect_add_form.dept_id.data,
+            sect_id=rt_sect_add_form.sect_id.data,
+            instructor=rt_sect_add_form.instructor.data,
+            class_period=rt_sect_add_form.class_period.data,
+        )
+        db.session.add(rt_add_section)
+        db.session.commit()
+        return redirect(url_for('rootSection'))
+    return render_template(page_template, new_root_section_form=rt_sect_add_form)
 
-
-@app.route('/admincourse', methods=['GET', 'POST'])
+@app.route('/admincourse')
 def adminCourse():
     page_template = 'adminCourse.html'
-    admin_add_form = CourseForm(request.form)
-    if admin_add_form.validate_on_submit():
-        course = Course(
-            course_title=admin_add_form.course_title.data,
-            dept_id=admin_add_form.dept_id.data,
-            sect_id=admin_add_form.sect_id.data,
-            instructor=admin_add_form.instructor.data,
-            class_period=admin_add_form.class_period.data
+    ad_crs_add_form = CourseForm(request.form)
+    if ad_crs_add_form.validate_on_submit():
+        ad_add_section = Section(
+            course_title=ad_crs_add_form.course_title.data,
+            dept_id=ad_crs_add_form.dept_id.data,
+            sect_id=ad_crs_add_form.sect_id.data,
+            instructor=ad_crs_add_form.instructor.data,
+            class_period=ad_crs_add_form.class_period.data,
         )
-        db.session.add(course)
+        db.session.add(ad_add_section)
         db.session.commit()
         return redirect(url_for('adminCourse'))
-    return render_template(page_template, admin_form=admin_add_form)
+    return render_template(page_template, new_admin_course_form=ad_crs_add_form)
 
-
-@app.route('/adminsection')
+@app.route('/adminsection', methods=['GET', 'POST'])
 def adminSection():
     page_template = 'adminSection.html'
-    return render_template(page_template)
-
+    ad_sect_add_form = SectionForm(request.form)
+    if ad_sect_add_form.validate_on_submit():
+        ad_new_section = Section(
+            course_title=ad_sect_add_form.course_title.data,
+            dept_id=ad_sect_add_form.dept_id.data,
+            sect_id=ad_sect_add_form.sect_id.data,
+            instructor=ad_sect_add_form.instructor.data,
+            class_period=ad_sect_add_form.class_period.data,
+        )
+        db.session.add(ad_new_section)
+        db.session.commit()
+        return redirect(url_for('adminSection'))
+    return render_template(page_template, new_admin_section_form=ad_sect_add_form)
 
 @app.route('/studentplan')
 def studentPlanner():

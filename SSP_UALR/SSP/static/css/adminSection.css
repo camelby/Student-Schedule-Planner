@@ -308,25 +308,20 @@ a.article:hover {
     MODAL STYLE
 ----------------------------------------------------- */
 
-.modal .modal-dialog {
-    max-width: 400px;
+h5 {
+    padding-top:25px;
+    padding-left: 20px;
+    font-weight: lighter;
+    text-align: left;
+    font-size: 1.75em;
 }
 
-.modal .modal-header, .modal .modal-body, .modal .modal-footer {
-    padding: 20px 30px;
+.form{
+    padding: 20px;
 }
 
 .modal .modal-content {
     border-radius: 1px;
-}
-
-.modal .modal-footer {
-    background: #ecf0f1;
-    border-radius: 0 0 1px 1px;
-}
-
-.modal .modal-title {
-    display: inline-block;
 }
 
 .modal .form-control {
@@ -335,18 +330,13 @@ a.article:hover {
     border-color: #dddddd;
 }
 
-.modal textarea.form-control {
-    resize: vertical;
-}
-
 .modal .btn {
+    color:white;
     border-radius: 1px;
     min-width: 100px;
+    float:right;
 }
 
-.modal form label {
-    font-weight: normal;
-}
 
 /* ---------------------------------------------------
     MEDIAQUERIES
