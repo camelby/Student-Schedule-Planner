@@ -22,8 +22,7 @@ bootstrap = Bootstrap(app)
 # Enable Cross-Site Request Forgery token validation
 app.config['WTF_CSRF_ENABLED'] = True
 
-# Set application configuration for database to reside in memory (data is gone after restart)
-# TODO if needed: Change database URI from :memory to db.sqlite to save data on restart
+# Set application configuration for database
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -77,6 +76,7 @@ class Section(db.Model):
     instructor = db.Column(db.String(64))
     class_days = db.Column(db.String(64))
 
+
 class Course(db.Model):
     __tablename__ = 'course'
     course_title = db.Column(db.String(64), primary_key=True)
@@ -114,6 +114,7 @@ class SectionForm(FlaskForm):
     class_period = StringField('Class Period -- MWF or TR HH.MM (UTC)', validators=[DataRequired()])
     submit = SubmitField('Add')
 
+
 class UpdateSectionForm(FlaskForm):
     course_title = StringField('Course Title', validators=[DataRequired()])
     dept_id = StringField('Department ID', validators=[DataRequired()])
@@ -122,17 +123,20 @@ class UpdateSectionForm(FlaskForm):
     class_period = StringField('Class Period -- MWF or TR HH.MM (UTC)', validators=[DataRequired()])
     submit = SubmitField('Update')
 
+
 class CourseForm(FlaskForm):
     course_title = StringField('Course Title', validators=[DataRequired()])
     dept_id = StringField('Department ID', validators=[DataRequired()])
     course_id = StringField('Course ID', validators=[DataRequired()])
     submit = SubmitField('Add')
 
+
 class UpdateCourseForm(FlaskForm):
     course_title = StringField('Course Title', validators=[DataRequired()])
     dept_id = StringField('Department ID', validators=[DataRequired()])
     course_id = StringField('Course ID', validators=[DataRequired()])
     submit = SubmitField('Update')
+
 
 class ChangePasswordForm(FlaskForm):
     password = PasswordField(
@@ -294,20 +298,18 @@ def rootCourse():
         db.session.add(rt_add_course)
         db.session.commit()
         return redirect(url_for('rootSection'))
-    return render_template(page_template, new_root_course_form=rt_crs_add_form)
-
-
-# TEST & ADD HERE --------------------------------------------------------------------------
     rt_crs_upd_form = UpdateCourseForm(request.form)
     if rt_crs_upd_form.validate_on_submit():
         rt_upd_course = Course(
-            course_title=rt_crs_upd_form.course_title['course_title'],
+            course_title=rt_crs_upd_form.course_title.data,
             dept_id=rt_crs_upd_form.dept_id.data,
             sect_id=rt_crs_upd_form.sect_id.data,
             instructor=rt_crs_upd_form.instructor.data,
             class_period=rt_crs_upd_form.class_period.data
         )
-
+        db.session.add(rt_upd_course)
+        db.session.commit()
+    return render_template(page_template, new_root_course_form=rt_crs_add_form, rt_crs_upd_form=rt_crs_upd_form)
 
 
 @app.route('/rootsection', methods=['GET', 'POST'])
@@ -327,6 +329,7 @@ def rootSection():
         return redirect(url_for('rootSection'))
     return render_template(page_template, new_root_section_form=rt_sect_add_form)
 
+
 @app.route('/admincourse')
 def adminCourse():
     page_template = 'adminCourse.html'
@@ -345,7 +348,6 @@ def adminCourse():
     return render_template(page_template, new_admin_course_form=ad_crs_add_form)
 
 
-
 @app.route('/adminsection', methods=['GET', 'POST'])
 def adminSection():
     page_template = 'adminSection.html'
@@ -362,6 +364,7 @@ def adminSection():
         db.session.commit()
         return redirect(url_for('adminSection'))
     return render_template(page_template, new_admin_section_form=ad_sect_add_form)
+
 
 @app.route('/studentplan')
 def studentPlanner():
