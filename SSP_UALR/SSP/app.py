@@ -277,10 +277,23 @@ def confirm_email(token):
     return redirect(url_for('login'))
 
 # TODO set @login_required for all routes for production
-@app.route('/root')
+@app.route('/root', methods=['GET', 'POST'])
 def rootAuth():
     page_template = 'rootAuth.html'
-    return render_template(page_template)
+    # Query all users in database to be used in Jinja2
+    users = User.query.all()
+    if request.method == 'POST':
+        query = request.form.get('index')
+        user = User.query.filter_by(username=query).first_or_404()
+        if request.form.get('accept_button'):
+            user.confirmed = True
+            user.confirmed_on = datetime.datetime.now()
+            db.session.add(user)
+            db.session.commit()
+        if request.form.get('deny_button'):
+            db.session.delete(user)
+            db.session.commit()
+    return render_template(page_template, users=users)
 
 
 @app.route('/rootcourse', methods=['GET', 'POST'])
