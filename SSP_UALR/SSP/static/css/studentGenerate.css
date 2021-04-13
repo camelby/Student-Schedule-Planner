@@ -79,8 +79,10 @@ i,
 span {
     display: inline-block;
 }
+.btn {
+    font-family: 'Futura PT';
+}
 
-.btn,
 .btn-info{
    border:none;
    background: #485676;

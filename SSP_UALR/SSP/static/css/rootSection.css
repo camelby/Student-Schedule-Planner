@@ -56,7 +56,10 @@ span {
     display: inline-block;
 }
 
-.btn,
+.btn {
+    font-family: 'Futura PT';
+}
+
 .btn-info{
    border:none;
    background: #485676;
