@@ -3298,6 +3298,7 @@ a {
         justify-content: center;
         height: 50px;
         height: var(--schedule-rows-height);
+        background-color: #b8daff;
         border-bottom: 1px solid #ebebeb;
         border-bottom: 1px solid var(--cd-color-border);
         padding:0

@@ -12,7 +12,10 @@
     <!-- Font Awesome JS -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+    <!-- Bootstrap Sidebar -->
+    <script>document.getElementsByTagName("html")[0].className += " js";</script>
 
+   <link rel="stylesheet" href="{{  url_for('static', filename='css/scheduleBox.css')}}" media="screen">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/studentCurrent.css') }}" media="screen">
 {% endblock %}
 {% block page_content %}
@@ -53,7 +56,6 @@
 
         <!-- Page Content  -->
         <div id="content">
-
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
                     <button type="button" id="sidebarCollapse" class="btn btn-info">
@@ -64,36 +66,135 @@
             <div class="title-Heading">Woosamotta U</div>
             <div class="subtitle-Heading">Student Planner</div>
             <h2>Current Schedule</h2>
-            <p>Placeholder</p>
+            <button type="button" class="button-edit"><i class="fas fa-sync"></i>
+                Edit or Drop</button>
+            <div class="container">
+                <div class="card-body">
+                    <table class="table table-hover table-bordered">
+                        <thead class="table-primary">
+                        <tr>
+                            <th scope="col">Status</th>
+                            <th scope="col">Subject</th>
+                            <th scope="col">Course</th>
+                            <th scope="col">Section</th>
+                            <th scope="col">Class Period</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr data-id="1">
+                            <td>Enrolled</td>
+                            <td>ARST</td>
+                            <td>3385</td>
+                            <td>9S1</td>
+                            <td>MWF time-time</td>
+                        </tr>
+                        <tr data-id="2">
+                            <td>Break Time</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>MWF time-time</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="cd-schedule cd-schedule--loading margin-top-lg margin-bottom-lg js-cd-schedule">
+                <div class="cd-schedule__timeline">
+                  <ul>
+                    <li><span>08:00</span></li>
+                    <li><span>08:30</span></li>
+                    <li><span>09:00</span></li>
+                    <li><span>09:30</span></li>
+                    <li><span>10:00</span></li>
+                    <li><span>10:30</span></li>
+                    <li><span>11:00</span></li>
+                    <li><span>11:30</span></li>
+                    <li><span>12:00</span></li>
+                    <li><span>12:30</span></li>
+                    <li><span>13:00</span></li>
+                    <li><span>13:30</span></li>
+                    <li><span>14:00</span></li>
+                    <li><span>14:30</span></li>
+                    <li><span>15:00</span></li>
+                    <li><span>15:30</span></li>
+                    <li><span>16:00</span></li>
+                    <li><span>16:30</span></li>
+                    <li><span>17:00</span></li>
+                  </ul>
+                </div> <!-- .cd-schedule__timeline -->
 
+                <div class="cd-schedule__events">
+                  <ul>
+                    <li class="cd-schedule__group">
+                      <div class="cd-schedule__top-info"><span>Monday</span></div>
 
+                      <ul>
+                        <li class="cd-schedule__event">
+                          <a data-start="09:30" data-end="10:30" data-content="event-abs-circuit" data-event="event-1" href="#0">
+                            <em class="cd-schedule__name">Placeholder</em>
+                          </a>
+                        </li>
 
+                        <li class="cd-schedule__event">
+                          <a data-start="11:00" data-end="12:30" data-content="event-rowing-workout" data-event="event-2" href="#0">
+                            <em class="cd-schedule__name">Placeholder</em>
+                          </a>
+                        </li>
 
+                        <li class="cd-schedule__event">
+                          <a data-start="14:00" data-end="15:15"  data-content="event-yoga-1" data-event="event-3" href="#0">
+                            <em class="cd-schedule__name">Placeholder</em>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
 
+                    <li class="cd-schedule__group">
+                      <div class="cd-schedule__top-info"><span>Tuesday</span></div>
+                      <ul>
+                        <!--Insert Tuesday code-->
+                      </ul>
+                    </li>
 
+                    <li class="cd-schedule__group">
+                      <div class="cd-schedule__top-info"><span>Wednesday</span></div>
+                      <ul>
+                        <!--Insert Wednesday code-->
+                      </ul>
+                    </li>
 
+                    <li class="cd-schedule__group">
+                      <div class="cd-schedule__top-info"><span>Thursday</span></div>
+                      <ul>
+                        <!--Insert Thursday code-->
+                      </ul>
+                    </li>
 
+                    <li class="cd-schedule__group">
+                      <div class="cd-schedule__top-info"><span>Friday</span></div>
+                      <ul>
+                                    <!--Insert Friday code-->
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
 
+                <div class="cd-schedule-modal">
+                  <header class="cd-schedule-modal__header">
+                    <div class="cd-schedule-modal__header-bg"></div>
+                  </header>
 
+                  <div class="cd-schedule-modal__body">
+                    <div class="cd-schedule-modal__event-info"></div>
+                    <div class="cd-schedule-modal__body-bg"></div>
+                  </div>
 
+                  <a href="#0" class="cd-schedule-modal__close text-replace">Close</a>
+                </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                <div class="cd-schedule__cover-layer"></div>
+              </div> <!-- .cd-schedule -->
         </div>
     </div>
 
@@ -104,6 +205,10 @@
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
 
+       <!-- Bootstrap Schedule Views -->
+    <script src="static/js/scheduleutil.js"></script> <!-- util functions included in framework -->
+    <script src="static/js/schedulemain.js"></script>
+
     <script type="text/javascript">
         $(document).ready(function () {
             $('#sidebarCollapse').on('click', function () {
@@ -111,5 +216,4 @@
             });
         });
     </script>
-
 {% endblock %}

@@ -26,6 +26,15 @@ div.subtitle-Heading {
     text-transform: uppercase;
 }
 
+.button-edit {
+    background-color: #485676;
+    border-radius: 6px;
+    color: white;
+    padding: 8px 10px;
+    border: none;
+    margin:0px 0px 30px;
+}
+
 h3 {
     font-size: 2.75em;
     text-align: center;
@@ -85,6 +94,7 @@ span {
    border:none;
    background: #485676;
 }
+
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
