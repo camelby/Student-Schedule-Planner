@@ -222,6 +222,13 @@ a[data-toggle="collapse"] {
     transform: translateY(-50%);
 }
 
+hr.solid {
+    margin-top: 8px;
+    border-top: 1px solid #bbb;
+}
+
+
+
 ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;

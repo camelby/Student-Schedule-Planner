@@ -3262,6 +3262,12 @@ a {
     color:transparent
 }
 
+@media (max-width: 1024px){
+    .js .cd-schedule__top-info{
+        background: white;
+    }
+}
+
 @media (min-width: 64rem) {
     .js .cd-schedule__group > ul {
         height: 950px;
@@ -3277,6 +3283,7 @@ a {
 
 .cd-schedule__top-info {
     width: 100%;
+    background-color: #b8daff;
     padding: 0 1.25em;
     padding:0 var(--component-padding)
 }
