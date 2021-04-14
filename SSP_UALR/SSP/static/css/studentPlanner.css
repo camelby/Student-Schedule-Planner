@@ -28,7 +28,9 @@ div.subtitle-Heading {
 
 div.break_div {
     display: inline-block;
-    margin-left:35%;
+    float: right;
+    margin-bottom: 38px;
+
 }
 
 h2 {
@@ -92,6 +94,7 @@ span {
 .btn-info{
    border:none;
    background: #485676;
+    padding:11px;
 }
 
 hr.solid {
@@ -348,7 +351,10 @@ a.article:hover {
 ----------------------------------------------------- */
 #content {
     width: 100%;
-    padding: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 40px;
+    padding-right: 40px;
     min-height: 100vh;
     transition: all 0.3s;
 }
@@ -356,6 +362,12 @@ a.article:hover {
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
+@media (max-width: 1061px) {
+    div.break_div {
+    float: none;
+}
+
+}
 
 @media (max-width: 768px) {
     hr.solid {
@@ -388,7 +400,7 @@ a.article:hover {
         text-transform: uppercase;
     }
     div.break_div {
-        margin-top: 50px;
+        margin-bottom: 38px;
         margin-left: 0px;
     }
     h2 {
