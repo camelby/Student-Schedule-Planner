@@ -5,6 +5,27 @@ body {
     background: #fafafa;
 }
 
+div.title-Heading {
+    -webkit-text-stroke: 1.5px #485676;
+    color: #485676;
+    font-family: Roboto;
+    letter-spacing: 10px;
+    font-weight: 700;
+    font-size: 70px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+div.subtitle-Heading {
+    font-family: 'Roboto Condensed', sans-serif;
+    position: relative;
+    top: -25px;
+    letter-spacing: 15px;
+    font-size: 70px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
 h2{
     margin:0px 0px 35px;
 }
@@ -289,6 +310,25 @@ a.article:hover {
 ----------------------------------------------------- */
 
 @media (max-width: 768px) {
+    div.title-Heading {
+        -webkit-text-stroke: 1.5px #485676;
+        color: #485676;
+        font-family: Roboto;
+        letter-spacing: 10px;
+        font-weight: 700;
+        font-size: 25px;
+        text-align: center;
+        text-transform: uppercase;
+    }
+    div.subtitle-Heading {
+        font-family: 'Roboto Condensed', sans-serif;
+        position: relative;
+        margin-top:20px;
+        letter-spacing: 15px;
+        font-size: 25px;
+        text-align: center;
+        text-transform: uppercase;
+    }
     #sidebar {
         min-width: 80px;
         max-width: 80px;
