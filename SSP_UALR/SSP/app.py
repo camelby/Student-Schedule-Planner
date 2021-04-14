@@ -282,6 +282,11 @@ def rootAuth():
     page_template = 'rootAuth.html'
     # Query all users in database to be used in Jinja2
     users = User.query.all()
+    return render_template(page_template, users=users)
+
+
+@app.route('/root_auth_decision', methods=['POST'])
+def root_auth_decision():
     if request.method == 'POST':
         query = request.form.get('index')
         user = User.query.filter_by(username=query).first_or_404()
@@ -294,6 +299,7 @@ def rootAuth():
             send_email(user.email, subject, html)
             db.session.add(user)
             db.session.commit()
+            return redirect(url_for('rootAuth'))
         if request.form.get('deny_button'):
             # Send user a message then yeet them
             html = render_template('denyRoot.html')
@@ -301,7 +307,7 @@ def rootAuth():
             send_email(user.email, subject, html)
             db.session.delete(user)
             db.session.commit()
-    return render_template(page_template, users=users)
+            return redirect(url_for('rootAuth'))
 
 
 @app.route('/rootcourse', methods=['GET', 'POST'])
