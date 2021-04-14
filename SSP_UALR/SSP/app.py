@@ -286,11 +286,19 @@ def rootAuth():
         query = request.form.get('index')
         user = User.query.filter_by(username=query).first_or_404()
         if request.form.get('accept_button'):
+            # Confirm and send notification email
             user.confirmed = True
             user.confirmed_on = datetime.datetime.now()
+            html = render_template('approveRoot.html')
+            subject = "Your privileged request has be approved"
+            send_email(user.email, subject, html)
             db.session.add(user)
             db.session.commit()
         if request.form.get('deny_button'):
+            # Send user a message then yeet them
+            html = render_template('denyRoot.html')
+            subject = "Your privileged request has be denied"
+            send_email(user.email, subject, html)
             db.session.delete(user)
             db.session.commit()
     return render_template(page_template, users=users)
