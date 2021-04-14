@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Admin Homepage</title>
-
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 
@@ -25,7 +23,7 @@
                 <h4>SSP</h4>
                 <strong>WU</strong>
             </div>
-             <div class="sidebar-header2">
+            <div class="sidebar-header2">
         	<div class="user-pic">
           		<img class="img-responsive img-rounded" src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg" alt="User picture">
        	        </div>
@@ -34,7 +32,6 @@
           		<span class="user-role">Administrator</span>
                 </div>
             </div>
-
             <ul class="list-unstyled components">
                 <li class="active">
                     <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
@@ -56,8 +53,7 @@
                 </li>
             </ul>
         </nav>
-
-                       <!-- Page Content  -->
+        <!-- Page Content  -->
         <div id="content">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
@@ -67,112 +63,92 @@
                 </div>
             </nav>
             <div id="wrapper">
-                    <h2 style="display: inline-block;">Setup Course Catalog</h2>
-                    <button href="#addCourseModal" class="btn btn-primary badge-pill"  style="display: inline-block;" data-toggle="modal" >Add Course</button>
-            <div>
-
-            <div class="container">
-                <div class="card-body">
-                    <table class="table table-hover table-bordered">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">Course Title</th>
-                                <th scope="col">Department ID</th>
-                                <th scope="col">Course Number</th>
-                                <th>ACTIONS</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Course</td>
-                                <td>ID</td>
-                                <td>#</td>
-                                <td>
-                                    <button href="#editCourseModal" class="btn btn-primary badge-pill" style="width:80px;" data-toggle="modal" >EDIT</button>
-                                    <button href="#deleteCourseModal" class="btn btn-danger badge-pill" style="width:80px;" data-toggle="modal" >DELETE</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="clearfix">
-                        <div class="hint-text">Showing <b>5</b> out of <b>100</b> entries</div>
-                        <ul class="pagination">
-                            <li class="page-item disabled"><a href="#">Previous</a></li>
-                            <li class="page-item"><a href="#" class="page-link">1</a></li>
-                            <li class="page-item"><a href="#" class="page-link">2</a></li>
-                            <li class="page-item active"><a href="#" class="page-link">3</a></li>
-                            <li class="page-item"><a href="#" class="page-link">4</a></li>
-                            <li class="page-item"><a href="#" class="page-link">5</a></li>
-                            <li class="page-item"><a href="#" class="page-link">Next</a></li>
-                        </ul>
+                <h2 style="display: inline-block;">Setup Course Catalog</h2>
+                <button href="#addCourseModal" class="btn btn-primary badge-pill"  style="display: inline-block;" data-toggle="modal" >Add Course</button>
+                <div>
+                    <div class="container">
+                        <div class="card-body">
+                            <table class="table table-hover table-bordered">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Course Title</th>
+                                    <th scope="col">Department ID</th>
+                                    <th scope="col">Course Number</th>
+                                    <th>ACTIONS</th>
+                                </tr>
+                                </thead>
+                                {% for course in courses %}
+                                <tbody>
+                                <tr>
+                                    <td>{{ course.course_title }}</td>
+                                    <td>{{ course.dept_id }}</td>
+                                    <td>{{ course.course_id }}</td>
+                                    <td>
+                                        <button href="#editCourseModal" class="edit-dialog btn btn-primary badge-pill" data-id="{{ course.course_id }}" style="width:80px;" data-toggle="modal">EDIT</button>
+                                        <button href="#deleteCourseModal" class="delete-dialog btn btn-danger badge-pill" data-id="{{ course.course_id }}" style="width:80px;" data-toggle="modal" >DELETE</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                                {% endfor %}
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <!--Add Modal HTML -->
-    <div id="addCourseModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <h5>Add New Course</h5>
-                {{ wtf.quick_form(new_admin_course_form) }}
+            <!--Add Modal HTML -->
+            <div id="addCourseModal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <h5>Add New Course</h5>
+                        {{ wtf.quick_form(ad_crs_add_form) }}
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <!-- Edit Modal HTML -->
-    <div id="editCourseModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <h5>Add New Course</h5>
-
-                {#<form>
-                    <div class="modal-header">
-                        <h4 class="modal-title">Edit Course</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <!-- Edit Modal HTML -->
+            <div id="editCourseModal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form action="/admin_update_course" method="post">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Edit Course</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="text" id="course_title" name="course_title"><br>
+                                <input type="text" id="dept_id" name="dept_id"><br>
+                                <input type="text" id="course_id" name="course_id"><br>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="hidden" id="index" name="index" value="">
+                                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                                <input type="submit" name="edit_button"  class="btn btn-success" value="Edit">
+                            </div>
+                        </form>
                     </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>Course Tile</label>
-                            <input type="text" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Department ID</label>
-                            <input type="text" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Course Number</label>
-                            <input type="number" class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                        <input type="submit" class="btn btn-info" value="Save">
-                    </div>
-                </form>#}
+                </div>
             </div>
-        </div>
-    </div>
-    <!-- Delete Modal HTML -->
-    <div id="deleteCourseModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form>
-                    <div class="modal-header">
-                        <h4 class="modal-title">Delete Course</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <!-- Delete Modal HTML -->
+            <div id="deleteCourseModal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form action="/admin_update_course" method="post">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Delete Course</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete these Records?</p>
+                                <p class="text-warning"><small>This action cannot be undone.</small></p>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="hidden" id="index" name="index" value="">
+                                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                                <input type="submit" name="delete_button" class="btn btn-danger" value="Delete">
+                            </div>
+                        </form>
                     </div>
-                    <div class="modal-body">
-                        <p>Are you sure you want to delete these Records?</p>
-                        <p class="text-warning"><small>This action cannot be undone.</small></p>
-                    </div>
-                    <div class="modal-footer">
-                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                        <input type="submit" class="btn btn-danger" value="Delete">
-                    </div>
-                </form>
+                </div>
             </div>
-        </div>
-    </div>
         </div>
     </div>
 
@@ -188,6 +164,14 @@
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').toggleClass('active');
             });
+        });
+        $(document).on("click", ".edit-dialog", function () {
+            let courseID = $(this).data('id');
+            $(".modal-footer #index").val( courseID );
+        });
+        $(document).on("click", ".delete-dialog", function () {
+            let courseID = $(this).data('id');
+            $(".modal-footer #index").val( courseID );
         });
     </script>
 

@@ -362,22 +362,38 @@ def rootSection():
     return render_template(page_template, new_root_section_form=rt_sect_add_form)
 
 
-@app.route('/admincourse')
+@app.route('/admincourse', methods=['GET', 'POST'])
 def adminCourse():
     page_template = 'adminCourse.html'
+    courses = Course.query.all()
     ad_crs_add_form = CourseForm(request.form)
     if ad_crs_add_form.validate_on_submit():
-        ad_add_course = Course(
+        course = Course(
             course_title=ad_crs_add_form.course_title.data,
             dept_id=ad_crs_add_form.dept_id.data,
-            sect_id=ad_crs_add_form.sect_id.data,
-            instructor=ad_crs_add_form.instructor.data,
-            class_period=ad_crs_add_form.class_period.data
+            course_id=ad_crs_add_form.course_id.data,
         )
-        db.session.add(ad_add_course)
+        db.session.add(course)
         db.session.commit()
         return redirect(url_for('adminCourse'))
-    return render_template(page_template, new_admin_course_form=ad_crs_add_form)
+    return render_template(page_template, ad_crs_add_form=ad_crs_add_form, courses=courses)
+
+
+@app.route('/admin_update_course', methods=['POST'])
+def admin_update_course():
+    if request.method == 'POST':
+        query = request.form.get('index')
+        course = Course.query.filter_by(course_id=query).first_or_404()
+        if request.form.get('edit_button'):
+            course.course_title = request.form['course_title']
+            course.dept_id = request.form['dept_id']
+            course.course_id = request.form['course_id']
+            db.session.commit()
+            return redirect(url_for('adminCourse'))
+        if request.form.get('delete_button'):
+            db.session.delete(course)
+            db.session.commit()
+            return redirect(url_for('adminCourse'))
 
 
 @app.route('/adminsection', methods=['GET', 'POST'])
