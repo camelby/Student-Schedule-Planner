@@ -307,30 +307,35 @@ def rootAuth():
 @app.route('/rootcourse', methods=['GET', 'POST'])
 def rootCourse():
     page_template = 'rootCourse.html'
+    courses = Course.query.all()
     rt_crs_add_form = CourseForm(request.form)
     if rt_crs_add_form.validate_on_submit():
-        rt_add_course = Course(
+        course = Course(
             course_title=rt_crs_add_form.course_title.data,
             dept_id=rt_crs_add_form.dept_id.data,
-            sect_id=rt_crs_add_form.sect_id.data,
-            instructor=rt_crs_add_form.instructor.data,
-            class_period=rt_crs_add_form.class_period.data
+            course_id=rt_crs_add_form.course_id.data
         )
-        db.session.add(rt_add_course)
+        db.session.add(course)
         db.session.commit()
-        return redirect(url_for('rootSection'))
-    rt_crs_upd_form = UpdateCourseForm(request.form)
-    if rt_crs_upd_form.validate_on_submit():
-        rt_upd_course = Course(
-            course_title=rt_crs_upd_form.course_title.data,
-            dept_id=rt_crs_upd_form.dept_id.data,
-            sect_id=rt_crs_upd_form.sect_id.data,
-            instructor=rt_crs_upd_form.instructor.data,
-            class_period=rt_crs_upd_form.class_period.data
-        )
-        db.session.add(rt_upd_course)
-        db.session.commit()
-    return render_template(page_template, new_root_course_form=rt_crs_add_form, rt_crs_upd_form=rt_crs_upd_form)
+        return redirect(url_for('rootCourse'))
+    return render_template(page_template, rt_crs_add_form=rt_crs_add_form, courses=courses)
+
+
+@app.route('/update_course', methods=['POST'])
+def update_course():
+    if request.method == 'POST':
+        query = request.form.get('index')
+        course = Course.query.filter_by(course_id=query).first_or_404()
+        if request.form.get('edit_button'):
+            course.course_title = request.form['course_title']
+            course.dept_id = request.form['dept_id']
+            course.course_id = request.form['course_id']
+            db.session.commit()
+            return redirect(url_for('rootCourse'))
+        if request.form.get('delete_button'):
+            db.session.delete(course)
+            db.session.commit()
+            return redirect(url_for('rootCourse'))
 
 
 @app.route('/rootsection', methods=['GET', 'POST'])
