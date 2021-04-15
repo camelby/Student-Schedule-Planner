@@ -331,6 +331,7 @@ def update_course():
 @app.route('/rootsection', methods=['GET', 'POST'])
 def rootSection():
     page_template = 'rootSection.html'
+    sections = Section.query.all()
     rt_sect_add_form = SectionForm(request.form)
     if rt_sect_add_form.validate_on_submit():
         rt_add_section = Section(
@@ -338,12 +339,12 @@ def rootSection():
             dept_id=rt_sect_add_form.dept_id.data,
             sect_id=rt_sect_add_form.sect_id.data,
             instructor=rt_sect_add_form.instructor.data,
-            class_period=rt_sect_add_form.class_period.data
+            class_period=rt_sect_add_form.class_period.data,
         )
         db.session.add(rt_add_section)
         db.session.commit()
         return redirect(url_for('rootSection'))
-    return render_template(page_template, new_root_section_form=rt_sect_add_form)
+    return render_template(page_template, new_root_section_form=rt_sect_add_form, sections=sections)
 
 
 @app.route('/admincourse', methods=['GET', 'POST'])
@@ -391,7 +392,7 @@ def adminSection():
             dept_id=ad_sect_add_form.dept_id.data,
             sect_id=ad_sect_add_form.sect_id.data,
             instructor=ad_sect_add_form.instructor.data,
-            class_period=ad_sect_add_form.class_period.data,
+            class_period=ad_sect_add_form.class_period.data
         )
         db.session.add(section)
         db.session.commit()
@@ -407,7 +408,7 @@ def admin_update_section():
         if request.form.get('edit_button'):
             section.course_title = request.form['course_title']
             section.dept_id = request.form['dept_id']
-            section.section_id = request.form['sect_id']
+            section.sect_id = request.form['sect_id']
             section.instructor = request.form['instructor']
             section.class_period = request.form['class_period']
             db.session.commit()
@@ -416,7 +417,6 @@ def admin_update_section():
             db.session.delete(section)
             db.session.commit()
             return redirect(url_for('adminSection'))
-
 
 @app.route('/studentplan')
 def studentPlanner():
