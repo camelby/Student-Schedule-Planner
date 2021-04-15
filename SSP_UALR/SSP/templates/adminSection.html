@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Admin Section Main</title>
-
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 
@@ -90,12 +88,12 @@
                             <tr>
                                 <td>{{ section.course_title }}</td>
                                 <td>{{ section.dept_id }}</td>
-                                <td>{{ section.section_id }}</td>
+                                <td>{{ section.sect_id }}</td>
                                 <td>{{ section.instructor }}</td>
                                 <td>{{ section.class_period }}</td>
                                 <td>
-                                    <button href="#editSectionModal" class="edit-dialog btn btn-primary badge-pill" data-id="{{ section.section_id }}" style="width:80px;" data-toggle="modal">EDIT</button>
-                                    <button href="#deleteSectioneModal" class="delete-dialog btn btn-danger badge-pill" data-id="{{ section.section_id }}" style="width:80px;" data-toggle="modal" >DELETE</button>
+                                    <button href="#editSectionModal" class="edit-dialog btn btn-primary badge-pill" data-id="{{ section.sect_id }}" style="width:80px;" data-toggle="modal">EDIT</button>
+                                    <button href="#deleteSectionModal" class="delete-dialog btn btn-danger badge-pill" data-id="{{ section.sect_id }}" style="width:80px;" data-toggle="modal" >DELETE</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -110,7 +108,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                          <h5>Add New Section</h5>
-{#                        {{ wtf.quick_form(ad_sect_add_form) }}#}
+                        {{ wtf.quick_form(ad_sect_add_form) }}}
                     </div>
                 </div>
             </div>
@@ -176,6 +174,14 @@
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').toggleClass('active');
             });
+        });
+        $(document).on("click", ".edit-dialog", function () {
+            let sectionID = $(this).data('id');
+            $(".modal-footer #index").val( sectionID );
+        });
+        $(document).on("click", ".delete-dialog", function () {
+            let sectionID = $(this).data('id');
+            $(".modal-footer #index").val( sectionID );
         });
     </script>
 

@@ -121,6 +121,7 @@ class CourseForm(FlaskForm):
     course_id = StringField('Course ID', validators=[DataRequired()])
     submit = SubmitField('Add')
 
+
 class ChangePasswordForm(FlaskForm):
     password = PasswordField(
         'password',
@@ -382,30 +383,31 @@ def admin_update_course():
 @app.route('/adminsection', methods=['GET', 'POST'])
 def adminSection():
     page_template = 'adminSection.html'
-    section = Section.query.all()
+    sections = Section.query.all()
     ad_sect_add_form = SectionForm(request.form)
     if ad_sect_add_form.validate_on_submit():
-        course = Course(
+        section = Section(
             course_title=ad_sect_add_form.course_title.data,
             dept_id=ad_sect_add_form.dept_id.data,
-            section_id=ad_sect_add_form.section_id.data,
+            sect_id=ad_sect_add_form.sect_id.data,
             instructor=ad_sect_add_form.instructor.data,
             class_period=ad_sect_add_form.class_period.data,
         )
         db.session.add(section)
         db.session.commit()
         return redirect(url_for('adminSection'))
-    return render_template(page_template, ad_sect_add_form=ad_sect_add_form, sections=section)
+    return render_template(page_template, ad_sect_add_form=ad_sect_add_form, sections=sections)
+
 
 @app.route('/admin_update_section', methods=['POST'])
 def admin_update_section():
     if request.method == 'POST':
         query = request.form.get('index')
-        section = Section.query.filter_by(course_id=query).first_or_404()
+        section = Section.query.filter_by(sect_id=query).first_or_404()
         if request.form.get('edit_button'):
             section.course_title = request.form['course_title']
             section.dept_id = request.form['dept_id']
-            section.section_id = request.form['section_id']
+            section.section_id = request.form['sect_id']
             section.instructor = request.form['instructor']
             section.class_period = request.form['class_period']
             db.session.commit()
