@@ -339,7 +339,7 @@ def rootSection():
             dept_id=rt_sect_add_form.dept_id.data,
             sect_id=rt_sect_add_form.sect_id.data,
             instructor=rt_sect_add_form.instructor.data,
-            class_period=rt_sect_add_form.class_period.data,
+            class_period=rt_sect_add_form.class_period.data
         )
         db.session.add(rt_add_section)
         db.session.commit()
@@ -356,7 +356,7 @@ def adminCourse():
         course = Course(
             course_title=ad_crs_add_form.course_title.data,
             dept_id=ad_crs_add_form.dept_id.data,
-            course_id=ad_crs_add_form.course_id.data,
+            course_id=ad_crs_add_form.course_id.data
         )
         db.session.add(course)
         db.session.commit()
@@ -417,6 +417,7 @@ def admin_update_section():
             db.session.delete(section)
             db.session.commit()
             return redirect(url_for('adminSection'))
+
 
 @app.route('/studentplan')
 def studentPlanner():
