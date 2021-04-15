@@ -74,7 +74,7 @@ class Section(db.Model):
     dept_id = db.Column(db.Integer, primary_key=True)
     sect_id = db.Column(db.Integer)
     instructor = db.Column(db.String(64))
-    class_days = db.Column(db.String(64))
+    class_period = db.Column(db.String(64))
 
 
 class Course(db.Model):
@@ -115,28 +115,11 @@ class SectionForm(FlaskForm):
     submit = SubmitField('Add')
 
 
-class UpdateSectionForm(FlaskForm):
-    course_title = StringField('Course Title', validators=[DataRequired()])
-    dept_id = StringField('Department ID', validators=[DataRequired()])
-    sect_id = StringField('Section ID', validators=[DataRequired()])
-    instructor = StringField('Instructor', validators=[DataRequired()])
-    class_period = StringField('Class Period -- MWF or TR HH.MM (UTC)', validators=[DataRequired()])
-    submit = SubmitField('Update')
-
-
 class CourseForm(FlaskForm):
     course_title = StringField('Course Title', validators=[DataRequired()])
     dept_id = StringField('Department ID', validators=[DataRequired()])
     course_id = StringField('Course ID', validators=[DataRequired()])
     submit = SubmitField('Add')
-
-
-class UpdateCourseForm(FlaskForm):
-    course_title = StringField('Course Title', validators=[DataRequired()])
-    dept_id = StringField('Department ID', validators=[DataRequired()])
-    course_id = StringField('Course ID', validators=[DataRequired()])
-    submit = SubmitField('Update')
-
 
 class ChangePasswordForm(FlaskForm):
     password = PasswordField(
@@ -399,19 +382,38 @@ def admin_update_course():
 @app.route('/adminsection', methods=['GET', 'POST'])
 def adminSection():
     page_template = 'adminSection.html'
+    section = Section.query.all()
     ad_sect_add_form = SectionForm(request.form)
     if ad_sect_add_form.validate_on_submit():
-        ad_new_section = Section(
+        course = Course(
             course_title=ad_sect_add_form.course_title.data,
             dept_id=ad_sect_add_form.dept_id.data,
-            sect_id=ad_sect_add_form.sect_id.data,
+            section_id=ad_sect_add_form.section_id.data,
             instructor=ad_sect_add_form.instructor.data,
             class_period=ad_sect_add_form.class_period.data,
         )
-        db.session.add(ad_new_section)
+        db.session.add(section)
         db.session.commit()
         return redirect(url_for('adminSection'))
-    return render_template(page_template, new_admin_section_form=ad_sect_add_form)
+    return render_template(page_template, ad_sect_add_form=ad_sect_add_form, sections=section)
+
+@app.route('/admin_update_section', methods=['POST'])
+def admin_update_section():
+    if request.method == 'POST':
+        query = request.form.get('index')
+        section = Section.query.filter_by(course_id=query).first_or_404()
+        if request.form.get('edit_button'):
+            section.course_title = request.form['course_title']
+            section.dept_id = request.form['dept_id']
+            section.section_id = request.form['section_id']
+            section.instructor = request.form['instructor']
+            section.class_period = request.form['class_period']
+            db.session.commit()
+            return redirect(url_for('adminSection'))
+        if request.form.get('delete_button'):
+            db.session.delete(section)
+            db.session.commit()
+            return redirect(url_for('adminSection'))
 
 
 @app.route('/studentplan')
