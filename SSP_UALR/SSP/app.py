@@ -121,7 +121,6 @@ class CourseForm(FlaskForm):
     course_id = StringField('Course ID', validators=[DataRequired()])
     submit = SubmitField('Add')
 
-
 class ChangePasswordForm(FlaskForm):
     password = PasswordField(
         'password',
@@ -135,7 +134,6 @@ class ChangePasswordForm(FlaskForm):
             EqualTo('password', message='Passwords must match.')
         ]
     )
-
 
 # Create confirmation token
 def generate_confirmation_token(email):
@@ -344,7 +342,25 @@ def rootSection():
         db.session.add(rt_add_section)
         db.session.commit()
         return redirect(url_for('rootSection'))
-    return render_template(page_template, new_root_section_form=rt_sect_add_form, sections=sections)
+    return render_template(page_template, root_section_form=rt_sect_add_form, sections=sections)
+
+@app.route('/root_update_section', methods=['POST'])
+def root_update_section():
+    if request.method == 'POST':
+        query = request.form.get('index')
+        section = Section.query.filter_by(sect_id=query).first_or_404()
+        if request.form.get('edit_button'):
+            section.course_title = request.form['course_title']
+            section.dept_id = request.form['dept_id']
+            section.sect_id = request.form['sect_id']
+            section.instructor = request.form['instructor']
+            section.class_period = request.form['class_period']
+            db.session.commit()
+            return redirect(url_for('rootSection'))
+        if request.form.get('delete_button'):
+            db.session.delete(section)
+            db.session.commit()
+            return redirect(url_for('rootSection'))
 
 
 @app.route('/admincourse', methods=['GET', 'POST'])

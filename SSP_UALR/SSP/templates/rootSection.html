@@ -72,61 +72,49 @@
                     </button>
                 </div>
             </nav>
-            <!-- TODO: COPY FROM BELOW TO  -->
-            <div id="wrapper">
-                <h2 style="display: inline-block;">Setup Course Section</h2>
-                <button href="#addSectionModal" class="btn btn-primary badge-pill" style="display: inline-block;" data-toggle="modal">Add Section</button>
-                <div>
-
-                    <div class="container">
-                        <div class="card-body">
-                            <table class="table table-hover table-bordered">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th scope="col">Course Title</th>
-                                        <th scope="col">Department ID</th>
-                                        <th scope="col">Section ID</th>
-                                        <th scope="col">Instructor</th>
-                                        <th scope="col">Class Period</th>
-                                        <th>ACTIONS</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Course</td>
-                                        <td>Depart ID</td>
-                                        <td>Section ID</td>
-                                        <td>Instructor Name</td>
-                                        <td>MWF time-time</td>
-                                        <td>
-                                            <button href="#editSectionModal" class="btn btn-primary badge-pill" style="width:80px;" data-toggle="modal">EDIT</button>
-                                            <button href="#deleteSectionModal" class="btn btn-danger badge-pill" style="width:80px;" data-toggle="modal">DELETE</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="clearfix">
-                                <div class="hint-text">Showing <b>5</b> out of <b>100</b> entries</div>
-                                <ul class="pagination">
-                                    <li class="page-item disabled"><a href="#">Previous</a></li>
-                                    <li class="page-item"><a href="#" class="page-link">1</a></li>
-                                    <li class="page-item"><a href="#" class="page-link">2</a></li>
-                                    <li class="page-item active"><a href="#" class="page-link">3</a></li>
-                                    <li class="page-item"><a href="#" class="page-link">4</a></li>
-                                    <li class="page-item"><a href="#" class="page-link">5</a></li>
-                                    <li class="page-item"><a href="#" class="page-link">Next</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+           <div id="wrapper">
+                    <h2 style="display: inline-block;">Setup Section Catalog</h2>
+                    <button href="#addSectionModal" class="btn btn-primary badge-pill"  style="display: inline-block;" data-toggle="modal" >Add Section</button>
+            <div>
+            <div class="container">
+                <div class="card-body">
+                    <table class="table table-hover table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Course Title</th>
+                                <th scope="col">Department ID</th>
+                                <th scope="col">Section ID</th>
+                                <th scope="col">Instructor</th>
+                                <th scope="col">Class Period</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        {% for section in sections %}
+                        <tbody>
+                            <tr>
+                                <td>{{ section.course_title }}</td>
+                                <td>{{ section.dept_id }}</td>
+                                <td>{{ section.sect_id }}</td>
+                                <td>{{ section.instructor }}</td>
+                                <td>{{ section.class_period }}</td>
+                                <td>
+                                    <button href="#editSectionModal" class="edit-dialog btn btn-primary badge-pill" data-id="{{ section.sect_id }}" style="width:80px;" data-toggle="modal">EDIT</button>
+                                    <button href="#deleteSectionModal" class="delete-dialog btn btn-danger badge-pill" data-id="{{ section.sect_id }}" style="width:80px;" data-toggle="modal" >DELETE</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        {% endfor %}
+                    </table>
                 </div>
             </div>
+        </div>
+    </div>
             <!--Add Modal HTML -->
             <div id="addSectionModal" class="modal fade">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <h5>Add New Section</h5>
-                        {{ wtf.quick_form(new_root_section_form) }}
+                         <h5>Add New Section</h5>
+                        {{ wtf.quick_form(root_section_form) }}
                     </div>
                 </div>
             </div>
@@ -134,40 +122,37 @@
             <div id="editSectionModal" class="modal fade">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <form>
+                        <form action="/root_update_section" method="post">
                             <div class="modal-header">
                                 <h4 class="modal-title">Edit Section</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                             </div>
                             <div class="modal-body">
                                 <div class="form-group">
-                                    <label>Department ID</label>
-                                    <input type="text" class="form-control" required>
-                                </div>
+                                 <label>Course Title</label>
+                                <input type="text" id="course_title" name="course_title"><br>
+                                 </div>
                                 <div class="form-group">
-                                    <label>Course Title</label>
-                                    <input type="text" class="form-control" required>
+                                 <label>Department ID</label>
+                                <input type="text" id="dept_id" name="dept_id"><br>
                                 </div>
                                 <div class="form-group">
                                     <label>Section ID</label>
-                                    <input type="text" class="form-control" required>
+                                    <input type="text" id="sect_id" name="sect_id"><br>
                                 </div>
                                 <div class="form-group">
-                                    <label>Intstructor Name</label>
-                                    <input type="text" class="form-control" required>
+                                    <label>Instructor</label>
+                                    <input type="text" id="instructor" name="instructor"><br>
                                 </div>
                                 <div class="form-group">
-                                    <label>Start Time</label>
-                                    <input type="time" class="form-control" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>End Time</label>
-                                    <input type="time" class="form-control" required>
+                                    <label>Class Period -- MWF or TR HH.MM (UTC)</label>
+                                <input type="text" id="class_period" name="class_period"><br>
                                 </div>
                             </div>
                             <div class="modal-footer">
+                                <input type="hidden" id="index" name="index" value="">
                                 <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                                <input type="submit" class="btn btn-info" value="Save">
+                                <input type="submit" name="edit_button"  class="btn btn-success" value="Edit">
                             </div>
                         </form>
                     </div>
@@ -177,7 +162,7 @@
             <div id="deleteSectionModal" class="modal fade">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <form>
+                        <form action="/root_update_section" method="post">
                             <div class="modal-header">
                                 <h4 class="modal-title">Delete Section</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -187,8 +172,9 @@
                                 <p class="text-warning"><small>This action cannot be undone.</small></p>
                             </div>
                             <div class="modal-footer">
+                                <input type="hidden" id="index" name="index" value="">
                                 <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                                <input type="submit" class="btn btn-danger" value="Delete">
+                                <input type="submit" name="delete_button" class="btn btn-danger" value="Delete">
                             </div>
                         </form>
                     </div>
@@ -204,11 +190,19 @@
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
 
-    <script type="text/javascript">
+     <script type="text/javascript">
         $(document).ready(function () {
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').toggleClass('active');
             });
+        });
+        $(document).on("click", ".edit-dialog", function () {
+            let sectionID = $(this).data('id');
+            $(".modal-footer #index").val( sectionID );
+        });
+        $(document).on("click", ".delete-dialog", function () {
+            let sectionID = $(this).data('id');
+            $(".modal-footer #index").val( sectionID );
         });
     </script>
 
