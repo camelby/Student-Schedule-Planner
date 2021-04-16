@@ -82,6 +82,7 @@
                         <thead class="thead-dark">
                             <tr>
                                 <th scope="col">Course Title</th>
+                                <th scope="col">Course ID</th>
                                 <th scope="col">Department ID</th>
                                 <th scope="col">Section ID</th>
                                 <th scope="col">Instructor</th>
@@ -93,6 +94,7 @@
                         <tbody>
                             <tr>
                                 <td>{{ section.course_title }}</td>
+                                <td>{{ section.course_id }}</td>
                                 <td>{{ section.dept_id }}</td>
                                 <td>{{ section.sect_id }}</td>
                                 <td>{{ section.instructor }}</td>
@@ -132,6 +134,10 @@
                                  <label>Course Title</label>
                                 <input type="text" id="course_title" name="course_title" required><br>
                                  </div>
+                                 <div class="form-group">
+                                 <label>Course ID</label>
+                                <input type="text" id="dept_id" name="course_id" required><br>
+                                </div>
                                 <div class="form-group">
                                  <label>Department ID</label>
                                 <input type="text" id="dept_id" name="dept_id" required><br>

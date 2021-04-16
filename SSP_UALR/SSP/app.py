@@ -70,8 +70,10 @@ class User(UserMixin, db.Model):
 # Course database model
 class Section(db.Model):
     __tablename__ = 'section'
-    course_title = db.Column(db.String(64), primary_key=True)
-    dept_id = db.Column(db.Integer, primary_key=True)
+    row_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    course_title = db.Column(db.String(64))
+    course_id = db.Column(db.Integer, foreign_key=True)
+    dept_id = db.Column(db.String(64))
     sect_id = db.Column(db.Integer)
     instructor = db.Column(db.String(64))
     class_period = db.Column(db.String(64))
@@ -79,9 +81,9 @@ class Section(db.Model):
 
 class Course(db.Model):
     __tablename__ = 'course'
-    course_title = db.Column(db.String(64), primary_key=True)
-    dept_id = db.Column(db.Integer, primary_key=True)
-    course_id = db.Column(db.Integer)
+    course_title = db.Column(db.String(64))
+    dept_id = db.Column(db.String(64))
+    course_id = db.Column(db.Integer, primary_key=True)
 
 # User loader callback for Flask-Login
 @login_manager.user_loader
@@ -108,6 +110,7 @@ class LoginForm(FlaskForm):
 
 class SectionForm(FlaskForm):
     course_title = StringField('Course Title', validators=[DataRequired()])
+    course_id = StringField('Course ID', validators=[DataRequired()])
     dept_id = StringField('Department ID', validators=[DataRequired()])
     sect_id = StringField('Section ID', validators=[DataRequired()])
     instructor = StringField('Instructor', validators=[DataRequired()])
@@ -334,6 +337,7 @@ def rootSection():
     if rt_sect_add_form.validate_on_submit():
         rt_add_section = Section(
             course_title=rt_sect_add_form.course_title.data,
+            course_id=rt_sect_add_form.course_id.data,
             dept_id=rt_sect_add_form.dept_id.data,
             sect_id=rt_sect_add_form.sect_id.data,
             instructor=rt_sect_add_form.instructor.data,
@@ -351,6 +355,7 @@ def root_update_section():
         section = Section.query.filter_by(sect_id=query).first_or_404()
         if request.form.get('edit_button'):
             section.course_title = request.form['course_title']
+            section.course_id = request.form['course_id']
             section.dept_id = request.form['dept_id']
             section.sect_id = request.form['sect_id']
             section.instructor = request.form['instructor']
@@ -405,6 +410,7 @@ def adminSection():
     if ad_sect_add_form.validate_on_submit():
         section = Section(
             course_title=ad_sect_add_form.course_title.data,
+            course_id=ad_sect_add_form.course_id.data,
             dept_id=ad_sect_add_form.dept_id.data,
             sect_id=ad_sect_add_form.sect_id.data,
             instructor=ad_sect_add_form.instructor.data,
@@ -423,6 +429,7 @@ def admin_update_section():
         section = Section.query.filter_by(sect_id=query).first_or_404()
         if request.form.get('edit_button'):
             section.course_title = request.form['course_title']
+            section.course_id = request.form['course_id']
             section.dept_id = request.form['dept_id']
             section.sect_id = request.form['sect_id']
             section.instructor = request.form['instructor']
