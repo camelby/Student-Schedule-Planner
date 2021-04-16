@@ -74,7 +74,7 @@ class Section(db.Model):
     course_title = db.Column(db.String(64))
     course_id = db.Column(db.Integer, foreign_key=True)
     dept_id = db.Column(db.String(64))
-    sect_id = db.Column(db.Integer)
+    sect_id = db.Column(db.String(64))
     instructor = db.Column(db.String(64))
     class_period = db.Column(db.String(64))
 
