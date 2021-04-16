@@ -114,7 +114,7 @@ class SectionForm(FlaskForm):
     dept_id = StringField('Department ID', validators=[DataRequired()])
     sect_id = StringField('Section ID', validators=[DataRequired()])
     instructor = StringField('Instructor', validators=[DataRequired()])
-    class_period = StringField('Class Period -- MWF or TR HH.MM (UTC)', validators=[DataRequired()])
+    class_period = StringField('Class Period -- MWF or TR HH.MM - HH.MM (UTC)', validators=[DataRequired()])
     submit = SubmitField('Add')
 
 
