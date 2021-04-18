@@ -67,7 +67,40 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
 
-# Course database model
+# Student planner database model(s)
+class AddClass(db.Model):
+    __tablename__ = 'add_class'
+    user_id = db.Column(db.Integer, primary_key=True)
+    request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
+    request = db.relationship("Request", backref=db.backref("request"), uselist=False)
+
+    course_title = db.Column(db.String(64))
+    sect_id = db.Column(db.String(64))
+    class_period = db.Columnn(db.String(64))
+
+
+class AddBreak(db.Model):
+    __tablename__ = 'add_break'
+    user_id = db.Column(db.Integer, primary_key=True)
+    request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
+    request = db.relationship("Request", backref=db.backref("request"), uselist=False)
+
+    time_period = db.Columnn(db.String(64))
+
+
+class Schedule(db.Model):
+    __tablename__ = 'schedule'
+    user_id = db.Column(db.Integer, primary_key=True)
+    request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
+    request = db.relationship("Request", backref=db.backref("request"), uselist=False)
+
+    course_title = db.Column(db.String(64))
+    sect_id = db.Column(db.String(64))
+    instructor = db.Column(db.String(64))
+    class_period = db.Columnn(db.String(64))
+
+
+# Course database model(s)
 class Section(db.Model):
     __tablename__ = 'section'
     row_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
@@ -124,6 +157,16 @@ class CourseForm(FlaskForm):
     course_id = StringField('Course ID', validators=[DataRequired()])
     submit = SubmitField('Add')
 
+
+class Search(FlaskForm):
+    choices = [('Course', 'Department', 'Instructor')]
+    select = SelectField('Search by Department:', choices=choices)
+    search = StringField('')
+
+
+# class StudentCourse(FlaskForm):
+
+
 class ChangePasswordForm(FlaskForm):
     password = PasswordField(
         'password',
@@ -137,6 +180,7 @@ class ChangePasswordForm(FlaskForm):
             EqualTo('password', message='Passwords must match.')
         ]
     )
+
 
 # Create confirmation token
 def generate_confirmation_token(email):
@@ -348,6 +392,7 @@ def rootSection():
         return redirect(url_for('rootSection'))
     return render_template(page_template, root_section_form=rt_sect_add_form, sections=sections)
 
+
 @app.route('/root_update_section', methods=['POST'])
 def root_update_section():
     if request.method == 'POST':
@@ -458,6 +503,7 @@ def studentGenerate():
 def studentCurrent():
     page_template = 'studentCurrent.html'
     return render_template(page_template)
+
 
 # TODO OPTIONAL edit error handling pages to be more acceptable
 @app.errorhandler(404)
