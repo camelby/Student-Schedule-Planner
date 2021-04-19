@@ -12,6 +12,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 import os
 import datetime
+import pandas as pd
 
 
 # Set application instance
@@ -20,12 +21,17 @@ app.secret_key = os.urandom(12)
 app.config['SECURITY_PASSWORD_SALT'] = 'salty'
 bootstrap = Bootstrap(app)
 
+
 # Enable Cross-Site Request Forgery token validation
 app.config['WTF_CSRF_ENABLED'] = True
 
 # Set application configuration for database
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Set CSV file upload folder
+UPLOAD_FOLDER = 'static/files'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Email settings for verification
 mail_settings = {
@@ -216,6 +222,27 @@ def send_email(to, subject, template):
     mail.send(msg)
 
 
+# Parse CSV file on upload
+def parseCSV(file_path):
+    # CVS column names
+    col_names = ['course_title', 'course_id', 'dept_id', 'sect_id', 'instructor', 'class_period']
+    # Use Pandas to parse the CSV file
+    csv_data = pd.read_csv(file_path, names=col_names, header=None)
+    # Loop through the rows and add them to the database
+    for i, row in csv_data.iterrows():
+        section = Section(
+            course_title=csv_data.course_title[i],
+            course_id=int(csv_data.course_id[i]),
+            dept_id=int(csv_data.dept_id[i]),
+            sect_id=int(csv_data.sect_id[i]),
+            instructor=csv_data.instructor[i],
+            class_period=csv_data.class_period[i]
+        )
+        db.session.add(section)
+        db.session.commit()
+    # Delete file after use
+    os.remove(file_path)
+
 # Landing page route for SSP
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -375,6 +402,32 @@ def update_course():
             db.session.delete(course)
             db.session.commit()
             return redirect(url_for('rootCourse'))
+
+
+@app.route("/upload_file", methods=['POST'])
+def upload_files():
+    # get the uploaded file
+    uploaded_file = request.files['file']
+    if uploaded_file.filename != '':
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
+        # set the file path
+        uploaded_file.save(file_path)
+        parseCSV(file_path)
+    # save the file
+    return redirect(url_for('adminSection'))
+
+
+@app.route("/upload_file_root", methods=['POST'])
+def upload_files_root():
+    # get the uploaded file
+    uploaded_file = request.files['file']
+    if uploaded_file.filename != '':
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
+        # set the file path
+        uploaded_file.save(file_path)
+        parseCSV(file_path)
+    # save the file
+    return redirect(url_for('rootSection'))
 
 
 @app.route('/rootsection', methods=['GET', 'POST'])
