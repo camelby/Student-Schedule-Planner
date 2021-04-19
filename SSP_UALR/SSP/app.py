@@ -1,3 +1,4 @@
+# Library Imports
 from flask import Flask, render_template, flash, request, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
@@ -16,7 +17,7 @@ import datetime
 # Set application instance
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
-app.config['SECURITY_PASSWORD_SALT'] = os.urandom(12)
+app.config['SECURITY_PASSWORD_SALT'] = 'salty'
 bootstrap = Bootstrap(app)
 
 # Enable Cross-Site Request Forgery token validation
@@ -156,17 +157,19 @@ class CourseForm(FlaskForm):
     submit = SubmitField('Add')
 
 
-class Search(FlaskForm):
+class SearchForm(FlaskForm):
     choices = [('Course', 'Department', 'Instructor')]
     select = SelectField('Choose Search Filter:', choices=choices)
     search = StringField('')
 
-class Break(FlaskForm):
+
+class BreakForm(FlaskForm):
     break_name = StringField('Break Name', validators=[DataRequired()])
     break_period = StringField('Break Period', validators=[DataRequired()])
     submit = SubmitField('Add')
 
 
+# TODO OPTIONAL: Implement password recovery
 class ChangePasswordForm(FlaskForm):
     password = PasswordField(
         'password',
@@ -188,6 +191,7 @@ def generate_confirmation_token(email):
     return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
 
 
+# Set token for email confirmation and mark max age for one hour
 def confirm_token(token, expiration=3600):
     serializer = URLSafeTimedSerializer(app.secret_key)
     try:
@@ -218,8 +222,9 @@ def login():
     page_template = 'base.html'
     form = LoginForm(request.form)
     if current_user.is_authenticated:
-        # if user is logged in we get out of here
-        return redirect(url_for('studentPlanner'))
+        if current_user.access == 'STUDENT':
+            # if user is logged in we get out of here
+            return redirect(url_for('studentPlanner'))
     if form.validate_on_submit():
         # Verify if user entered correct password
         user = User.query.filter_by(email=form.email.data).first()
@@ -300,7 +305,6 @@ def confirm_email(token):
         # Once user is confirmed set confirmed to true and allow them access to application
         user.confirmed = True
         user.confirmed_on = datetime.datetime.now()
-        db.session.add(user)
         db.session.commit()
         flash('You have confirmed your account. Thanks!', 'success')
     return redirect(url_for('login'))
@@ -490,18 +494,15 @@ def admin_update_section():
 @app.route('/studentplan')
 def studentPlanner():
     page_template = 'studentPlanner.html'
-    search = Section.query.all()
-    search_form = Search(request.form)
+    # Searches takes all database rows for the section table
+    searches = Section.query.all()
+    # set search form variable to use in HTML
+    search_form = SearchForm(request.form)
     if search_form.validate_on_submit():
-        search
-    return render_template(page_template, search_form=search_form)
-
-
-
-
-
-
-
+        print('something')
+        # do something
+    # pass variables to HTML page
+    return render_template(page_template, search_form=search_form, searches=searches)
 
 
 @app.route('/studentgen')
