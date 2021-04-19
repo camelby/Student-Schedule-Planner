@@ -5,6 +5,18 @@ body {
     background: #fafafa;
 }
 
+h2 {
+    margin-bottom: 25px;
+}
+
+p input {
+    margin-left: 10px;
+    border-radius: 3px;
+    font-size: small;
+    border:none;
+    background-color: lightgrey;
+}
+
 h3 {
     font-size: 2.75em;
     text-align: center;
