@@ -70,34 +70,31 @@ class User(UserMixin, db.Model):
 # Student planner database model(s)
 class AddClass(db.Model):
     __tablename__ = 'add_class'
-    user_id = db.Column(db.Integer, primary_key=True)
-    request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
-    request = db.relationship("Request", backref=db.backref("request"), uselist=False)
-
+    user_id = db.Column(db.String(64), db.ForeignKey('users.id'), primary_key=True)
     course_title = db.Column(db.String(64))
-    sect_id = db.Column(db.String(64))
-    class_period = db.Columnn(db.String(64))
-
-
-class AddBreak(db.Model):
-    __tablename__ = 'add_break'
-    user_id = db.Column(db.Integer, primary_key=True)
-    request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
-    request = db.relationship("Request", backref=db.backref("request"), uselist=False)
-
-    time_period = db.Columnn(db.String(64))
-
-
-class Schedule(db.Model):
-    __tablename__ = 'schedule'
-    user_id = db.Column(db.Integer, primary_key=True)
-    request_id = db.Column(db.Integer, db.ForeignKey('request.id'))
-    request = db.relationship("Request", backref=db.backref("request"), uselist=False)
-
-    course_title = db.Column(db.String(64))
+    course_id = db.Column(db.Integer)
+    dept_id = db.Column(db.String(64))
     sect_id = db.Column(db.String(64))
     instructor = db.Column(db.String(64))
-    class_period = db.Columnn(db.String(64))
+    class_period = db.Column(db.String(64))
+
+
+class Break(db.Model):
+    __tablename__ = 'break'
+    user_id = db.Column(db.String(64), db.ForeignKey('users.id'), primary_key=True)
+    break_name = db.Column(db.String(64))
+    break_period = db.Column(db.String(64))
+
+
+class FinalSchedule(db.Model):
+    __tablenamme__ = 'final_schedule'
+    user_id = db.Column(db.String(64), db.ForeignKey('users.id'), primary_key=True)
+    course_title = db.Column(db.String(64))
+    course_id = db.Column(db.Integer)
+    dept_id = db.Column(db.String(64))
+    sect_id = db.Column(db.String(64))
+    instructor = db.Column(db.String(64))
+    class_period = db.Column(db.String(64))
 
 
 # Course database model(s)
@@ -105,7 +102,7 @@ class Section(db.Model):
     __tablename__ = 'section'
     row_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     course_title = db.Column(db.String(64))
-    course_id = db.Column(db.Integer, foreign_key=True)
+    course_id = db.Column(db.Integer)
     dept_id = db.Column(db.String(64))
     sect_id = db.Column(db.String(64))
     instructor = db.Column(db.String(64))
@@ -117,6 +114,7 @@ class Course(db.Model):
     course_title = db.Column(db.String(64))
     dept_id = db.Column(db.String(64))
     course_id = db.Column(db.Integer, primary_key=True)
+
 
 # User loader callback for Flask-Login
 @login_manager.user_loader
@@ -160,11 +158,9 @@ class CourseForm(FlaskForm):
 
 class Search(FlaskForm):
     choices = [('Course', 'Department', 'Instructor')]
-    select = SelectField('Search by Department:', choices=choices)
+    select = SelectField('Choose Search Filter:', choices=choices)
     search = StringField('')
 
-
-# class StudentCourse(FlaskForm):
 
 
 class ChangePasswordForm(FlaskForm):
@@ -490,7 +486,18 @@ def admin_update_section():
 @app.route('/studentplan')
 def studentPlanner():
     page_template = 'studentPlanner.html'
-    return render_template(page_template)
+    search = Section.query.all()
+    search_form = Search(request.form)
+    if search_form.validate_on_submit():
+        search
+    return render_template(page_template, search_form=search_form)
+
+
+
+
+
+
+
 
 
 @app.route('/studentgen')
