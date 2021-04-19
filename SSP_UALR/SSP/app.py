@@ -161,6 +161,10 @@ class Search(FlaskForm):
     select = SelectField('Choose Search Filter:', choices=choices)
     search = StringField('')
 
+class Break(FlaskForm):
+    break_name = StringField('Break Name', validators=[DataRequired()])
+    break_period = StringField('Break Period', validators=[DataRequired()])
+    submit = SubmitField('Add')
 
 
 class ChangePasswordForm(FlaskForm):
