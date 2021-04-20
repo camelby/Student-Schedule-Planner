@@ -27,11 +27,24 @@ div.subtitle-Heading {
 }
 
 div.break_div {
-    display: inline-block;
     float: right;
     margin-bottom: 38px;
 
 }
+
+.card-body{
+    flex: 1 1 auto;
+    padding: 1.25rem;
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.table .thead-dark th{
+    font-size: small;
+}
+
+
 
 h2 {
     -webkit-text-stroke: 1px black;
@@ -346,6 +359,59 @@ a.article:hover {
     padding-left: 30px;
     padding-bottom: 30px;
 }
+
+
+/* ---- BREAK MODAL STYLE ------------------------------ */
+
+
+h5 {
+    padding-top:25px;
+    padding-left: 20px;
+    font-weight: lighter;
+    text-align: left;
+    font-size: 1.75em;
+}
+
+.form{
+    padding: 20px;
+}
+
+.modal .modal-content {
+    border-radius: 1px;
+}
+
+.modal .form-control {
+    border-radius: 1px;
+    box-shadow: none;
+    border-color: #dddddd;
+}
+
+.modal .btn {
+    color:white;
+    border-radius: 1px;
+    min-width: 100px;
+    float:right;
+    background: #485676;
+}
+#course_title, #dept_id, #course_id{
+    display: block;
+    width: 100%;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+#editCourseModal .form-group {
+    margin-bottom:-5px;
+}
+
+
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
@@ -364,9 +430,8 @@ a.article:hover {
 ----------------------------------------------------- */
 @media (max-width: 1061px) {
     div.break_div {
-    float: none;
-}
-
+        float: none;
+    }
 }
 
 @media (max-width: 768px) {
@@ -376,8 +441,7 @@ a.article:hover {
     }
 
     .container{
-        margin-left: -15px;
-        width: 100px;
+        margin-left: -75px;
     }
     div.title-Heading {
         -webkit-text-stroke: 1.5px #485676;
