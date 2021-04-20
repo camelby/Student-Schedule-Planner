@@ -544,18 +544,36 @@ def admin_update_section():
             return redirect(url_for('adminSection'))
 
 
-@app.route('/studentplan')
+@app.route('/studentplan', methods=['GET', 'POST'])
 def studentPlanner():
     page_template = 'studentPlanner.html'
-    # Searches takes all database rows for the section table
-    searches = Section.query.all()
-    # set search form variable to use in HTML
-    search_form = SearchForm(request.form)
-    if search_form.validate_on_submit():
-        print('something')
-        # do something
-    # pass variables to HTML page
-    return render_template(page_template, search_form=search_form, searches=searches)
+    breaks = Break.query.all()
+    break_form = BreakForm(request.form)
+    if break_form.validate_on_submit():
+        add_break = Break(
+            user_id=break_form.user_id.data,
+            break_name=break_form.break_name.data,
+            break_period=break_form.break_period.data
+        )
+        db.session.add(add_break)
+        db.session.commit()
+        return redirect(url_for('studentPlanner'))
+    return render_template(page_template, break_form=break_form, breaks=breaks)
+
+@app.route('/break_update', methods=['POST'])
+def break_update():
+    if request.method == 'POST':
+        query = request.form.get('index')
+        breaks = Break.query.filter_by(break_name=query).first_or_404()
+        if request.form.get('edit_button'):
+            breaks.break_name = request.form['break_name']
+            breaks.break_period = request.form['break_period']
+            db.session.commit()
+            return redirect(url_for('studentPlanner'))
+        if request.form.get('delete_button'):
+            db.session.delete(breaks)
+            db.session.commit()
+            return redirect(url_for('studentPlanner'))
 
 
 @app.route('/studentgen')
