@@ -30,7 +30,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:/
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Set CSV file upload folder
-UPLOAD_FOLDER = 'static/files'
+UPLOAD_FOLDER = os.path.join(app.root_path, 'files')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Email settings for verification
