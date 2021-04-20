@@ -587,9 +587,6 @@ def public():
     return render_template(page_template, courses=courses)
 
 
-    return render_template(page_template)
-
-
 @app.route('/studentgen')
 def studentGenerate():
     page_template = 'studentGenerate.html'
