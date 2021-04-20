@@ -87,9 +87,9 @@ class AddClass(db.Model):
 
 
 class Break(db.Model):
-    __tablename__ = 'break'
-    user_id = db.Column(db.String(64), db.ForeignKey('users.id'), primary_key=True)
-    break_name = db.Column(db.String(64))
+    __tablename__ = 'breaks'
+    # user_id = db.Column(db.String(64), db.ForeignKey('users.id'), primary_key=True)
+    break_name = db.Column(db.String(64), primary_key=True)
     break_period = db.Column(db.String(64))
 
 
@@ -551,7 +551,7 @@ def studentPlanner():
     break_form = BreakForm(request.form)
     if break_form.validate_on_submit():
         add_break = Break(
-            user_id=break_form.user_id.data,
+            # user_id=break_form.user_id.data,
             break_name=break_form.break_name.data,
             break_period=break_form.break_period.data
         )
@@ -559,6 +559,7 @@ def studentPlanner():
         db.session.commit()
         return redirect(url_for('studentPlanner'))
     return render_template(page_template, break_form=break_form, breaks=breaks)
+
 
 @app.route('/break_update', methods=['POST'])
 def break_update():
@@ -574,6 +575,9 @@ def break_update():
             db.session.delete(breaks)
             db.session.commit()
             return redirect(url_for('studentPlanner'))
+
+
+# @app.route('/class_add', methods=['GET', 'POST'])
 
 
 @app.route('/studentgen')

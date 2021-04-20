@@ -63,17 +63,16 @@
             <div class="title-Heading">Woosamotta U</div>
             <div class="subtitle-Heading">Student Planner</div>
             <hr class="solid" style="position:relative; top:-40px;">
-            <div style="display: inline-block; padding-right: 18px; padding-bottom: 15px; margin-bottom: 38px;">
+            <div style="display: block; padding-left: 50px; padding-right: 50px; padding-bottom: 15px; margin-bottom: 38px;">
                 <h2 style="display: inline-block;">Course</h2>
                 <button href="#addCourseModal" class="btn btn-info badge-pill" style="display: inline-block; float:right;" data-toggle="modal">Add Course</button>
                 <hr class="solid">
                 <div style="margin-left:20px;">
                     <h6>Course Section</h6>
                     <p>Course Title</p>
-                    <hr class="solid">
                 </div>
             </div>
-            <div class="break_div">
+            <div class="break_div" style="padding-left: 50px; padding-right: 50px;">
                 <h2 style="display: inline-block;">Break</h2>
                 <button href="#addBreakModal" class="btn btn-info badge-pill" style="display: inline-block;  float:right;" data-toggle="modal">Add Break</button>
                 <hr class="solid">
@@ -180,7 +179,7 @@
             <div id="editBreakModal" class="modal fade">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <form action="/update_break" method="post">
+                        <form action="/break_update" method="post">
                             <div class="modal-header">
                                 <h4 class="modal-title">Edit Break</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -205,10 +204,10 @@
                 </div>
             </div>
             <!-- Break Modal HTML -->
-            <div id="deleteBreakeModal" class="modal fade">
+            <div id="deleteBreakModal" class="modal fade">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <form action="/update_break" method="post">
+                        <form action="/break_update" method="post">
                             <div class="modal-header">
                                 <h4 class="modal-title">Delete Break</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -232,28 +231,19 @@
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
 
-    <script type="text/javascript">
-         $('#deleteBreakModal').on('show', function () {
-              var id = $(this).data('id'),
-                  removeBtn = $(this).find('.danger');
-          })
-
-        $('button.btnRemove').on('click', function (e) {
-            e.preventDefault();
-            var id = $(this).closest('tr').data('id');
-            $('#deleteBreakModal').data('id', id).modal('show');
-        });
-
-        $('#btnDelteYes').click(function () {
-            var id = $('#deleteBreakModal').data('id');
-            $('[data-id=' + id + ']').remove();
-            $('#deleteSectionModal').modal('hide');
-        });
-
+        <script type="text/javascript">
         $(document).ready(function () {
-        $('#sidebarCollapse').on('click', function () {
-        $('#sidebar').toggleClass('active');
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
         });
+        $(document).on("click", ".edit-dialog", function () {
+            let breakName = $(this).data('id');
+            $(".modal-footer #index").val( breakName );
+        });
+        $(document).on("click", ".delete-dialog", function () {
+            let breakName = $(this).data('id');
+            $(".modal-footer #index").val( breakName );
         });
     </script>
 {% endblock %}

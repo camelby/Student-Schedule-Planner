@@ -26,16 +26,15 @@ div.subtitle-Heading {
     text-transform: uppercase;
 }
 
-div.break_div {
-    float: right;
-    margin-bottom: 38px;
-
+.container{
+    margin-left: auto;
+    margin-right: auto;
 }
+
 
 .card-body{
     flex: 1 1 auto;
     padding: 1.25rem;
-    width: 500px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -305,65 +304,6 @@ a.article:hover {
     MODAL STYLE
 ----------------------------------------------------- */
 
-.modal .modal-dialog {
-    max-width: 545px;
-}
-
-.modal .modal-header, .modal .modal-body, .modal .modal-footer {
-    padding: 20px 30px;
-}
-
-.modal .modal-content {
-    margin-top: 200px;
-    border-radius: 1px;
-}
-
-.modal .modal-footer {
-    background: #ecf0f1;
-    border-radius: 0 0 1px 1px;
-}
-
-.modal .modal-title {
-    display: inline-block;
-}
-
-.modal .form-control {
-    border-radius: 1px;
-    box-shadow: none;
-    border-color: #dddddd;
-}
-
-.modal textarea.form-control {
-    resize: vertical;
-}
-
-.modal .btn {
-    border-radius: 1px;
-    min-width: 100px;
-}
-
-.modal form label {
-    font-weight: normal;
-}
-
-#category_div.category_div{
-    padding-top: 30px;
-    padding-left: 30px;
-}
-#sub_category_div.sub_category_div {
-    padding-top: 10px;
-    padding-left: 30px;
-}
-#sub_category_div2.sub_category_div {
-    padding-top: 10px;
-    padding-left: 30px;
-    padding-bottom: 30px;
-}
-
-
-/* ---- BREAK MODAL STYLE ------------------------------ */
-
-
 h5 {
     padding-top:25px;
     padding-left: 20px;
@@ -393,7 +333,8 @@ h5 {
     float:right;
     background: #485676;
 }
-#course_title, #dept_id, #course_id{
+
+#break_name, #break_period {
     display: block;
     width: 100%;
     padding: .375rem .75rem;
@@ -407,7 +348,7 @@ h5 {
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
-#editCourseModal .form-group {
+#editBreakModal .form-group {
     margin-bottom:-5px;
 }
 
@@ -428,20 +369,10 @@ h5 {
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
-@media (max-width: 1061px) {
-    div.break_div {
-        float: none;
-    }
-}
-
 @media (max-width: 768px) {
     hr.solid {
         margin-top: 15px;
         border-top: 1px solid #bbb;
-    }
-
-    .container{
-        margin-left: -75px;
     }
     div.title-Heading {
         -webkit-text-stroke: 1.5px #485676;
@@ -462,10 +393,6 @@ h5 {
         font-size: 25px;
         text-align: center;
         text-transform: uppercase;
-    }
-    div.break_div {
-        margin-bottom: 38px;
-        margin-left: 0px;
     }
     h2 {
         -webkit-text-stroke: 1px black;
