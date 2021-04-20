@@ -316,7 +316,7 @@ a.article:hover {
     MEDIAQUERIES
 ----------------------------------------------------- */
 
-@media (max-width: 768px) {
+@media (max-width: 1021px){
     div.title-Heading {
         -webkit-text-stroke: 1.5px #485676;
         color: #485676;
@@ -327,6 +327,7 @@ a.article:hover {
         text-align: center;
         text-transform: uppercase;
     }
+
     div.subtitle-Heading {
         font-family: 'Roboto Condensed', sans-serif;
         position: relative;
@@ -336,6 +337,9 @@ a.article:hover {
         text-align: center;
         text-transform: uppercase;
     }
+}
+
+@media (max-width: 768px) {
     #sidebar {
         min-width: 80px;
         max-width: 80px;

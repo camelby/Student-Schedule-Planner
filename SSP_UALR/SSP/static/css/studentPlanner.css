@@ -369,8 +369,9 @@ h5 {
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
-@media (max-width: 768px) {
-    hr.solid {
+
+@media (max-width: 1021px){
+       hr.solid {
         margin-top: 15px;
         border-top: 1px solid #bbb;
     }
@@ -394,6 +395,8 @@ h5 {
         text-align: center;
         text-transform: uppercase;
     }
+}
+@media (max-width: 768px) {
     h2 {
         -webkit-text-stroke: 1px black;
         font-family: 'Proxima Nova';

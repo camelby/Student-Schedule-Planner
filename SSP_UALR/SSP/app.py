@@ -580,6 +580,16 @@ def break_update():
 # @app.route('/class_add', methods=['GET', 'POST'])
 
 
+@app.route('/all')
+def public():
+    page_template = 'public.html'
+    courses = Course.query.all()
+    return render_template(page_template, courses=courses)
+
+
+    return render_template(page_template)
+
+
 @app.route('/studentgen')
 def studentGenerate():
     page_template = 'studentGenerate.html'
