@@ -243,7 +243,7 @@ def parseCSV(file_path):
     # Delete file after use
     os.remove(file_path)
 
-# Landing page route for SSP
+# Default route and login page for PUBLIC_USER -> USER
 @app.route('/', methods=['GET', 'POST'])
 def login():
     page_template = 'base.html'
@@ -273,6 +273,7 @@ def login():
     return render_template(page_template, form=form)
 
 
+# Route for PUBLIC_USER to register as either ROOT, ADMIN, or STUDENT
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     page_template = 'registration.html'
@@ -314,6 +315,7 @@ def register():
     return render_template(page_template, form=form)
 
 
+# Route for email confirmation to verify user
 @app.route('/confirm/<token>')
 def confirm_email(token):
     # Check integrity of email token/url
@@ -333,6 +335,7 @@ def confirm_email(token):
         flash('You have confirmed your account. Thanks!', 'success')
     return redirect(url_for('login'))
 
+
 # TODO set @login_required for all routes for production
 @app.route('/root', methods=['GET', 'POST'])
 # @login_required
@@ -349,6 +352,7 @@ def rootAuth():
          #   return redirect(401)
 
 
+# POST route for root decision on privileged user requests
 @app.route('/root_auth_decision', methods=['POST'])
 def root_auth_decision():
     if request.method == 'POST':
@@ -374,6 +378,7 @@ def root_auth_decision():
             return redirect(url_for('rootAuth'))
 
 
+# Route for root to view, add, or edit courses
 @app.route('/rootcourse', methods=['GET', 'POST'])
 def rootCourse():
     page_template = 'rootCourse.html'
@@ -391,6 +396,7 @@ def rootCourse():
     return render_template(page_template, rt_crs_add_form=rt_crs_add_form, courses=courses)
 
 
+# POST route for root course update
 @app.route('/update_course', methods=['POST'])
 def update_course():
     if request.method == 'POST':
@@ -408,32 +414,25 @@ def update_course():
             return redirect(url_for('rootCourse'))
 
 
+# POST route for CSV file upload
 @app.route("/upload_file", methods=['POST'])
 def upload_files():
-    # get the uploaded file
+    # Get the uploaded file
     uploaded_file = request.files['file']
     if uploaded_file.filename != '':
+        # Set the file path
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
-        # set the file path
+        # Save the file
         uploaded_file.save(file_path)
+        # Parse the CSV file using Pandas
         parseCSV(file_path)
-    # save the file
-    return redirect(url_for('adminSection'))
+    if current_user.access == 'ADMIN':
+        return redirect(url_for('adminSection'))
+    elif current_user.access == 'ROOT':
+        return redirect(url_for('rootAuth'))
 
 
-@app.route("/upload_file_root", methods=['POST'])
-def upload_files_root():
-    # get the uploaded file
-    uploaded_file = request.files['file']
-    if uploaded_file.filename != '':
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
-        # set the file path
-        uploaded_file.save(file_path)
-        parseCSV(file_path)
-    # save the file
-    return redirect(url_for('rootSection'))
-
-
+# Route for root to view, add, or edit sections
 @app.route('/rootsection', methods=['GET', 'POST'])
 def rootSection():
     page_template = 'rootSection.html'
@@ -454,6 +453,7 @@ def rootSection():
     return render_template(page_template, root_section_form=rt_sect_add_form, sections=sections)
 
 
+# POST route for root to update sections
 @app.route('/root_update_section', methods=['POST'])
 def root_update_section():
     if request.method == 'POST':
@@ -474,9 +474,11 @@ def root_update_section():
             return redirect(url_for('rootSection'))
 
 
+# Route for admin to view, add, or change courses
 @app.route('/admincourse', methods=['GET', 'POST'])
 def adminCourse():
     page_template = 'adminCourse.html'
+    # Select all available courses
     courses = Course.query.all()
     ad_crs_add_form = CourseForm(request.form)
     if ad_crs_add_form.validate_on_submit():
@@ -491,6 +493,7 @@ def adminCourse():
     return render_template(page_template, ad_crs_add_form=ad_crs_add_form, courses=courses)
 
 
+# POST route for admin course update
 @app.route('/admin_update_course', methods=['POST'])
 def admin_update_course():
     if request.method == 'POST':
@@ -508,9 +511,11 @@ def admin_update_course():
             return redirect(url_for('adminCourse'))
 
 
+# Route for admin to view, add, or change sections
 @app.route('/adminsection', methods=['GET', 'POST'])
 def adminSection():
     page_template = 'adminSection.html'
+    # Select all routes in sections table
     sections = Section.query.all()
     ad_sect_add_form = SectionForm(request.form)
     if ad_sect_add_form.validate_on_submit():
@@ -528,6 +533,7 @@ def adminSection():
     return render_template(page_template, ad_sect_add_form=ad_sect_add_form, sections=sections)
 
 
+# POST route for admin to update sections
 @app.route('/admin_update_section', methods=['POST'])
 def admin_update_section():
     if request.method == 'POST':
@@ -547,15 +553,15 @@ def admin_update_section():
             db.session.commit()
             return redirect(url_for('adminSection'))
 
-
+# Route for student planner
 @app.route('/studentplan', methods=['GET', 'POST'])
 @login_required
 def studentPlanner():
     if current_user.is_authenticated:
         if current_user.access == 'STUDENT':
             page_template = 'studentPlanner.html'
+            # Select all of the student's breaks based on their assigned ID
             query = current_user.id
-            # Select all of current users breaks
             breaks = Break.query.filter_by(user_id=query).all()
             break_form = BreakForm(request.form)
             if break_form.validate_on_submit():
@@ -568,12 +574,9 @@ def studentPlanner():
                 db.session.commit()
                 return redirect(url_for('studentPlanner'))
             return render_template(page_template, break_form=break_form, breaks=breaks)
-        elif current_user.access == 'ROOT':
-            return redirect(url_for('rootAuth'))
-        elif current_user.access == 'ADMIN':
-            return redirect(url_for('adminCourse'))
 
 
+# POST route for updating student breaks
 @app.route('/break_update', methods=['POST'])
 def break_update():
     if request.method == 'POST':
@@ -590,9 +593,7 @@ def break_update():
             return redirect(url_for('studentPlanner'))
 
 
-# @app.route('/class_add', methods=['GET', 'POST'])
-
-
+# Route for PUBLIC_USER to view all courses
 @app.route('/all')
 def public():
     page_template = 'public.html'
@@ -600,6 +601,7 @@ def public():
     return render_template(page_template, courses=courses)
 
 
+# Route for student schedule generation
 @app.route('/studentgen')
 @login_required
 def studentGenerate():
@@ -613,6 +615,7 @@ def studentGenerate():
             return redirect(url_for('adminCourse'))
 
 
+# Route for student schedule viewer
 @app.route('/studentcur')
 def studentCurrent():
     if current_user.is_authenticated:
@@ -625,20 +628,16 @@ def studentCurrent():
             return redirect(url_for('adminCourse'))
 
 
-@app.route('/homepage')
-def homePage():
-    page_template = 'public.html'
-    return render_template(page_template)
-
-
+# User logout route
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('login'))
 
 
+# Application common error handling routes
 @app.errorhandler(401)
-def internal_server_error(error):
+def unauthorized_error(error):
     page_template = '401.html'
     return render_template(page_template, error=error)
 
@@ -658,6 +657,6 @@ def internal_server_error(error):
 # Create database if it does not exist
 db.create_all()
 
-
+# Application run on host IP address port 5000
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=4000)
+    app.run(debug=True, host='0.0.0.0', port=5000)
