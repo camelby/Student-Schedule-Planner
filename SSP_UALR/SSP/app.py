@@ -599,6 +599,13 @@ def studentCurrent():
     return render_template(page_template)
 
 
+@app.route('/homepage')
+def homePage():
+    page_template = 'public.html'
+    return render_template(page_template)
+
+
+
 # TODO OPTIONAL edit error handling pages to be more acceptable
 @app.errorhandler(404)
 def page_not_found_error(error):
