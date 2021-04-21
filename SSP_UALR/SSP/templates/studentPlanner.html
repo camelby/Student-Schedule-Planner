@@ -106,61 +106,31 @@
             </div>
         </div>
     </div>
-    <!--Add Modal HTML -->
-    <div id="addCourseModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <h5>Search Course</h5>
-
-
-{#
-                <form>
-                    <div class="modal-header">
-                        <h4 class="modal-title">Add New Course</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    </div>
-                    <div class="category_div" id="category_div">
-                        Choose Search Filter:
-                        <select name="category" class="required-entry" id="validationCustom04" onchange="javascript: filterdynamicdropdown(this.options[this.selectedIndex].value);" required>
-                            <option selected disabled value="">Select Search Filter</option>
-                            <option value="Subject">Subject</option>
-                            <option value="Instructor">Instructor</option>
-                        </select>
-                        <div class="invalid-feedback">
-                            Please select a valid Search Filter.
+ <!--Search Modal HTML -->
+<div id="addClassModal" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="/search" method="post">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Search Course</h4>
+                            <p class="modal-subhead">Search by Department</p>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         </div>
-                    </div>
-                    <div class="sub_category_div" id="sub_category_div">
-                        Please select Option:
-                        <script type="text/javascript" language="JavaScript">
-                            document.write('<select name="subcategory" class="required-entry" id="subcategory" onchange="javascript: coursedynamicdropdown(this.options[this.selectedIndex].value);" required><option value="" >...</option></select>')
-                        </script>
-                        <noscript>
-                            <select name="subcategory" id="subcategory" onchange="javascript: coursedynamicdropdown(this.options[this.selectedIndex].value);">
-                                <option selected disabled value="">...</option>
-                            </select>
-                        </noscript>
-                    </div>
-                    <div class="sub_category_div" id="sub_category_div2">
-                        Please select course:
-                        <script type="text/javascript" language="JavaScript">
-                            document.write('<select name="subcategory2" id="subcategory2"><option value="">...</option></select>')
-                        </script>
-                        <noscript>
-                            <select name="subcategory2" id="subcategory2">
-                                <option selected disabled value="">...</option>
-                            </select>
-                        </noscript>
-                    </div>
-                    <div class="modal-footer">
-                        <input type="button" class="btn btn-outline-secondary" data-dismiss="modal" value="Cancel">
-                        <input type="submit" class="btn btn-info" value="Add Course">
-                    </div>
-                </form>
-#}
+                        <div class="modal-body">
+                            <div class="form-group">
+                             <label>Enter Department ID:</label>
+                            <input type="text" id="search" name="search" required><br>
+                             </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" id="index" name="index" value="">
+                            <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                            <input type="submit" name="search_button"  class="btn btn-success" value="Search">
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
     <!--Add Break Modal HTML -->
     <div id="addBreakModal" class="modal fade">
         <div class="modal-dialog">
