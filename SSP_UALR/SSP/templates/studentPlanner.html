@@ -66,11 +66,35 @@
             <div style="display: block; padding-left: 50px; padding-right: 50px; padding-bottom: 15px; margin-bottom: 38px;">
                 <h2 style="display: inline-block;">Course</h2>
                 <button href="#addCourseModal" class="btn btn-info badge-pill" style="display: inline-block; float:right;" data-toggle="modal">Add Course</button>
-                <hr class="solid">
-                <div style="margin-left:20px;">
-                    <h6>Course Section</h6>
-                    <p>Course Title</p>
-                </div>
+                <table class="table table-hover table-bordered">
+                        <thead class="table-primary">
+                            <tr>
+                                <th scope="col">Course Title</th>
+                                <th scope="col">Course ID</th>
+                                <th scope="col">Department ID</th>
+                                <th scope="col">Section ID</th>
+                                <th scope="col">Instructor</th>
+                                <th scope="col">Class Period</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        {% for section in sections %}
+                        <tbody>
+                            <tr>
+                                <td>{{ section.course_title }}</td>
+                                <td>{{ section.course_id }}</td>
+                                <td>{{ section.dept_id }}</td>
+                                <td>{{ section.sect_id }}</td>
+                                <td>{{ section.instructor }}</td>
+                                <td>{{ section.class_period }}</td>
+                                <td>
+                                    <button href="#editSectionModal" class="edit-dialog btn btn-primary badge-pill" data-id="{{ section.sect_id }}" style="width:80px;" data-toggle="modal">EDIT</button>
+                                    <button href="#deleteSectionModal" class="delete-dialog btn btn-danger badge-pill" data-id="{{ section.sect_id }}" style="width:80px;" data-toggle="modal" >DELETE</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        {% endfor %}
+                    </table>
             </div>
             <div class="break_div" style="padding-left: 50px; padding-right: 50px;">
                 <h2 style="display: inline-block;">Break</h2>
@@ -80,7 +104,7 @@
                                 <div class="container">
                 <div class="card-body">
                     <table class="table table-hover table-bordered">
-                        <thead class="thead-dark">
+                        <thead class="table-primary">
                             <tr>
                                 <th scope="col">Break Name</th>
                                 <th scope="col">Break Period</th>
