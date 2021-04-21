@@ -335,11 +335,18 @@ def confirm_email(token):
 
 # TODO set @login_required for all routes for production
 @app.route('/root', methods=['GET', 'POST'])
+# @login_required
 def rootAuth():
-    page_template = 'rootAuth.html'
-    # Query all users in database to be used in Jinja2
-    users = User.query.all()
-    return render_template(page_template, users=users)
+    # if current_user.is_authenticated:
+        # if current_user.access == 'ROOT':
+            page_template = 'rootAuth.html'
+            # Query all users in database to be used in Jinja2
+            users = User.query.all()
+            return render_template(page_template, users=users)
+        #elif current_user.access == 'ADMIN':
+          #  return redirect(401)
+       # elif current_user.access == 'STUDENT':
+         #   return redirect(401)
 
 
 @app.route('/root_auth_decision', methods=['POST'])
@@ -629,7 +636,13 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-# TODO OPTIONAL edit error handling pages to be more acceptable
+
+@app.errorhandler(401)
+def internal_server_error(error):
+    page_template = '401.html'
+    return render_template(page_template, error=error)
+
+
 @app.errorhandler(404)
 def page_not_found_error(error):
     page_template = '404.html'

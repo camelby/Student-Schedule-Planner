@@ -1,4 +1,4 @@
-{% block title %}<title>404 Error</title>{% endblock %}
+{% block title %}<title>401 Error</title>{% endblock %}
 
 {% block header %}
 	<meta charset="utf-8">
@@ -26,11 +26,14 @@
 	<div id="error_code">
 		<div class="error_code">
 			<div class="error_code_40">
-				<h1>404</h1>
+				<h1>401</h1>
 			</div>
-			<h2>Oops! Nothing was found</h2>
-			<p>The page you are looking for might have been removed had its name changed or is temporarily unavailable. <a href="{{url_for('login')}}">Return to homepage</a></p>
-
+			<h2>Unauthorized</h2>
+			<p>The server could not verify that you are authorized to access the URL requested.
+				You either supplied the wrong credentials (e.g. a bad password), or your browser
+				doesn't understand how to supply the credentials required.
+				<a href="{{url_for('login')}}">Return to homepage</a>
+			</p>
 		</div>
 	</div>
 {% endblock %}
