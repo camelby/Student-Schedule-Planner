@@ -28,8 +28,8 @@
           		<img class="img-responsive img-rounded" src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg" alt="User picture">
        	        </div>
                 <div class="user-info">
-          		<span class="user-name">Jhon Smith</span>
-          		<span class="user-role">Administrator</span>
+          		<span class="user-name">{{current_user.username}}</span>
+          		<span class="user-role">{{current_user.access}}</span>
                 </div>
             </div>
 
@@ -47,7 +47,7 @@
                             <a href="{{ url_for('adminSection') }}">Section</a>
                         </li>
                     </ul>
-                    <a href="#">
+                    <a href="{{ url_for('logout') }}">
                         <i class="fas fa-sign-out-alt"></i>
                         Sign Out
                     </a>

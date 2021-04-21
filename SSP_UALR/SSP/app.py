@@ -88,7 +88,7 @@ class AddClass(db.Model):
 
 class Break(db.Model):
     __tablename__ = 'breaks'
-    # user_id = db.Column(db.String(64), db.ForeignKey('users.id'), primary_key=True)
+    user_id = db.Column(db.String(64), db.ForeignKey('users.id'), primary_key=True)
     break_name = db.Column(db.String(64), primary_key=True)
     break_period = db.Column(db.String(64))
 
@@ -263,15 +263,12 @@ def login():
             flash('Please confirm your email.')
         if user.access == 'STUDENT' and user.confirmed is True:
             login_user(user)
-            flash('You are now logged in!')
             return redirect(url_for('studentPlanner'))
         elif user.access == 'ADMIN' and user.confirmed is True:
             login_user(user)
-            flash('You are now logged in!')
             return redirect(url_for('adminCourse'))
         elif user.access == 'ROOT' and user.confirmed is True:
             login_user(user)
-            flash('You are now logged in!')
             return redirect(url_for('rootAuth'))
     return render_template(page_template, form=form)
 
@@ -545,20 +542,29 @@ def admin_update_section():
 
 
 @app.route('/studentplan', methods=['GET', 'POST'])
+@login_required
 def studentPlanner():
-    page_template = 'studentPlanner.html'
-    breaks = Break.query.all()
-    break_form = BreakForm(request.form)
-    if break_form.validate_on_submit():
-        add_break = Break(
-            # user_id=break_form.user_id.data,
-            break_name=break_form.break_name.data,
-            break_period=break_form.break_period.data
-        )
-        db.session.add(add_break)
-        db.session.commit()
-        return redirect(url_for('studentPlanner'))
-    return render_template(page_template, break_form=break_form, breaks=breaks)
+    if current_user.is_authenticated:
+        if current_user.access == 'STUDENT':
+            page_template = 'studentPlanner.html'
+            query = current_user.id
+            # Select all of current users breaks
+            breaks = Break.query.filter_by(user_id=query).all()
+            break_form = BreakForm(request.form)
+            if break_form.validate_on_submit():
+                add_break = Break(
+                    user_id=current_user.id,
+                    break_name=break_form.break_name.data,
+                    break_period=break_form.break_period.data
+                )
+                db.session.add(add_break)
+                db.session.commit()
+                return redirect(url_for('studentPlanner'))
+            return render_template(page_template, break_form=break_form, breaks=breaks)
+        elif current_user.access == 'ROOT':
+            return redirect(url_for('rootAuth'))
+        elif current_user.access == 'ADMIN':
+            return redirect(url_for('adminCourse'))
 
 
 @app.route('/break_update', methods=['POST'])
@@ -588,15 +594,28 @@ def public():
 
 
 @app.route('/studentgen')
+@login_required
 def studentGenerate():
-    page_template = 'studentGenerate.html'
-    return render_template(page_template)
+    if current_user.is_authenticated:
+        if current_user.access == 'STUDENT':
+            page_template = 'studentGenerate.html'
+            return render_template(page_template)
+        elif current_user.access == 'ROOT':
+            return redirect(url_for('rootAuth'))
+        elif current_user.access == 'ADMIN':
+            return redirect(url_for('adminCourse'))
 
 
 @app.route('/studentcur')
 def studentCurrent():
-    page_template = 'studentCurrent.html'
-    return render_template(page_template)
+    if current_user.is_authenticated:
+        if current_user.access == 'STUDENT':
+            page_template = 'studentCurrent.html'
+            return render_template(page_template)
+        elif current_user.access == 'ROOT':
+            return redirect(url_for('rootAuth'))
+        elif current_user.access == 'ADMIN':
+            return redirect(url_for('adminCourse'))
 
 
 @app.route('/homepage')
@@ -605,6 +624,10 @@ def homePage():
     return render_template(page_template)
 
 
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
 
 # TODO OPTIONAL edit error handling pages to be more acceptable
 @app.errorhandler(404)

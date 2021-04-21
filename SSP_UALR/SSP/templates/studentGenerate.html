@@ -33,8 +33,8 @@
           		<img class="img-responsive img-rounded" src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg" alt="User picture">
        	        </div>
                 <div class="user-info">
-          		<span class="user-name">Jhon Smith</span>
-          		<span class="user-role">Student</span>
+          		<span class="user-name">{{current_user.username}}</span>
+          		<span class="user-role">{{current_user.access}}</span>
                 </div>
             </div>
             <ul class="list-unstyled components">
@@ -46,7 +46,7 @@
                         Generate Schedule</a>
                     <a href="{{ url_for('studentCurrent') }}"><i class="fas fa-calendar-alt"></i>
                         Current Schedule</a>
-                    <a href="#">
+                    <a href="{{ url_for('logout') }}">
                         <i class="fas fa-sign-out-alt"></i>
                         Sign Out
                     </a>
