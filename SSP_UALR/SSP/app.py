@@ -580,6 +580,7 @@ def studentPlanner():
                 )
                 db.session.add(add_break)
                 db.session.commit()
+                flash('Break was successfully Added')
                 return redirect(url_for('studentPlanner'))
             return render_template(page_template, break_form=break_form, breaks=breaks)
 
@@ -593,11 +594,13 @@ def break_update():
         if request.form.get('edit_button'):
             breaks.break_name = request.form['break_name']
             breaks.break_period = request.form['break_period']
+            flash('Break was successfully edited')
             db.session.commit()
             return redirect(url_for('studentPlanner'))
         if request.form.get('delete_button'):
             db.session.delete(breaks)
             db.session.commit()
+            flash('Break was successfully deleted')
             return redirect(url_for('studentPlanner'))
 
 
