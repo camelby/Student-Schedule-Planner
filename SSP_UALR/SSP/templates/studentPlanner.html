@@ -17,6 +17,15 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/studentPlanner.css') }}" media="screen">
 {% endblock %}
 {% block page_content %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
   <div class="wrapper">
         <!-- Sidebar  -->
         <nav id="sidebar">
@@ -39,7 +48,7 @@
                     <a href="{{ url_for('studentPlanner') }}"> <i class="fas fa-clock"></i>
                         Plan Schedule</a>
                     <a href="{{ url_for('studentGenerate') }}">
-                         <i class="fas fa-clock"></i>
+                         <i class="fas fa-sync"></i>
                         Generate Schedule</a>
                     <a href="{{ url_for('studentCurrent') }}"><i class="fas fa-calendar-alt"></i>
                         Current Schedule</a>

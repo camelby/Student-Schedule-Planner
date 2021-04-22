@@ -565,6 +565,14 @@ def studentPlanner():
             breaks = Break.query.filter_by(user_id=query).all()
             break_form = BreakForm(request.form)
             if break_form.validate_on_submit():
+                check_break_name = Break.query.filter_by(break_name=break_form.break_name.data).first()
+                if check_break_name is not None:
+                    flash('break_name already exists.')
+                    return redirect(url_for('studentPlanner'))
+                check_break_period = Break.query.filter_by(break_period=break_form.break_period.data).first()
+                if check_break_period is not None:
+                    flash('break_period already exists.')
+                    return redirect(url_for('studentPlanner'))
                 add_break = Break(
                     user_id=current_user.id,
                     break_name=break_form.break_name.data,
