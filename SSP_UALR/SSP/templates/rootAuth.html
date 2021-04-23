@@ -4,7 +4,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Root Homepage</title>
 
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
@@ -29,7 +28,7 @@
           		<img class="img-responsive img-rounded" src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg" alt="User picture">
        	        </div>
                 <div class="user-info">
-          		<span class="user-name">{{current_user.username}}</span>
+          		<span class="user-name">{{current_user.first_name}} {{current_user.last_name}}</span>
           		<span class="user-role">{{current_user.access }}</span>
                 </div>
             </div>
@@ -45,10 +44,10 @@
                     </a>
                     <ul class="collapse list-unstyled" id="pageSubmenu">
                         <li>
-                            <a href="{{ url_for('rootCourse') }}">Course</a>
+                            <a href="{{ url_for('course_catalog') }}">Course</a>
                         </li>
                         <li>
-                            <a href="{{ url_for('rootSection') }}">Section</a>
+                            <a href="{{ url_for('sections_catalog') }}">Section</a>
                         </li>
                     </ul>
                     <a href="{{ url_for('logout') }}">
@@ -72,10 +71,18 @@
                 <div>
                     <div class="container">
                         <div class="card-body">
+                            {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                            {% for category, message in messages %}
+                            <div class="alert {{category}}" role="alert"> {{ message }} </div>
+                            {% endfor %}
+                            {% endif %}
+                            {% endwith %}
                             <table class="table table-hover table-bordered">
                                 <thead class="table-primary">
                                     <tr>
-                                        <th scope="col">Username</th>
+                                        <th scope="col">First Name</th>
+                                        <th scope="col">Last Name</th>
                                         <th scope="col">Email</th>
                                         <th scope="col">Access Level</th>
                                         <th>ACTIONS</th>
@@ -84,12 +91,13 @@
                                 {% for user in users if (user.access == 'ROOT' or user.access == 'ADMIN') and user.confirmed == false %}
                                 <tbody>
                                     <tr>
-                                        <td>{{ user.username }}</td>
+                                        <td>{{ user.first_name }}</td>
+                                        <td>{{ user.last_name }}</td>
                                         <td>{{ user.email }}</td>
                                         <td>{{ user.access }}</td>
                                         <td>
-                                            <button href="#acceptRequestModal" class="accept-dialog btn btn-primary badge-pill" style="width:80px;" data-id="{{ user.username }}" data-toggle="modal">ACCEPT</button>
-                                            <button href="#denyRequestModal" class="deny-dialog btn btn-danger badge-pill" style="width:80px;" data-id="{{ user.username }}" data-toggle="modal">DENY</button>
+                                            <button href="#acceptRequestModal" class="accept-dialog btn btn-primary badge-pill" style="width:80px;" data-id="{{ user.email }}" data-toggle="modal">ACCEPT</button>
+                                            <button href="#denyRequestModal" class="deny-dialog btn btn-danger badge-pill" style="width:80px;" data-id="{{ user.email }}" data-toggle="modal">DENY</button>
                                         </td>
                                     </tr>
                                 </tbody>

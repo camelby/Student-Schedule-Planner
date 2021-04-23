@@ -7,15 +7,7 @@
     <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i">
 {% endblock %}
 {% block page_content %}
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
+
     <section class="u-align-left u-clearfix u-image u-shading u-section-1" id="sec-93e4" data-image-width="1920" data-image-height="1080">
             <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-xl u-sheet-1">
                 <div class="u-clearfix u-expanded-width-lg u-expanded-width-xl u-layout-wrap u-layout-wrap-1">
@@ -26,8 +18,14 @@
                                     <div class="u-container-style u-grey-10 u-group u-opacity u-opacity-95 u-radius-27 u-shape-round u-group-1">
                                         <div class="u-container-layout u-container-layout-2">
                                             <h2>LOGIN</h2>
-                                            <!-- Need this block -->
                                             {{ wtf.quick_form(form) }}
+                                            {% with messages = get_flashed_messages(with_categories=true) %}
+                                            {% if messages %}
+                                            {% for category, message in messages %}
+                                            <div class="alert {{category}}" role="alert"> {{ message }} </div>
+                                            {% endfor %}
+                                            {% endif %}
+                                            {% endwith %}
                                             <p>No account? &emsp; &emsp;
                                                 <a href="{{ url_for('register') }}" >Sign Up Here</a>
                                                 </p>

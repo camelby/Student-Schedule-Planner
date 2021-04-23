@@ -1,11 +1,9 @@
 {% import "bootstrap/wtf.html" as wtf %}
-{% block title %}<title>Root | Course Catalog</title>{% endblock %}
+{% block title %}<title>Course Catalog</title>{% endblock %}
 {% block header %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-    <title>Root Homepage</title>
 
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
@@ -14,7 +12,7 @@
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/rootCourse.css') }}" media="screen">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/course_catalog.css') }}" media="screen">
 {% endblock %}
 {% block page_content %}
     <div class="wrapper">
@@ -30,26 +28,29 @@
                 <img class="img-responsive img-rounded" src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg" alt="User picture">
        	        </div>
                 <div class="user-info">
-          		<span class="user-name">{{current_user.username}}</span>
+          		<span class="user-name">{{current_user.first_name}} {{current_user.last_name}}</span>
           		<span class="user-role">{{current_user.access}}</span>
                 </div>
             </div>
+
             <ul class="list-unstyled components">
                 <li class="active">
+                    {% if current_user.access == 'ROOT' %}
                     <a href="{{ url_for('rootAuth') }}">
                         <i class="fas fa-user-plus"></i>
                         User Authentication
                     </a>
+                    {% endif %}
                     <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                         <i class="fas fa-file-alt"></i>
                         Setup Catalog
                     </a>
                     <ul class="collapse list-unstyled" id="pageSubmenu">
                         <li>
-                            <a href="{{ url_for('rootCourse') }}">Course</a>
+                            <a href="{{ url_for('course_catalog') }}">Course</a>
                         </li>
                         <li>
-                            <a href="{{ url_for('rootSection') }}">Section</a>
+                            <a href="{{ url_for('sections_catalog') }}">Section</a>
                         </li>
                     </ul>
                     <a href="{{ url_for('logout') }}">
@@ -78,6 +79,13 @@
             <div>
             <div class="container">
                 <div class="card-body">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert {{category}}" role="alert"> {{ message }} </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
                     <table class="table table-hover table-bordered">
                         <thead class="table-primary">
                             <tr>

@@ -55,8 +55,9 @@ db = SQLAlchemy(app)
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), index=True)
-    email = db.Column(db.String(64))
+    email = db.Column(db.String(64), index=True)
+    first_name = db.Column(db.String(64))
+    last_name = db.Column(db.String(64))
     access = db.Column(db.String(64))
     password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
@@ -131,12 +132,13 @@ def load_user(user_id):
 
 # WTF flask forms
 class RegisterForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(1, 64)])
+    first_name = StringField('First Name', validators=[DataRequired(), Length(1, 64)])
+    last_name = StringField('Last Name', validators=[DataRequired(), Length(1, 64)])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     password_again = PasswordField('Confirm Password',
                                    validators=[DataRequired(), EqualTo('password')])
-    access = SelectField('Access', choices=[('STUDENT', 'STUDENT'), ('ROOT', 'ROOT'), ('ADMIN', 'ADMIN')])
+    access = SelectField('Access Level', choices=[('STUDENT', 'STUDENT'), ('ROOT', 'ROOT'), ('ADMIN', 'ADMIN')])
     submit = SubmitField('Register')
 
 
@@ -256,17 +258,17 @@ def login():
         # Verify if user entered correct password
         user = User.query.filter_by(email=form.email.data).first()
         if user is None or not user.verify_password(form.password.data):
-            flash('Invalid username or password.')
+            flash('Invalid username or password.', 'alert-danger')
             return redirect(url_for('login'))
         # Check user access level and if user is confirmed before logging in
         if user.confirmed is False:
-            flash('Please confirm your email.')
+            flash('Please confirm your email.' 'alert-warning')
         if user.access == 'STUDENT' and user.confirmed is True:
             login_user(user)
             return redirect(url_for('studentPlanner'))
         elif user.access == 'ADMIN' and user.confirmed is True:
             login_user(user)
-            return redirect(url_for('adminCourse'))
+            return redirect(url_for('course_catalog'))
         elif user.access == 'ROOT' and user.confirmed is True:
             login_user(user)
             return redirect(url_for('rootAuth'))
@@ -280,17 +282,15 @@ def register():
     form = RegisterForm(request.form)
     if form.validate_on_submit():
         # Check if username or email are already registered
-        user = User.query.filter_by(username=form.username.data).first()
-        if user is not None:
-            flash('Username already exists.')
-            return redirect(url_for('register'))
         user = User.query.filter_by(email=form.email.data).first()
         if user is not None:
-            flash('Email already exists.')
+            flash('The email address you have entered already exists. Please login or use another email address.',
+                  'alert-danger')
             return redirect(url_for('register'))
         # Add user into database
         user = User(
-            username=form.username.data,
+            first_name=form.first_name.data,
+            last_name=form.last_name.data,
             email=form.email.data,
             password=form.password.data,
             access=form.access.data,
@@ -303,12 +303,12 @@ def register():
         confirm_url = url_for('confirm_email', token=token, _external=True)
         # Send confirmation request to students and notification email to root or admin
         if user.access == 'STUDENT':
-            html = render_template('activate.html', confirm_url=confirm_url)
+            html = render_template('activate.html', confirm_url=confirm_url, first_name=user.first_name)
             subject = "Please confirm your email"
             send_email(user.email, subject, html)
         elif user.access == 'ADMIN' or user.access == 'ROOT':
-            html = render_template('activateRoot.html')
-            subject = "Your privileged request has be received"
+            html = render_template('activateRoot.html', first_name=user.first_name)
+            subject = "Your privileged request has been received"
             send_email(user.email, subject, html)
         return redirect(url_for('login'))
 
@@ -322,21 +322,21 @@ def confirm_email(token):
     try:
         email = confirm_token(token)
     except token.DoesNotExist:
-        flash('The confirmation link is invalid or has expired.', 'danger')
+        flash('The confirmation link is invalid or has expired.', 'alert-danger')
     # Check if user has already confirmed
     user = User.query.filter_by(email=email).first_or_404()
     if user.confirmed:
-        flash('Account already confirmed. Please login.', 'success')
+        flash('Account already confirmed. Please login.', 'alert-success')
     else:
         # Once user is confirmed set confirmed to true and allow them access to application
         user.confirmed = True
         user.confirmed_on = datetime.datetime.now()
         db.session.commit()
-        flash('You have confirmed your account. Thanks!', 'success')
+        flash('Your account is now confirmed ', 'alert-success')
     return redirect(url_for('login'))
 
 
-# TODO set @login_required for all routes for production
+# TODO set @login_required for all routes for root auth
 @app.route('/root', methods=['GET', 'POST'])
 # @login_required
 def rootAuth():
@@ -357,201 +357,152 @@ def rootAuth():
 def root_auth_decision():
     if request.method == 'POST':
         query = request.form.get('index')
-        user = User.query.filter_by(username=query).first_or_404()
+        user = User.query.filter_by(email=query).first_or_404()
         if request.form.get('accept_button'):
             # Confirm and send notification email
             user.confirmed = True
             user.confirmed_on = datetime.datetime.now()
-            html = render_template('approveRoot.html')
-            subject = "Your privileged request has be approved"
+            # Generate confirmation token and url
+            html = render_template('approveRoot.html', first_name=user.first_name)
+            subject = "Your privileged request has been approved"
             send_email(user.email, subject, html)
             db.session.add(user)
             db.session.commit()
+            flash('User request has been approved', 'alert-success')
             return redirect(url_for('rootAuth'))
         if request.form.get('deny_button'):
             # Send user a message then yeet them
-            html = render_template('denyRoot.html')
-            subject = "Your privileged request has be denied"
+            html = render_template('denyRoot.html', first_name=user.first_name)
+            subject = "Your privileged request has been denied"
             send_email(user.email, subject, html)
             db.session.delete(user)
             db.session.commit()
+            flash('User request has been denied', 'alert-danger')
             return redirect(url_for('rootAuth'))
 
 
-# Route for root to view, add, or edit courses
-@app.route('/rootcourse', methods=['GET', 'POST'])
-def rootCourse():
-    page_template = 'rootCourse.html'
-    courses = Course.query.all()
-    rt_crs_add_form = CourseForm(request.form)
-    if rt_crs_add_form.validate_on_submit():
-        course = Course(
-            course_title=rt_crs_add_form.course_title.data,
-            dept_id=rt_crs_add_form.dept_id.data,
-            course_id=rt_crs_add_form.course_id.data
-        )
-        db.session.add(course)
-        db.session.commit()
-        return redirect(url_for('rootCourse'))
-    return render_template(page_template, rt_crs_add_form=rt_crs_add_form, courses=courses)
+# Route for root or admin to view, add, or edit courses
+@app.route('/courses', methods=['GET', 'POST'])
+@login_required
+def course_catalog():
+    if current_user.is_authenticated:
+        if current_user.access == 'ROOT' or current_user.access == 'ADMIN':
+            page_template = 'course_catalog.html'
+            courses = Course.query.all()
+            rt_crs_add_form = CourseForm(request.form)
+            if rt_crs_add_form.validate_on_submit():
+                course_query = Section.query.filter_by(sect_id=rt_crs_add_form.course_id.data).first()
+                if course_query is not None:
+                    flash('Course already exists!', 'alert-danger')
+                else:
+                    course = Course(
+                        course_title=rt_crs_add_form.course_title.data,
+                        dept_id=rt_crs_add_form.dept_id.data,
+                        course_id=rt_crs_add_form.course_id.data
+                    )
+                    db.session.add(course)
+                    db.session.commit()
+                    flash('Course successfully added!', 'alert-success')
+                return redirect(url_for('course_catalog'))
+            return render_template(page_template, rt_crs_add_form=rt_crs_add_form, courses=courses)
 
 
 # POST route for root course update
 @app.route('/update_course', methods=['POST'])
+@login_required
 def update_course():
-    if request.method == 'POST':
-        query = request.form.get('index')
-        course = Course.query.filter_by(course_id=query).first_or_404()
-        if request.form.get('edit_button'):
-            course.course_title = request.form['course_title']
-            course.dept_id = request.form['dept_id']
-            course.course_id = request.form['course_id']
-            db.session.commit()
-            return redirect(url_for('rootCourse'))
-        if request.form.get('delete_button'):
-            db.session.delete(course)
-            db.session.commit()
-            return redirect(url_for('rootCourse'))
+    if current_user.is_authenticated:
+        if current_user.access == 'ROOT' or current_user.access == 'ADMIN':
+            if request.method == 'POST':
+                query = request.form.get('index')
+                course = Course.query.filter_by(course_id=query).first_or_404()
+                if request.form.get('edit_button'):
+                    course.course_title = request.form['course_title']
+                    course.dept_id = request.form['dept_id']
+                    course.course_id = request.form['course_id']
+                    db.session.commit()
+                    flash('Course successfully edited!', 'alert-success')
+                    return redirect(url_for('course_catalog'))
+                if request.form.get('delete_button'):
+                    db.session.delete(course)
+                    db.session.commit()
+                    flash('Course deleted!', 'alert-danger')
+                    return redirect(url_for('course_catalog'))
 
 
 # POST route for CSV file upload
 @app.route("/upload_file", methods=['POST'])
+@login_required
 def upload_files():
-    # Get the uploaded file
-    uploaded_file = request.files['file']
-    if uploaded_file.filename != '':
-        # Set the file path
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
-        # Save the file
-        uploaded_file.save(file_path)
-        # Parse the CSV file using Pandas
-        parseCSV(file_path)
-    if current_user.access == 'ADMIN':
-        return redirect(url_for('adminSection'))
-    elif current_user.access == 'ROOT':
-        return redirect(url_for('rootAuth'))
+    if current_user.is_authenticated:
+        if current_user.access == 'ROOT' or current_user.access == 'ADMIN':
+            # Get the uploaded file
+            uploaded_file = request.files['file']
+            if uploaded_file.filename != '':
+                # Set the file path
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
+                # Save the file
+                uploaded_file.save(file_path)
+                # Parse the CSV file using Pandas
+                parseCSV(file_path)
+                flash('File imported successfully!', 'alert-success')
+                return redirect(url_for('sections_catalog'))
 
 
-# Route for root to view, add, or edit sections
-@app.route('/rootsection', methods=['GET', 'POST'])
-def rootSection():
-    page_template = 'rootSection.html'
-    sections = Section.query.all()
-    rt_sect_add_form = SectionForm(request.form)
-    if rt_sect_add_form.validate_on_submit():
-        rt_add_section = Section(
-            course_title=rt_sect_add_form.course_title.data,
-            course_id=rt_sect_add_form.course_id.data,
-            dept_id=rt_sect_add_form.dept_id.data,
-            sect_id=rt_sect_add_form.sect_id.data,
-            instructor=rt_sect_add_form.instructor.data,
-            class_period=rt_sect_add_form.class_period.data
-        )
-        db.session.add(rt_add_section)
-        db.session.commit()
-        return redirect(url_for('rootSection'))
-    return render_template(page_template, root_section_form=rt_sect_add_form, sections=sections)
+# Route for root or admin to view, add, or edit sections
+@app.route('/sections', methods=['GET', 'POST'])
+@login_required
+def sections_catalog():
+    if current_user.is_authenticated:
+        if current_user.access == 'ROOT' or current_user.access == 'ADMIN':
+            page_template = 'section_catalog.html'
+            sections = Section.query.all()
+            rt_sect_add_form = SectionForm(request.form)
+            if rt_sect_add_form.validate_on_submit():
+                section = Section.query.filter_by(sect_id=rt_sect_add_form.sect_id.data).first()
+                if section is not None:
+                    flash('Section already exists!', 'alert-danger')
+                else:
+                    rt_add_section = Section(
+                        course_title=rt_sect_add_form.course_title.data,
+                        course_id=rt_sect_add_form.course_id.data,
+                        dept_id=rt_sect_add_form.dept_id.data,
+                        sect_id=rt_sect_add_form.sect_id.data,
+                        instructor=rt_sect_add_form.instructor.data,
+                        class_period=rt_sect_add_form.class_period.data
+                    )
+                    db.session.add(rt_add_section)
+                    db.session.commit()
+                    flash('Section successfully added!', 'alert-success')
+                return redirect(url_for('sections_catalog'))
+            return render_template(page_template, root_section_form=rt_sect_add_form, sections=sections)
 
 
-# POST route for root to update sections
-@app.route('/root_update_section', methods=['POST'])
-def root_update_section():
-    if request.method == 'POST':
-        query = request.form.get('index')
-        section = Section.query.filter_by(sect_id=query).first_or_404()
-        if request.form.get('edit_button'):
-            section.course_title = request.form['course_title']
-            section.course_id = request.form['course_id']
-            section.dept_id = request.form['dept_id']
-            section.sect_id = request.form['sect_id']
-            section.instructor = request.form['instructor']
-            section.class_period = request.form['class_period']
-            db.session.commit()
-            return redirect(url_for('rootSection'))
-        if request.form.get('delete_button'):
-            db.session.delete(section)
-            db.session.commit()
-            return redirect(url_for('rootSection'))
+# POST route for root or admin to update sections
+@app.route('/update_section', methods=['POST'])
+@login_required
+def update_section():
+    if current_user.is_authenticated:
+        if current_user.access == 'ROOT' or current_user.access == 'ADMIN':
+            if request.method == 'POST':
+                query = request.form.get('index')
+                section = Section.query.filter_by(sect_id=query).first_or_404()
+                if request.form.get('edit_button'):
+                    section.course_title = request.form['course_title']
+                    section.course_id = request.form['course_id']
+                    section.dept_id = request.form['dept_id']
+                    section.sect_id = request.form['sect_id']
+                    section.instructor = request.form['instructor']
+                    section.class_period = request.form['class_period']
+                    db.session.commit()
+                    flash('Section successfully edited!', 'alert-success')
+                    return redirect(url_for('sections_catalog'))
+                if request.form.get('delete_button'):
+                    db.session.delete(section)
+                    db.session.commit()
+                    flash('Section deleted!', 'alert-danger')
+                    return redirect(url_for('sections_catalog'))
 
-
-# Route for admin to view, add, or change courses
-@app.route('/admincourse', methods=['GET', 'POST'])
-def adminCourse():
-    page_template = 'adminCourse.html'
-    # Select all available courses
-    courses = Course.query.all()
-    ad_crs_add_form = CourseForm(request.form)
-    if ad_crs_add_form.validate_on_submit():
-        course = Course(
-            course_title=ad_crs_add_form.course_title.data,
-            dept_id=ad_crs_add_form.dept_id.data,
-            course_id=ad_crs_add_form.course_id.data
-        )
-        db.session.add(course)
-        db.session.commit()
-        return redirect(url_for('adminCourse'))
-    return render_template(page_template, ad_crs_add_form=ad_crs_add_form, courses=courses)
-
-
-# POST route for admin course update
-@app.route('/admin_update_course', methods=['POST'])
-def admin_update_course():
-    if request.method == 'POST':
-        query = request.form.get('index')
-        course = Course.query.filter_by(course_id=query).first_or_404()
-        if request.form.get('edit_button'):
-            course.course_title = request.form['course_title']
-            course.dept_id = request.form['dept_id']
-            course.course_id = request.form['course_id']
-            db.session.commit()
-            return redirect(url_for('adminCourse'))
-        if request.form.get('delete_button'):
-            db.session.delete(course)
-            db.session.commit()
-            return redirect(url_for('adminCourse'))
-
-
-# Route for admin to view, add, or change sections
-@app.route('/adminsection', methods=['GET', 'POST'])
-def adminSection():
-    page_template = 'adminSection.html'
-    # Select all routes in sections table
-    sections = Section.query.all()
-    ad_sect_add_form = SectionForm(request.form)
-    if ad_sect_add_form.validate_on_submit():
-        section = Section(
-            course_title=ad_sect_add_form.course_title.data,
-            course_id=ad_sect_add_form.course_id.data,
-            dept_id=ad_sect_add_form.dept_id.data,
-            sect_id=ad_sect_add_form.sect_id.data,
-            instructor=ad_sect_add_form.instructor.data,
-            class_period=ad_sect_add_form.class_period.data
-        )
-        db.session.add(section)
-        db.session.commit()
-        return redirect(url_for('adminSection'))
-    return render_template(page_template, ad_sect_add_form=ad_sect_add_form, sections=sections)
-
-
-# POST route for admin to update sections
-@app.route('/admin_update_section', methods=['POST'])
-def admin_update_section():
-    if request.method == 'POST':
-        query = request.form.get('index')
-        section = Section.query.filter_by(sect_id=query).first_or_404()
-        if request.form.get('edit_button'):
-            section.course_title = request.form['course_title']
-            section.course_id = request.form['course_id']
-            section.dept_id = request.form['dept_id']
-            section.sect_id = request.form['sect_id']
-            section.instructor = request.form['instructor']
-            section.class_period = request.form['class_period']
-            db.session.commit()
-            return redirect(url_for('adminSection'))
-        if request.form.get('delete_button'):
-            db.session.delete(section)
-            db.session.commit()
-            return redirect(url_for('adminSection'))
 
 # Route for student planner
 @app.route('/studentplan', methods=['GET', 'POST'])
@@ -620,10 +571,6 @@ def studentGenerate():
         if current_user.access == 'STUDENT':
             page_template = 'studentGenerate.html'
             return render_template(page_template)
-        elif current_user.access == 'ROOT':
-            return redirect(url_for('rootAuth'))
-        elif current_user.access == 'ADMIN':
-            return redirect(url_for('adminCourse'))
 
 
 # Route for student schedule viewer
@@ -633,10 +580,6 @@ def studentCurrent():
         if current_user.access == 'STUDENT':
             page_template = 'studentCurrent.html'
             return render_template(page_template)
-        elif current_user.access == 'ROOT':
-            return redirect(url_for('rootAuth'))
-        elif current_user.access == 'ADMIN':
-            return redirect(url_for('adminCourse'))
 
 
 # User logout route
