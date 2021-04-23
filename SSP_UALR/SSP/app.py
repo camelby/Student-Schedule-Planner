@@ -13,14 +13,13 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import datetime
 import pandas as pd
-
+import time
 
 # Set application instance
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
 app.config['SECURITY_PASSWORD_SALT'] = 'salty'
 bootstrap = Bootstrap(app)
-
 
 # Enable Cross-Site Request Forgery token validation
 app.config['WTF_CSRF_ENABLED'] = True
@@ -91,7 +90,9 @@ class Break(db.Model):
     __tablename__ = 'breaks'
     user_id = db.Column(db.String(64), db.ForeignKey('users.id'), primary_key=True)
     break_name = db.Column(db.String(64), primary_key=True)
-    break_period = db.Column(db.String(64))
+    break_day = db.Column(db.String(64))
+    break_start_time = db.Column(db.String(64))
+    break_end_time = db.Column(db.String(64))
 
 
 class FinalSchedule(db.Model):
@@ -172,8 +173,15 @@ class SearchForm(FlaskForm):
 
 
 class BreakForm(FlaskForm):
+    time_choices = [('8:00', '08:00'), ('8:30', '08:30'), ('9:00', '09:00'), ('9:30', '09:30'), ('10:00', '10:00'),
+                    ('10:30', '10:30'), ('11:00', '11:00'), ('11:30', '11:30'), ('12:00', '12:00'), ('12:30', '12:30'),
+                    ('13:00', '13:00'), ('13:30', '13:30'), ('14:00', '14:00'), ('14:30', '14:30'), ('15:00', '15:00'),
+                    ('15:30', '15:30'), ('16:00', '16:00'), ('16:30', '16:30'), ('17:00', '17:00'), ('17:30', '17:30'),
+                    ('18:00', '18:00'), ('18:30', '18:30'), ('19:00', '19:00'), ('19:30', '19:30'), ('20:00', '20:00')]
     break_name = StringField('Break Name', validators=[DataRequired()])
-    break_period = StringField('Break Period', validators=[DataRequired()])
+    break_day = StringField('Days', validators=[DataRequired()])
+    break_start_time = SelectField('Start Time: HH.MM (UTC)', choices=time_choices, validators=[DataRequired()])
+    break_end_time = SelectField('End Time: HH.MM (UTC)', choices=time_choices, validators=[DataRequired()])
     submit = SubmitField('Add')
 
 
@@ -191,6 +199,14 @@ class ChangePasswordForm(FlaskForm):
             EqualTo('password', message='Passwords must match.')
         ]
     )
+
+
+# Convert HH:MM to minutes
+def military_time_converter(new_time):
+    x = new_time
+    t = time.strptime(new_time, "%H:%M")
+    minutes = t.tm_hour * 60 + t.tm_min
+    return minutes
 
 
 # Create confirmation token
@@ -264,6 +280,7 @@ def parse_course_CSV(file_path):
     # Delete file after use
     os.remove(file_path)
 
+
 # Default route and login page for PUBLIC_USER -> USER
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -330,7 +347,6 @@ def register():
             subject = "Your privileged request has been received"
             send_email(user.email, subject, html)
         return redirect(url_for('login'))
-
     return render_template(page_template, form=form)
 
 
@@ -360,15 +376,17 @@ def confirm_email(token):
 # @login_required
 def rootAuth():
     # if current_user.is_authenticated:
-        # if current_user.access == 'ROOT':
-            page_template = 'rootAuth.html'
-            # Query all users in database to be used in Jinja2
-            users = User.query.all()
-            return render_template(page_template, users=users)
-        #elif current_user.access == 'ADMIN':
-          #  return redirect(401)
-       # elif current_user.access == 'STUDENT':
-         #   return redirect(401)
+    # if current_user.access == 'ROOT':
+    page_template = 'rootAuth.html'
+    # Query all users in database to be used in Jinja2
+    users = User.query.all()
+    return render_template(page_template, users=users)
+
+
+# elif current_user.access == 'ADMIN':
+#  return redirect(401)
+# elif current_user.access == 'STUDENT':
+#   return redirect(401)
 
 
 # POST route for root decision on privileged user requests
@@ -568,20 +586,26 @@ def studentPlanner():
             if break_form.validate_on_submit():
                 check_break_name = Break.query.filter_by(break_name=break_form.break_name.data).first()
                 if check_break_name is not None:
-                    flash('break_name already exists.')
+                    flash('break_name already exists.', 'alert-danger')
                     return redirect(url_for('studentPlanner'))
-                check_break_period = Break.query.filter_by(break_period=break_form.break_period.data).first()
-                if check_break_period is not None:
-                    flash('break_period already exists.')
+                check_break_st = military_time_converter(break_form.break_start_time.data)
+                check_break_et = military_time_converter(break_form.break_end_time.data)
+                if check_break_et == check_break_st:
+                    flash('break_period must be different.', 'alert-danger')
+                    return redirect(url_for('studentPlanner'))
+                if check_break_st > check_break_et:
+                    flash('Start time must be less than End time.', 'alert-danger')
                     return redirect(url_for('studentPlanner'))
                 add_break = Break(
                     user_id=current_user.id,
                     break_name=break_form.break_name.data,
-                    break_period=break_form.break_period.data
+                    break_day=break_form.break_day.data,
+                    break_start_time=break_form.break_start_time.data,
+                    break_end_time=break_form.break_end_time.data
                 )
                 db.session.add(add_break)
                 db.session.commit()
-                flash('Break was successfully Added')
+                flash('Break was successfully Added', 'alert-success')
                 return redirect(url_for('studentPlanner'))
             return render_template(page_template, break_form=break_form, breaks=breaks)
         else:
@@ -596,14 +620,16 @@ def break_update():
         breaks = Break.query.filter_by(break_name=query).first_or_404()
         if request.form.get('edit_button'):
             breaks.break_name = request.form['break_name']
-            breaks.break_period = request.form['break_period']
-            flash('Break was successfully edited')
+            breaks.break_day = request.form['break_day']
+            breaks.break_start_time = request.form['break_start_time']
+            breaks.break_end_time = request.form['break_end_time']
+            flash('Break was successfully edited', 'alert-success')
             db.session.commit()
             return redirect(url_for('studentPlanner'))
         if request.form.get('delete_button'):
             db.session.delete(breaks)
             db.session.commit()
-            flash('Break was successfully deleted')
+            flash('Break was successfully deleted', 'alert-success')
             return redirect(url_for('studentPlanner'))
 
 

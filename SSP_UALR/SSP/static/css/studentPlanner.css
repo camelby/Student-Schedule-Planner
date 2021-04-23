@@ -334,7 +334,7 @@ h5 {
     background: #485676;
 }
 
-#break_name, #break_period {
+#break_name, #break_start_time, #break_end_time, #break_day {
     display: block;
     width: 100%;
     padding: .375rem .75rem;

@@ -17,15 +17,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/studentPlanner.css') }}" media="screen">
 {% endblock %}
 {% block page_content %}
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
   <div class="wrapper">
         <!-- Sidebar  -->
         <nav id="sidebar">
@@ -109,6 +100,13 @@
             <div class="break_div" style="padding-left: 50px; padding-right: 50px;">
                 <h2 style="display: inline-block;">Break</h2>
                 <button href="#addBreakModal" class="btn btn-info badge-pill" style="display: inline-block;  float:right;" data-toggle="modal">Add Break</button>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div style="margin-top: 20px" class="alert {{category}}" role="alert"> {{ message }} </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
                 <hr class="solid">
                 <div style="margin-left:20px;">
                                 <div class="container">
@@ -125,7 +123,7 @@
                         <tbody>
                             <tr>
                                 <td>{{ break.break_name }}</td>
-                                <td>{{ break.break_period }}</td>
+                                <td>{{ break.break_day }} {{ break.break_start_time }}-{{ break.break_end_time }}</td>
                                 <td>
                                     <button href="#editBreakModal" class="edit-dialog btn btn-primary badge-pill" data-id="{{ break.break_name }}" style="width:80px;" data-toggle="modal">EDIT</button>
                                     <button href="#deleteBreakModal" class="delete-dialog btn btn-danger badge-pill" data-id="{{ break.break_name }}" style="width:80px;" data-toggle="modal" >DELETE</button>
@@ -185,12 +183,72 @@
                             </div>
                             <div class="modal-body">
                                 <div class="form-group">
-                                 <label>Break Name</label>
-                                <input type="text" id="break_name" name="break_name" required><br>
-                                 </div>
+                                     <label>Break Name</label>
+                                    <input type="text" id="break_name" name="break_name" required><br>
+                                </div>
                                 <div class="form-group">
-                                 <label>Break Period</label>
-                                <input type="text" id="break_period" name="break_period" required><br>
+                                     <label>Break Day</label>
+                                    <input type="text" id="break_day" name="break_day" required><br>
+                                </div>
+                                <div class="form-group">
+                                    <label for="break_start_time">Start Time: HH.MM (UTC)</label>
+                                    <select name="break_start_time" id="break_start_time" required>
+                                        <option value="8:00">8:00</option>
+                                        <option value="8:30">8:30</option>
+                                        <option value="9:00">9:00</option>
+                                        <option value="9:30">9:30</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="10:30">10:30</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="11:30">11:30</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="12:30">12:30</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="13:30">13:30</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="14:30">14:30</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="15:30">15:30</option>
+                                        <option value="13:00">16:00</option>
+                                        <option value="16:30">16:30</option>
+                                        <option value="17:00">17:00</option>
+                                        <option value="17:30">17:30</option>
+                                        <option value="18:00">18:00</option>
+                                        <option value="18:30">18:30</option>
+                                        <option value="19:00">19:00</option>
+                                        <option value="19:30">19:30</option>
+                                        <option value="20:00">20:00</option>
+                                    </select>
+                                 </div>
+                                 <div class="form-group">
+                                    <label for="break_end_time">End Time: HH.MM (UTC)</label>
+                                    <select style="margin-top: -10px" name="break_end_time" id="break_end_time" required>
+                                        <option value="8:00">8:00</option>
+                                        <option value="8:30">8:30</option>
+                                        <option value="9:00">9:00</option>
+                                        <option value="9:30">9:30</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="10:30">10:30</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="11:30">11:30</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="12:30">12:30</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="13:30">13:30</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="14:30">14:30</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="15:30">15:30</option>
+                                        <option value="13:00">16:00</option>
+                                        <option value="16:30">16:30</option>
+                                        <option value="17:00">17:00</option>
+                                        <option value="17:30">17:30</option>
+                                        <option value="18:00">18:00</option>
+                                        <option value="18:30">18:30</option>
+                                        <option value="19:00">19:00</option>
+                                        <option value="19:30">19:30</option>
+                                        <option value="20:00">20:00</option>
+                                    </select>
                                  </div>
                             </div>
                             <div class="modal-footer">
