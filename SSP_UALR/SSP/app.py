@@ -245,6 +245,25 @@ def parseCSV(file_path):
     # Delete file after use
     os.remove(file_path)
 
+
+# Parse CSV file on upload
+def parse_course_CSV(file_path):
+    # CVS column names
+    col_names = ['course_title', 'dept_id', 'course_id']
+    # Use Pandas to parse the CSV file
+    csv_data = pd.read_csv(file_path, names=col_names, header=None)
+    # Loop through the rows and add them to the database
+    for i, row in csv_data.iterrows():
+        course = Course(
+            course_title=csv_data.course_title[i],
+            course_id=int(csv_data.course_id[i]),
+            dept_id=int(csv_data.dept_id[i])
+        )
+        db.session.add(course)
+        db.session.commit()
+    # Delete file after use
+    os.remove(file_path)
+
 # Default route and login page for PUBLIC_USER -> USER
 @app.route('/', methods=['GET', 'POST'])
 def login():
@@ -405,6 +424,8 @@ def course_catalog():
                     flash('Course successfully added!', 'alert-success')
                 return redirect(url_for('course_catalog'))
             return render_template(page_template, rt_crs_add_form=rt_crs_add_form, courses=courses)
+        else:
+            return redirect(url_for('unauthorized_error'))
 
 
 # POST route for root course update
@@ -428,6 +449,8 @@ def update_course():
                     db.session.commit()
                     flash('Course deleted!', 'alert-danger')
                     return redirect(url_for('course_catalog'))
+            else:
+                return redirect(url_for('unauthorized_error'))
 
 
 # POST route for CSV file upload
@@ -447,6 +470,29 @@ def upload_files():
                 parseCSV(file_path)
                 flash('File imported successfully!', 'alert-success')
                 return redirect(url_for('sections_catalog'))
+        else:
+            return redirect(url_for('unauthorized_error'))
+
+
+# POST route for course CSV file upload
+@app.route("/upload_course_file", methods=['POST'])
+@login_required
+def upload_course_files():
+    if current_user.is_authenticated:
+        if current_user.access == 'ROOT' or current_user.access == 'ADMIN':
+            # Get the uploaded file
+            uploaded_file = request.files['file']
+            if uploaded_file.filename != '':
+                # Set the file path
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
+                # Save the file
+                uploaded_file.save(file_path)
+                # Parse the CSV file using Pandas
+                parse_course_CSV(file_path)
+                flash('File imported successfully!', 'alert-success')
+                return redirect(url_for('course_catalog'))
+        else:
+            return redirect(url_for('unauthorized_error'))
 
 
 # Route for root or admin to view, add, or edit sections
@@ -476,6 +522,8 @@ def sections_catalog():
                     flash('Section successfully added!', 'alert-success')
                 return redirect(url_for('sections_catalog'))
             return render_template(page_template, root_section_form=rt_sect_add_form, sections=sections)
+        else:
+            return redirect(url_for('unauthorized_error'))
 
 
 # POST route for root or admin to update sections
@@ -502,6 +550,8 @@ def update_section():
                     db.session.commit()
                     flash('Section deleted!', 'alert-danger')
                     return redirect(url_for('sections_catalog'))
+        else:
+            return redirect(url_for('unauthorized_error'))
 
 
 # Route for student planner
@@ -534,6 +584,8 @@ def studentPlanner():
                 flash('Break was successfully Added')
                 return redirect(url_for('studentPlanner'))
             return render_template(page_template, break_form=break_form, breaks=breaks)
+        else:
+            return redirect(url_for('unauthorized_error'))
 
 
 # POST route for updating student breaks
@@ -571,6 +623,8 @@ def studentGenerate():
         if current_user.access == 'STUDENT':
             page_template = 'studentGenerate.html'
             return render_template(page_template)
+        else:
+            return redirect(url_for('unauthorized_error'))
 
 
 # Route for student schedule viewer
@@ -580,6 +634,8 @@ def studentCurrent():
         if current_user.access == 'STUDENT':
             page_template = 'studentCurrent.html'
             return render_template(page_template)
+        else:
+            return redirect(url_for('unauthorized_error'))
 
 
 # User logout route
