@@ -615,22 +615,26 @@ def studentPlanner():
 # POST route for updating student breaks
 @app.route('/break_update', methods=['POST'])
 def break_update():
-    if request.method == 'POST':
-        query = request.form.get('index')
-        breaks = Break.query.filter_by(break_name=query).first_or_404()
-        if request.form.get('edit_button'):
-            breaks.break_name = request.form['break_name']
-            breaks.break_day = request.form['break_day']
-            breaks.break_start_time = request.form['break_start_time']
-            breaks.break_end_time = request.form['break_end_time']
-            flash('Break was successfully edited', 'alert-success')
-            db.session.commit()
-            return redirect(url_for('studentPlanner'))
-        if request.form.get('delete_button'):
-            db.session.delete(breaks)
-            db.session.commit()
-            flash('Break was successfully deleted', 'alert-success')
-            return redirect(url_for('studentPlanner'))
+    if current_user.is_authenticated:
+        if current_user.access == 'STUDENT':
+            if request.method == 'POST':
+                query = request.form.get('index')
+                breaks = Break.query.filter_by(break_name=query).first_or_404()
+                if request.form.get('edit_button'):
+                    breaks.break_name = request.form['break_name']
+                    breaks.break_day = request.form['break_day']
+                    breaks.break_start_time = request.form['break_start_time']
+                    breaks.break_end_time = request.form['break_end_time']
+                    flash('Break was successfully edited', 'alert-success')
+                    db.session.commit()
+                    return redirect(url_for('studentPlanner'))
+                if request.form.get('delete_button'):
+                    db.session.delete(breaks)
+                    db.session.commit()
+                    flash('Break was successfully deleted', 'alert-success')
+                    return redirect(url_for('studentPlanner'))
+        else:
+            return redirect(url_for('unauthorized_error'))
 
 
 # Route for PUBLIC_USER to view all courses
