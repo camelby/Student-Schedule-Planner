@@ -65,7 +65,7 @@
             <hr class="solid" style="position:relative; top:-40px;">
             <div style="display: block; padding-left: 50px; padding-right: 50px; padding-bottom: 15px; margin-bottom: 38px;">
                 <h2 style="display: inline-block;">Course</h2>
-                <button href="#addCourseModal" class="btn btn-info badge-pill" style="display: inline-block; float:right;" data-toggle="modal">Add Course</button>
+                <button href="#addClassModal" class="btn btn-info badge-pill" style="display: inline-block; float:right;" data-toggle="modal">Add Course</button>
                 <hr class="solid">
                 <table class="table table-hover table-bordered">
                         <thead class="table-primary">
@@ -79,17 +79,16 @@
                                 <th>ACTIONS</th>
                             </tr>
                         </thead>
-                        {% for section in sections %}
+                        {% for add_class in add_classes %}
                         <tbody>
                             <tr>
-                                <td>{{ section.course_title }}</td>
-                                <td>{{ section.course_id }}</td>
-                                <td>{{ section.dept_id }}</td>
-                                <td>{{ section.sect_id }}</td>
-                                <td>{{ section.instructor }}</td>
-                                <td>{{ section.class_period }}</td>
+                                <td>{{ add_class.course_title }}</td>
+                                <td>{{ add_class.course_id }}</td>
+                                <td>{{ add_class.dept_id }}</td>
+                                <td>{{ add_class.sect_id }}</td>
+                                <td>{{ add_class.instructor }}</td>
+                                <td>{{ add_clas.class_period }}</td>
                                 <td>
-                                    <button href="#editSectionModal" class="edit-dialog btn btn-primary badge-pill" data-id="{{ section.sect_id }}" style="width:80px;" data-toggle="modal">EDIT</button>
                                     <button href="#deleteSectionModal" class="delete-dialog btn btn-danger badge-pill" data-id="{{ section.sect_id }}" style="width:80px;" data-toggle="modal" >DELETE</button>
                                 </td>
                             </tr>
@@ -138,28 +137,11 @@
             </div>
         </div>
     </div>
- <!--Search Modal HTML -->
+ <!--Add Class Modal HTML ------ EDIT WIDTHS -->
 <div id="addClassModal" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="/search" method="post">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Search Course</h4>
-                            <p class="modal-subhead">Search by Department</p>
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                             <label>Enter Department ID:</label>
-                            <input type="text" id="search" name="search" required><br>
-                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <input type="hidden" id="index" name="index" value="">
-                            <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                            <input type="submit" name="search_button"  class="btn btn-success" value="Search">
-                        </div>
-                    </form>
+                    <embed width="800" height="685" src="{{ url_for('plan_course') }}" frameborder="0">
                 </div>
             </div>
         </div>
@@ -191,7 +173,7 @@
                                     <input type="text" id="break_day" name="break_day" required><br>
                                 </div>
                                 <div class="form-group">
-                                    <label for="break_start_time">Start Time: HH.MM (UTC)</label>
+                                    <label for="break_start_time">Start Time: HH:MM (UTC)</label>
                                     <select name="break_start_time" id="break_start_time" required>
                                         <option value="8:00">8:00</option>
                                         <option value="8:30">8:30</option>
@@ -220,8 +202,8 @@
                                         <option value="20:00">20:00</option>
                                     </select>
                                  </div>
-                                 <div class="form-group">
-                                    <label for="break_end_time">End Time: HH.MM (UTC)</label>
+                                 <div class="form-group" style="margin-top: 25px;">
+                                    <label for="break_end_time">End Time: HH:MM (UTC)</label>
                                     <select style="margin-top: -10px" name="break_end_time" id="break_end_time" required>
                                         <option value="8:00">8:00</option>
                                         <option value="8:30">8:30</option>

@@ -1,4 +1,7 @@
 # Library Imports
+import random
+
+import flask
 from flask import Flask, render_template, flash, request, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
@@ -155,7 +158,7 @@ class SectionForm(FlaskForm):
     dept_id = StringField('Department ID', validators=[DataRequired()])
     sect_id = StringField('Section ID', validators=[DataRequired()])
     instructor = StringField('Instructor', validators=[DataRequired()])
-    class_period = StringField('Class Period -- MWF or TR HH.MM - HH.MM (UTC)', validators=[DataRequired()])
+    class_period = StringField('Class Period -- MWF or TR HH:MM - HH:MM (UTC)', validators=[DataRequired()])
     submit = SubmitField('Add')
 
 
@@ -166,12 +169,6 @@ class CourseForm(FlaskForm):
     submit = SubmitField('Add')
 
 
-class SearchForm(FlaskForm):
-    choices = [('Course', 'Department', 'Instructor')]
-    select = SelectField('Choose Search Filter:', choices=choices)
-    search = StringField('')
-
-
 class BreakForm(FlaskForm):
     time_choices = [('8:00', '08:00'), ('8:30', '08:30'), ('9:00', '09:00'), ('9:30', '09:30'), ('10:00', '10:00'),
                     ('10:30', '10:30'), ('11:00', '11:00'), ('11:30', '11:30'), ('12:00', '12:00'), ('12:30', '12:30'),
@@ -180,8 +177,8 @@ class BreakForm(FlaskForm):
                     ('18:00', '18:00'), ('18:30', '18:30'), ('19:00', '19:00'), ('19:30', '19:30'), ('20:00', '20:00')]
     break_name = StringField('Break Name', validators=[DataRequired()])
     break_day = StringField('Days', validators=[DataRequired()])
-    break_start_time = SelectField('Start Time: HH.MM (UTC)', choices=time_choices, validators=[DataRequired()])
-    break_end_time = SelectField('End Time: HH.MM (UTC)', choices=time_choices, validators=[DataRequired()])
+    break_start_time = SelectField('Start Time: HH:MM (UTC)', choices=time_choices, validators=[DataRequired()])
+    break_end_time = SelectField('End Time: HH:MM (UTC)', choices=time_choices, validators=[DataRequired()])
     submit = SubmitField('Add')
 
 
@@ -635,6 +632,48 @@ def break_update():
                     return redirect(url_for('studentPlanner'))
         else:
             return redirect(url_for('unauthorized_error'))
+
+
+@app.route('/plan_course')
+def plan_course():
+     if current_user.is_authenticated:
+          if current_user.access == 'STUDENT':
+             page_template = 'studentSection.html'
+             sections = Section.query.all()
+             return render_template(page_template, sections=sections)
+     else:
+         return redirect(url_for('unauthorized_error'))
+
+
+@app.route('/plan_course_update', methods=['POST'])
+def plan_course_update():
+    if current_user.is_authenticated:
+        if current_user.access == 'STUDENT':
+            if request.method == 'POST':
+                query = request.form.get('index')
+                addClass = AddClass.query.filter_by(dept_id=query).first_or_404()
+                if request.form.get('delete_button'):
+                    db.session.delete(addClass)
+                    db.session.commit()
+                    flash('Course was successfully deleted', 'alert-success')
+                    return redirect(url_for('studentPlanner'))
+        else:
+            return redirect(url_for('unauthorized_error'))
+
+
+
+# @app.route ('/plan_add_course', methods=['GET', 'POST'])
+# def plan_add_course():
+#         if request.method == 'POST':
+#             if request.form.get('add_button'):
+#
+#
+#
+#                 return redirect(url_for('studentPlanner'))
+#             if request.form.get('delete_class_button'):
+#                 db.session.delete(add_classes)
+#                 db.session.commit()
+#                 return redirect(url_for('studentPlanner'))
 
 
 # Route for PUBLIC_USER to view all courses
