@@ -604,7 +604,8 @@ def studentPlanner():
                 db.session.commit()
                 flash('Break was successfully Added', 'alert-success')
                 return redirect(url_for('studentPlanner'))
-            return render_template(page_template, break_form=break_form, breaks=breaks)
+            add_class = AddClass.query.all()
+            return render_template(page_template, break_form=break_form, breaks=breaks, add_classes=add_class)
         else:
             return redirect(url_for('unauthorized_error'))
 
@@ -636,16 +637,16 @@ def break_update():
 
 @app.route('/plan_course')
 def plan_course():
-     if current_user.is_authenticated:
-          if current_user.access == 'STUDENT':
+    # if current_user.is_authenticated:
+        #  if current_user.access == 'STUDENT':
              page_template = 'studentSection.html'
              sections = Section.query.all()
              return render_template(page_template, sections=sections)
-     else:
-         return redirect(url_for('unauthorized_error'))
+    # else:
+    #     return redirect(url_for('unauthorized_error'))
 
 
-@app.route('/plan_course_update', methods=['POST'])
+@app.route('/plan_course_delete', methods=['POST'])
 def plan_course_update():
     if current_user.is_authenticated:
         if current_user.access == 'STUDENT':
@@ -657,23 +658,36 @@ def plan_course_update():
                     db.session.commit()
                     flash('Course was successfully deleted', 'alert-success')
                     return redirect(url_for('studentPlanner'))
+    else:
+        return redirect(url_for('unauthorized_error'))
+
+
+
+@app.route ('/plan_add_course', methods=['GET', 'POST'])
+def plan_add_course():
+    if current_user.is_authenticated:
+        if current_user.access == 'STUDENT':
+            # Select all of the student's breaks based on their assigned ID
+           # query = current_user.id
+           # classes = AddClass.query.filter_by(user_id=query).all()
+            if request.method == 'POST':
+                qry = request.form.get('index')
+                section = Section.query.filter_by(dept_id=qry).first_or_404()
+                add_class = AddClass(
+                    user_id=current_user.id.data,
+                    course_title=section.course_title.data,
+                    course_id=section.course_id.data,
+                    dept_id=qry.dept_id.data,
+                    sect_id=section.sect_id.data,
+                    instructor=section.instructor.data,
+                    class_period=section.class_period.data
+                )
+                db.session.add(add_class)
+                db.session.commit()
+                flash('Course was successfully Added', 'alert-success')
+                return redirect(url_for('plan_course'))
         else:
             return redirect(url_for('unauthorized_error'))
-
-
-
-# @app.route ('/plan_add_course', methods=['GET', 'POST'])
-# def plan_add_course():
-#         if request.method == 'POST':
-#             if request.form.get('add_button'):
-#
-#
-#
-#                 return redirect(url_for('studentPlanner'))
-#             if request.form.get('delete_class_button'):
-#                 db.session.delete(add_classes)
-#                 db.session.commit()
-#                 return redirect(url_for('studentPlanner'))
 
 
 # Route for PUBLIC_USER to view all courses

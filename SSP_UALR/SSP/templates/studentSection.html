@@ -1,3 +1,4 @@
+{% import "bootstrap/wtf.html" as wtf %}
 {% block title %}<title>Woosamotta U | Student Sections</title>{% endblock %}
 {% block header %}
     <meta charset="utf-8">
@@ -38,12 +39,124 @@
                                 <td>{{ section.instructor }}</td>
                                 <td>{{ section.class_period }}</td>
                                 <td>
-                                    <button href="#addModal" class="edit-dialog btn btn-primary badge-pill" data-id="{{ section.sect_id }}" style="width:60px;" data-toggle="modal">ADD</button>
+                                    <button href="#addModal" class="edit-dialog btn btn-primary badge-pill"  style="width:60px;" data-toggle="modal">ADD</button>
                                 </td>
                             </tr>
                         </tbody>
                         {% endfor %}
                     </table>
+                </div>
+            </div>
+
+
+
+    <div id="editBreakModal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form action="/break_update" method="post">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Edit Break</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                     <label>Break Name</label>
+                                    <input type="text" id="break_name" name="break_name" required><br>
+                                </div>
+                                <div class="form-group">
+                                     <label>Break Day</label>
+                                    <input type="text" id="break_day" name="break_day" required><br>
+                                </div>
+                                <div class="form-group">
+                                    <label for="break_start_time">Start Time: HH:MM (UTC)</label>
+                                    <select name="break_start_time" id="break_start_time" required>
+                                        <option value="8:00">8:00</option>
+                                        <option value="8:30">8:30</option>
+                                        <option value="9:00">9:00</option>
+                                        <option value="9:30">9:30</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="10:30">10:30</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="11:30">11:30</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="12:30">12:30</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="13:30">13:30</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="14:30">14:30</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="15:30">15:30</option>
+                                        <option value="13:00">16:00</option>
+                                        <option value="16:30">16:30</option>
+                                        <option value="17:00">17:00</option>
+                                        <option value="17:30">17:30</option>
+                                        <option value="18:00">18:00</option>
+                                        <option value="18:30">18:30</option>
+                                        <option value="19:00">19:00</option>
+                                        <option value="19:30">19:30</option>
+                                        <option value="20:00">20:00</option>
+                                    </select>
+                                 </div>
+                                 <div class="form-group" style="margin-top: 25px;">
+                                    <label for="break_end_time">End Time: HH:MM (UTC)</label>
+                                    <select style="margin-top: -10px" name="break_end_time" id="break_end_time" required>
+                                        <option value="8:00">8:00</option>
+                                        <option value="8:30">8:30</option>
+                                        <option value="9:00">9:00</option>
+                                        <option value="9:30">9:30</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="10:30">10:30</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="11:30">11:30</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="12:30">12:30</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="13:30">13:30</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="14:30">14:30</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="15:30">15:30</option>
+                                        <option value="13:00">16:00</option>
+                                        <option value="16:30">16:30</option>
+                                        <option value="17:00">17:00</option>
+                                        <option value="17:30">17:30</option>
+                                        <option value="18:00">18:00</option>
+                                        <option value="18:30">18:30</option>
+                                        <option value="19:00">19:00</option>
+                                        <option value="19:30">19:30</option>
+                                        <option value="20:00">20:00</option>
+                                    </select>
+                                 </div>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="hidden" id="index" name="index" value="">
+                                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                                <input type="submit" name="edit_button"  class="btn btn-success" value="Edit">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Break Modal HTML -->
+            <div id="addModal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form action="/plan_add_course" method="POST">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Delete Break</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete this Record?</p>
+                                <p class="text-warning"><small>This action cannot be undone.</small></p>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="hidden" id="index" name="index" value="">
+                                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                                <input type="submit" name="delete_button" class="btn btn-danger" value="Add">
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
 

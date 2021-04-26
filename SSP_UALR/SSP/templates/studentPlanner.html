@@ -87,9 +87,9 @@
                                 <td>{{ add_class.dept_id }}</td>
                                 <td>{{ add_class.sect_id }}</td>
                                 <td>{{ add_class.instructor }}</td>
-                                <td>{{ add_clas.class_period }}</td>
+                                <td>{{ add_class.class_period }}</td>
                                 <td>
-                                    <button href="#deleteSectionModal" class="delete-dialog btn btn-danger badge-pill" data-id="{{ section.sect_id }}" style="width:80px;" data-toggle="modal" >DELETE</button>
+                                    <button href="#deleteStudCourseModal" class="delete-dialog btn btn-danger badge-pill" data-id="{{ add_class.sect_id }}" style="width:80px;" data-toggle="modal" >DELETE</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -145,6 +145,28 @@
                 </div>
             </div>
         </div>
+    <!-- Delete Student Course -->
+    <div id="deleteStudCourseModal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form action="/plan_course_delete" method="POST">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Delete Course</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete this Record?</p>
+                                <p class="text-warning"><small>This action cannot be undone.</small></p>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="hidden" id="index" name="index" value="">
+                                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                                <input type="submit" name="delete_button" class="btn btn-danger" value="Delete">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
     <!--Add Break Modal HTML -->
     <div id="addBreakModal" class="modal fade">
         <div class="modal-dialog">
@@ -154,7 +176,7 @@
             </div>
         </div>
     </div>
-           <!-- Edit Break Modal HTML -->
+    <!-- Edit Break Modal HTML -->
             <div id="editBreakModal" class="modal fade">
                 <div class="modal-dialog">
                     <div class="modal-content">
