@@ -81,6 +81,7 @@ class User(UserMixin, db.Model):
 class AddClass(db.Model):
     __tablename__ = 'add_class'
     user_id = db.Column(db.String(64), db.ForeignKey('users.id'), primary_key=True)
+    row_id = db.Column(db.Integer)
     course_title = db.Column(db.String(64))
     course_id = db.Column(db.Integer)
     dept_id = db.Column(db.String(64))
@@ -520,7 +521,7 @@ def sections_catalog():
             sections = Section.query.all()
             rt_sect_add_form = SectionForm(request.form)
             if rt_sect_add_form.validate_on_submit():
-                section = Section.query.filter_by(sect_id=rt_sect_add_form.sect_id.data).first()
+                section = Section.query.filter_by(row_id=rt_sect_add_form.sect_id.data).first()
                 if section is not None:
                     flash('Section already exists!', 'alert-danger')
                 else:
@@ -668,6 +669,7 @@ def plan_add_course():
                     else:
                         add_class = AddClass(
                             user_id=current_user.id,
+                            row_id=section.row_id,
                             course_title=section.course_title,
                             course_id=section.course_id,
                             dept_id=section.dept_id,
