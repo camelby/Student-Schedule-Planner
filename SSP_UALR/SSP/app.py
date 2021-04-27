@@ -605,7 +605,8 @@ def studentPlanner():
                 flash('Break was successfully Added', 'alert-success')
                 return redirect(url_for('studentPlanner'))
             add_class = AddClass.query.all()
-            return render_template(page_template, break_form=break_form, breaks=breaks, add_classes=add_class)
+            section = Section.query.all()
+            return render_template(page_template, break_form=break_form, breaks=breaks, add_classes=add_class, sections=section)
         else:
             return redirect(url_for('unauthorized_error'))
 
@@ -635,17 +636,6 @@ def break_update():
             return redirect(url_for('unauthorized_error'))
 
 
-@app.route('/plan_course')
-def plan_course():
-    if current_user.is_authenticated:
-         if current_user.access == 'STUDENT':
-             page_template = 'studentSection.html'
-             sections = Section.query.all()
-             return render_template(page_template, sections=sections)
-    else:
-        return redirect(url_for('unauthorized_error'))
-
-
 @app.route('/plan_course_delete', methods=['POST'])
 def plan_course_update():
     if current_user.is_authenticated:
@@ -664,8 +654,8 @@ def plan_course_update():
 
 @app.route('/plan_add_course', methods=['GET', 'POST'])
 def plan_add_course():
-    if current_user.is_authenticated:
-        if current_user.access == 'STUDENT':
+   # if current_user.is_authenticated:
+     #   if current_user.access == 'STUDENT':
         # Select all of the student's breaks based on their assigned ID
             if request.method == 'POST':
                 qry = request.form.get('index')
@@ -674,7 +664,7 @@ def plan_add_course():
                     check_add_section_name = AddClass.query.filter_by(sect_id=qry).first()
                     if check_add_section_name is not None:
                         flash('Course already exists.', 'alert-danger')
-                        return render_template('studentPlanner.html')
+                        #return render_template('studentPlanner.html')
                     else:
                         add_class = AddClass(
                             user_id=current_user.id,
@@ -688,9 +678,9 @@ def plan_add_course():
                         db.session.add(add_class)
                         db.session.commit()
                         flash('Course was successfully Added', 'alert-success')
-                        return redirect(url_for('studentPlanner'))
-        else:
-            return redirect(url_for('unauthorized_error'))
+                return redirect(url_for('studentPlanner'))
+      #  else:
+      #      return redirect(url_for('unauthorized_error'))
 
 
 # Route for PUBLIC_USER to view all courses
