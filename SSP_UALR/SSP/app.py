@@ -485,8 +485,8 @@ def upload_files():
                 parseCSV(file_path)
                 flash('File imported successfully!', 'alert-success')
                 return redirect(url_for('sections_catalog'))
-        else:
-            return redirect(url_for('unauthorized_error'))
+        # else:
+        #     return redirect(url_for('unauthorized_error'))
 
 
 # POST route for course CSV file upload
@@ -637,13 +637,13 @@ def break_update():
 
 @app.route('/plan_course')
 def plan_course():
-    # if current_user.is_authenticated:
-        #  if current_user.access == 'STUDENT':
+    if current_user.is_authenticated:
+         if current_user.access == 'STUDENT':
              page_template = 'studentSection.html'
              sections = Section.query.all()
              return render_template(page_template, sections=sections)
-    # else:
-    #     return redirect(url_for('unauthorized_error'))
+    else:
+        return redirect(url_for('unauthorized_error'))
 
 
 @app.route('/plan_course_delete', methods=['POST'])
@@ -652,8 +652,8 @@ def plan_course_update():
         if current_user.access == 'STUDENT':
             if request.method == 'POST':
                 query = request.form.get('index')
-                addClass = AddClass.query.filter_by(dept_id=query).first_or_404()
-                if request.form.get('delete_button'):
+                addClass = AddClass.query.filter_by(sect_id=query).first_or_404()
+                if request.form.get('sect_delete_button'):
                     db.session.delete(addClass)
                     db.session.commit()
                     flash('Course was successfully deleted', 'alert-success')
@@ -662,30 +662,33 @@ def plan_course_update():
         return redirect(url_for('unauthorized_error'))
 
 
-
-@app.route ('/plan_add_course', methods=['GET', 'POST'])
+@app.route('/plan_add_course', methods=['GET', 'POST'])
 def plan_add_course():
     if current_user.is_authenticated:
         if current_user.access == 'STUDENT':
-            # Select all of the student's breaks based on their assigned ID
-           # query = current_user.id
-           # classes = AddClass.query.filter_by(user_id=query).all()
+        # Select all of the student's breaks based on their assigned ID
             if request.method == 'POST':
                 qry = request.form.get('index')
-                section = Section.query.filter_by(dept_id=qry).first_or_404()
-                add_class = AddClass(
-                    user_id=current_user.id.data,
-                    course_title=section.course_title.data,
-                    course_id=section.course_id.data,
-                    dept_id=qry.dept_id.data,
-                    sect_id=section.sect_id.data,
-                    instructor=section.instructor.data,
-                    class_period=section.class_period.data
-                )
-                db.session.add(add_class)
-                db.session.commit()
-                flash('Course was successfully Added', 'alert-success')
-                return redirect(url_for('plan_course'))
+                section = Section.query.filter_by(sect_id=qry).first_or_404()
+                if request.form.get('add_button'):
+                    check_add_section_name = AddClass.query.filter_by(sect_id=qry).first()
+                    if check_add_section_name is not None:
+                        flash('Course already exists.', 'alert-danger')
+                        return render_template('studentPlanner.html')
+                    else:
+                        add_class = AddClass(
+                            user_id=current_user.id,
+                            course_title=section.course_title,
+                            course_id=section.course_id,
+                            dept_id=section.dept_id,
+                            sect_id=section.sect_id,
+                            instructor=section.instructor,
+                            class_period=section.class_period
+                        )
+                        db.session.add(add_class)
+                        db.session.commit()
+                        flash('Course was successfully Added', 'alert-success')
+                        return redirect(url_for('studentPlanner'))
         else:
             return redirect(url_for('unauthorized_error'))
 

@@ -63,6 +63,13 @@
             <div class="title-Heading">Woosamotta U</div>
             <div class="subtitle-Heading">Student Planner</div>
             <hr class="solid" style="position:relative; top:-40px;">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div style="margin-top: 20px" class="alert {{category}}" role="alert"> {{ message }} </div>
+                        {% endfor %}
+                    {% endif %}
+            {% endwith %}
             <div style="display: block; padding-left: 50px; padding-right: 50px; padding-bottom: 15px; margin-bottom: 38px;">
                 <h2 style="display: inline-block;">Course</h2>
                 <button href="#addClassModal" class="btn btn-info badge-pill" style="display: inline-block; float:right;" data-toggle="modal">Add Course</button>
@@ -99,13 +106,6 @@
             <div class="break_div" style="padding-left: 50px; padding-right: 50px;">
                 <h2 style="display: inline-block;">Break</h2>
                 <button href="#addBreakModal" class="btn btn-info badge-pill" style="display: inline-block;  float:right;" data-toggle="modal">Add Break</button>
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                            <div style="margin-top: 20px" class="alert {{category}}" role="alert"> {{ message }} </div>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
                 <hr class="solid">
                 <div style="margin-left:20px;">
                                 <div class="container">
@@ -161,7 +161,7 @@
                             <div class="modal-footer">
                                 <input type="hidden" id="index" name="index" value="">
                                 <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                                <input type="submit" name="delete_button" class="btn btn-danger" value="Delete">
+                                <input type="submit" name="sect_delete_button" class="btn btn-danger" value="Delete">
                             </div>
                         </form>
                     </div>
@@ -307,6 +307,10 @@
         $(document).on("click", ".delete-dialog", function () {
             let breakName = $(this).data('id');
             $(".modal-footer #index").val( breakName );
+        });
+        $(document).on("click", ".delete-dialog", function () {
+            let sectionID = $(this).data('id');
+            $(".modal-footer #index").val( sectionID );
         });
     </script>
 {% endblock %}
