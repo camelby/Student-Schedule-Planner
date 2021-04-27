@@ -140,19 +140,12 @@
  <!--Add Class Modal HTML ------ EDIT WIDTHS -->
 <div id="addClassModal" class="modal fade">
             <div class="modal-dialog">
-                <div class="modal-content">
-
-
-
-                       <!-- Section test -->
-
-<div id="id01" class="w3-modal">
+                <div class="modal-content" style="width: fit-content; padding: 25px;">
+                    <div id="id01" class="w3-modal">
   <div class="w3-modal-content">
-
     <header class="w3-container w3-teal">
-      <span onclick="document.getElementById('id01').style.display='none'"
-      class="w3-button w3-display-topright">&times;</span>
-      <h2>Modal Header</h2>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h2>Add Course</h2>
     </header>
 
     <div class="w3-container">
@@ -161,26 +154,26 @@
                     <table class="table table-hover table-bordered">
                         <thead class="table-primary">
                             <tr>
-                                <th scope="col">Course Title</th>
-                                <th scope="col">Course ID</th>
-                                <th scope="col">Department ID</th>
-                                <th scope="col">Section ID</th>
-                                <th scope="col">Instructor</th>
-                                <th scope="col">Class Period</th>
-                                <th>ACTIONS</th>
+                                <th scope="col" style="font-size: 1.4vw;">Course Title</th>
+                                <th scope="col" style="font-size: 1.4vw;">Course ID</th>
+                                <th scope="col" style="font-size: 1.4vw;">Department ID</th>
+                                <th scope="col" style="font-size: 1.4vw;">Section ID</th>
+                                <th scope="col" style="font-size: 1.4vw;">Instructor</th>
+                                <th scope="col" style="font-size: 1.4vw;">Class Period</th>
+                                <th style="font-size: 1.4vw;">ACTIONS</th>
                             </tr>
                         </thead>
                         {% for section in sections %}
                         <tbody>
                             <tr>
-                                <td>{{ section.course_title }}</td>
-                                <td>{{ section.course_id }}</td>
-                                <td>{{ section.dept_id }}</td>
-                                <td>{{ section.sect_id }}</td>
-                                <td>{{ section.instructor }}</td>
-                                <td>{{ section.class_period }}</td>
-                                <td>
-                                    <button href="#addModal" class="add-dialog btn btn-primary badge-pill" data-id="{{ section.sect_id }}"  style="width:60px;" data-toggle="modal">ADD</button>
+                                <td style="font-size: 1.4vw;">{{ section.course_title }}</td>
+                                <td style="font-size: 1.4vw;">{{ section.course_id }}</td>
+                                <td style="font-size: 1.4vw;">{{ section.dept_id }}</td>
+                                <td style="font-size: 1.4vw;">{{ section.sect_id }}</td>
+                                <td style="font-size: 1.4vw;">{{ section.instructor }}</td>
+                                <td style="font-size: 1.4vw;">{{ section.class_period }}</td>
+                                <td style="font-size: 1.4vw;">
+                                    <button href="#addModal" class="add-dialog btn btn-primary badge-pill" data-id="{{ section.sect_id }}"  style="min-width: 75px; font-size: 1.4vw; padding:0;" data-toggle="modal">ADD</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -190,19 +183,17 @@
             </div>
 
 
-
             <!-- Break Modal HTML -->
             <div id="addModal" class="modal fade">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <form action="/plan_add_course" method="post">
                             <div class="modal-header">
-                                <h4 class="modal-title">Delete Break</h4>
+                                <h4 class="modal-title">Add Course</h4>
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                             </div>
                             <div class="modal-body">
-                                <p>Are you sure you want to delete this Record?</p>
-                                <p class="text-warning"><small>This action cannot be undone.</small></p>
+                                <p>Are you sure you want to add this Record?</p>
                             </div>
                             <div class="modal-footer">
                                 <input type="hidden" id="index" name="index" value="">
@@ -213,29 +204,11 @@
                     </div>
                 </div>
             </div>
-
-
-
-
     </div>
-
     <footer class="w3-container w3-teal">
-      <p>Modal Footer</p>
     </footer>
-
   </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-{#                    <embed width="800" height="685" src="{{ url_for('plan_course') }}" frameborder="0">#}
                 </div>
             </div>
         </div>
@@ -380,13 +353,7 @@
                     </div>
                 </div>
             </div>
-
-
-
-
-
-
-
+    
 
     <!-- jQuery CDN - Slim version (=without AJAX) -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -415,16 +382,12 @@
         });
     </script>
 
-
-     <script type="text/javascript">
+         <script type="text/javascript">
     $(document).on("click", ".add-dialog", function () {
             let sectionID = $(this).data('id');
             $(".modal-footer #index").val( sectionID );
         });
     </script>
-
-
-
 
 
 {% endblock %}
