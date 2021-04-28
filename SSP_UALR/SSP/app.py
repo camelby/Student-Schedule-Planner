@@ -81,7 +81,6 @@ class User(UserMixin, db.Model):
 class AddClass(db.Model):
     __tablename__ = 'add_class'
     user_id = db.Column(db.String(64), db.ForeignKey('users.id'), primary_key=True)
-    row_id = db.Column(db.Integer)
     course_title = db.Column(db.String(64))
     course_id = db.Column(db.Integer)
     dept_id = db.Column(db.String(64))
@@ -637,6 +636,17 @@ def break_update():
             return redirect(url_for('unauthorized_error'))
 
 
+@app.route('/plan_course')
+def plan_course():
+    if current_user.is_authenticated:
+         if current_user.access == 'STUDENT':
+             page_template = 'studentSection.html'
+             sections = Section.query.all()
+             return render_template(page_template, sections=sections)
+    else:
+        return redirect(url_for('unauthorized_error'))
+
+
 @app.route('/plan_course_delete', methods=['POST'])
 def plan_course_update():
     if current_user.is_authenticated:
@@ -655,34 +665,33 @@ def plan_course_update():
 
 @app.route('/plan_add_course', methods=['GET', 'POST'])
 def plan_add_course():
-   # if current_user.is_authenticated:
-     #   if current_user.access == 'STUDENT':
+    if current_user.is_authenticated:
+        if current_user.access == 'STUDENT':
         # Select all of the student's breaks based on their assigned ID
             if request.method == 'POST':
                 qry = request.form.get('index')
                 section = Section.query.filter_by(sect_id=qry).first_or_404()
                 if request.form.get('add_button'):
-                    check_add_section_name = AddClass.query.filter_by(sect_id=qry).first()
-                    if check_add_section_name is not None:
-                        flash('Course already exists.', 'alert-danger')
-                        #return render_template('studentPlanner.html')
-                    else:
-                        add_class = AddClass(
-                            user_id=current_user.id,
-                            row_id=section.row_id,
-                            course_title=section.course_title,
-                            course_id=section.course_id,
-                            dept_id=section.dept_id,
-                            sect_id=section.sect_id,
-                            instructor=section.instructor,
-                            class_period=section.class_period
-                        )
-                        db.session.add(add_class)
-                        db.session.commit()
-                        flash('Course was successfully Added', 'alert-success')
-                return redirect(url_for('studentPlanner'))
-      #  else:
-      #      return redirect(url_for('unauthorized_error'))
+                  #  check_add_section_name = AddClass.query.filter_by(sect_id=qry).first()
+                    #if check_add_section_name is not None:
+                       # flash('Course already exists.', 'alert-danger')
+                      #  return render_template('studentPlanner.html')
+                 #   else:
+                    add_class = AddClass(
+                        user_id=current_user.id,
+                        course_title=section.course_title,
+                        course_id=section.course_id,
+                        dept_id=section.dept_id,
+                        sect_id=section.sect_id,
+                        instructor=section.instructor,
+                        class_period=section.class_period
+                    )
+                    db.session.add(add_class)
+                    db.session.commit()
+                    flash('Course was successfully Added', 'alert-success')
+                    return redirect(url_for('studentPlanner'))
+        else:
+            return redirect(url_for('unauthorized_error'))
 
 
 # Route for PUBLIC_USER to view all courses
