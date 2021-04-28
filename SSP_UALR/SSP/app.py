@@ -80,7 +80,8 @@ class User(UserMixin, db.Model):
 # Student planner database model(s)
 class AddClass(db.Model):
     __tablename__ = 'add_class'
-    user_id = db.Column(db.String(64), db.ForeignKey('users.id'), primary_key=True)
+    user_id = db.Column(db.String(64), db.ForeignKey('users.id'))
+    rows_id = db.Column(db.Integer,  primary_key=True) #db.ForeignKey('section.row_id'),
     course_title = db.Column(db.String(64))
     course_id = db.Column(db.Integer)
     dept_id = db.Column(db.String(64))
@@ -670,7 +671,7 @@ def plan_add_course():
         # Select all of the student's breaks based on their assigned ID
             if request.method == 'POST':
                 qry = request.form.get('index')
-                section = Section.query.filter_by(sect_id=qry).first_or_404()
+                section = Section.query.filter_by(row_id=qry).first_or_404()
                 if request.form.get('add_button'):
                   #  check_add_section_name = AddClass.query.filter_by(sect_id=qry).first()
                     #if check_add_section_name is not None:
@@ -679,6 +680,7 @@ def plan_add_course():
                  #   else:
                     add_class = AddClass(
                         user_id=current_user.id,
+                      #  rows_id=section.row_id,
                         course_title=section.course_title,
                         course_id=section.course_id,
                         dept_id=section.dept_id,
