@@ -673,25 +673,25 @@ def plan_add_course():
                 qry = request.form.get('index')
                 section = Section.query.filter_by(row_id=qry).first_or_404()
                 if request.form.get('add_button'):
-                  #  check_add_section_name = AddClass.query.filter_by(sect_id=qry).first()
-                    #if check_add_section_name is not None:
-                       # flash('Course already exists.', 'alert-danger')
-                      #  return render_template('studentPlanner.html')
-                 #   else:
-                    add_class = AddClass(
-                        user_id=current_user.id,
-                      #  rows_id=section.row_id,
-                        course_title=section.course_title,
-                        course_id=section.course_id,
-                        dept_id=section.dept_id,
-                        sect_id=section.sect_id,
-                        instructor=section.instructor,
-                        class_period=section.class_period
-                    )
-                    db.session.add(add_class)
-                    db.session.commit()
-                    flash('Course was successfully Added', 'alert-success')
-                    return redirect(url_for('studentPlanner'))
+                    # check = AddClass.query.filter_by(rows_id=qry).first()
+                    # if  is not None:
+                    #     flash('Course already exists.', 'alert-danger')
+                    #     return render_template('studentPlanner.html')
+                    # else:
+                        add_class = AddClass(
+                            user_id=current_user.id,
+                            rows_id=section.row_id,
+                            course_title=section.course_title,
+                            course_id=section.course_id,
+                            dept_id=section.dept_id,
+                            sect_id=section.sect_id,
+                            instructor=section.instructor,
+                            class_period=section.class_period
+                        )
+                        db.session.add(add_class)
+                        db.session.commit()
+                        flash('Course was successfully Added', 'alert-success')
+                        return redirect(url_for('studentPlanner'))
         else:
             return redirect(url_for('unauthorized_error'))
 
