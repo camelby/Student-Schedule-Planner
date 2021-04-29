@@ -96,7 +96,7 @@
                                 <td>{{ add_class.instructor }}</td>
                                 <td>{{ add_class.class_period }}</td>
                                 <td>
-                                    <button href="#deleteStudCourseModal" class="delete-dialog btn btn-danger badge-pill" data-id="{{ add_class.sect_id }}" style="width:80px;" data-toggle="modal" >DELETE</button>
+                                    <button href="#deleteStudCourseModal" class="delete-dialog btn btn-danger badge-pill" data-id="{{ add_class.rows_id }}" style="width:80px;" data-toggle="modal" >DELETE</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -377,8 +377,8 @@
             $(".modal-footer #index").val( breakName );
         });
         $(document).on("click", ".delete-dialog", function () {
-            let sectionID = $(this).data('id');
-            $(".modal-footer #index").val( sectionID );
+            let rowsID = $(this).data('id');
+            $(".modal-footer #index").val( rowsID );
         });
     </script>
 

@@ -111,8 +111,8 @@
                                 <td>{{ section.instructor }}</td>
                                 <td>{{ section.class_period }}</td>
                                 <td>
-                                    <button href="#editSectionModal" class="edit-dialog btn btn-primary badge-pill" data-id="{{ section.sect_id }}" style="width:80px;" data-toggle="modal">EDIT</button>
-                                    <button href="#deleteSectionModal" class="delete-dialog btn btn-danger badge-pill" data-id="{{ section.sect_id }}" style="width:80px;" data-toggle="modal" >DELETE</button>
+                                    <button href="#editSectionModal" class="edit-dialog btn btn-primary badge-pill" data-id="{{ section.row_id }}" style="width:80px;" data-toggle="modal">EDIT</button>
+                                    <button href="#deleteSectionModal" class="delete-dialog btn btn-danger badge-pill" data-id="{{ section.row_id }}" style="width:80px;" data-toggle="modal" >DELETE</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -214,12 +214,12 @@
             });
         });
         $(document).on("click", ".edit-dialog", function () {
-            let sectionID = $(this).data('id');
-            $(".modal-footer #index").val( sectionID );
+            let rowID = $(this).data('id');
+            $(".modal-footer #index").val( rowID );
         });
         $(document).on("click", ".delete-dialog", function () {
-            let sectionID = $(this).data('id');
-            $(".modal-footer #index").val( sectionID );
+            let rowID = $(this).data('id');
+            $(".modal-footer #index").val( rowID );
         });
     </script>
 

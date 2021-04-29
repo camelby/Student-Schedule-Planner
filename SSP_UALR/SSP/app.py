@@ -126,7 +126,8 @@ class Course(db.Model):
     __tablename__ = 'course'
     course_title = db.Column(db.String(64))
     dept_id = db.Column(db.String(64))
-    course_id = db.Column(db.Integer, primary_key=True)
+    course_id = db.Column(db.Integer)
+    row_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 
 
 # User loader callback for Flask-Login
@@ -426,7 +427,7 @@ def course_catalog():
             courses = Course.query.all()
             rt_crs_add_form = CourseForm(request.form)
             if rt_crs_add_form.validate_on_submit():
-                course_query = Section.query.filter_by(sect_id=rt_crs_add_form.course_id.data).first()
+                course_query = Section.query.filter_by(row_id=rt_crs_add_form.course_id.data).first()
                 if course_query is not None:
                     flash('Course already exists!', 'alert-danger')
                 else:
@@ -452,7 +453,7 @@ def update_course():
         if current_user.access == 'ROOT' or current_user.access == 'ADMIN':
             if request.method == 'POST':
                 query = request.form.get('index')
-                course = Course.query.filter_by(course_id=query).first_or_404()
+                course = Course.query.filter_by(row_id=query).first_or_404()
                 if request.form.get('edit_button'):
                     course.course_title = request.form['course_title']
                     course.dept_id = request.form['dept_id']
@@ -550,7 +551,7 @@ def update_section():
         if current_user.access == 'ROOT' or current_user.access == 'ADMIN':
             if request.method == 'POST':
                 query = request.form.get('index')
-                section = Section.query.filter_by(sect_id=query).first_or_404()
+                section = Section.query.filter_by(row_id=query).first_or_404()
                 if request.form.get('edit_button'):
                     section.course_title = request.form['course_title']
                     section.course_id = request.form['course_id']
@@ -654,7 +655,7 @@ def plan_course_update():
         if current_user.access == 'STUDENT':
             if request.method == 'POST':
                 query = request.form.get('index')
-                addClass = AddClass.query.filter_by(sect_id=query).first_or_404()
+                addClass = AddClass.query.filter_by(rows_id=query).first_or_404()
                 if request.form.get('sect_delete_button'):
                     db.session.delete(addClass)
                     db.session.commit()
