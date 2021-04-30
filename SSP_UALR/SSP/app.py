@@ -628,7 +628,7 @@ def studentPlanner():
                 db.session.commit()
                 flash('Break was successfully Added', 'alert-success')
                 return redirect(url_for('studentPlanner'))
-            add_class = AddClass.query.all()
+            add_class = AddClass.query.filter_by(user_id=query).all()
             section = Section.query.all()
             return render_template(page_template, break_form=break_form, breaks=breaks, add_classes=add_class, sections=section)
         else:
