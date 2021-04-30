@@ -626,6 +626,17 @@ def studentPlanner():
                 )
                 db.session.add(add_break)
                 db.session.commit()
+                generate_schedule = generate_schedules(
+                    user_id=current_user.id,
+                    reserved_time=Break(
+                        break_name=break_form.break_name.data,
+                        break_day=''.join(break_form.break_day.data),
+                        break_start_time=break_form.break_start_time.data,
+                        break_end_time=break_form.break_end_time.data
+                    )
+                )
+                db.session.add(generate_schedule)
+                db.session.commit()
                 flash('Break was successfully Added', 'alert-success')
                 return redirect(url_for('studentPlanner'))
             add_class = AddClass.query.filter_by(user_id=query).all()
@@ -749,24 +760,28 @@ def generate_schedules():
             addClass = AddClass.query.filter_by(user_id=query).all()
             page_template = 'studentGenerate.html'
             for addClasses in addClass:
-                class_period = addClass.class_period
+                class_period = addClasses.class_period
                 day, break_time = class_period.split(' ')
                 start_time, end_time = break_time.split('-')
                 for student_break in breaks:
-                    if start_time > breaks.break_start_time or start_time < breaks.break_end_time:
+                    check_break_st = military_time_converter(student_break.break_start_time)
+                    check_break_et = military_time_converter(student_break.break_end_time)
+                    check_class_st = military_time_converter(start_time)
+                    if check_class_st > check_break_st or check_class_st < check_break_et:
                         flash('A desired course is between your break.', 'alert-danger')
                         return render_template(page_template)
                     else:
                         generate_schedule = GeneratedSchedules(
-                            course_title=addClass.course_title,
-                            course_id=addClass.course_id,
-                            dept_id=addClass.dept_id,
-                            sect_id=addClass.sect_id,
-                            instructor=addClass.instructor,
-                            class_period=addClass.class_period
+                            course_title=addClasses.course_title,
+                            course_id=addClasses.course_id,
+                            dept_id=addClasses.dept_id,
+                            sect_id=addClasses.sect_id,
+                            instructor=addClasses.instructor,
+                            class_period=addClasses.class_period
                         )
                         db.session.add(generate_schedule)
                         db.session.commit()
+
             return render_template(page_template)
 
 
