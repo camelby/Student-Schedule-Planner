@@ -68,14 +68,19 @@
             <div class="subtitle-Heading">Student Planner</div>
             <hr class="solid" style="position:relative; top:-40px;">
             <h2>Generated Schedules</h2>
-            <button type="button" class="button-generate"><i class="fas fa-sync"></i>
+            <form action="/generate_schedule" method="POST">
+                <button type="submit" class="button-generate" ><i class="fas fa-sync"></i>
                 Generate Schedule</button>
+            </form>
+
             <button type="button" class="button-save">Save Selected</button>
             <div>
                <input type="radio" id="schedule1" name="" value="">
                 <p class="schedule_heading">course title course title course title break_name</p>
             </div>
+            {% for break in breaks %}
 
+            {% endfor %}
             <h5>Schedule View</h5>
 
             <!--INSERT CONTENT HERE------------------------------------------------------------------------------------->

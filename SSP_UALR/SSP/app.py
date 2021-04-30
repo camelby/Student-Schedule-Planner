@@ -102,16 +102,17 @@ class Break(db.Model):
 
 class GeneratedSchedules(db.Model):
     __tablenamme__ = 'generated_schedules'
-    user_id = db.Column(db.String(64), db.ForeignKey('users.id'), primary_key=True)
+    user_id = db.Column(db.String(64), db.ForeignKey('users.id'))
+    rows_id = db.Column(db.Integer, primary_key=True)
     course_title = db.Column(db.String(64))
     course_id = db.Column(db.Integer)
     dept_id = db.Column(db.String(64))
     sect_id = db.Column(db.String(64))
     instructor = db.Column(db.String(64))
     class_period = db.Column(db.String(64))
-    break_name = db.Column(db.String(64), primary_key=True)
+    break_name = db.Column(db.String(64))
     reserved_time = Break(
-        break_name=db.Column(db.String(64), primary_key=True),
+        break_name=db.Column(db.String(64)),
         break_day=db.Column(db.String(64)),
         break_start_time=db.Column(db.String(64)),
         break_end_time=db.Column(db.String(64))
@@ -732,11 +733,41 @@ def public():
 def studentGenerate():
     if current_user.is_authenticated:
         if current_user.access == 'STUDENT':
-
-            page_template = 'studentGenerate.html'
-            return render_template(page_template)
+            if request.method == 'POST':
+                page_template = 'studentGenerate.html'
+                return render_template(page_template)
         else:
             return redirect(url_for('unauthorized_error'))
+
+
+@app.route("/generate_schedule", methods=['POST'])
+def generate_schedules():
+    if current_user.is_authenticated:
+         if current_user.access == 'STUDENT':
+            query = current_user.id
+            breaks = Break.query.filter_by(user_id=query).all()
+            addClass = AddClass.query.filter_by(user_id=query).all()
+            page_template = 'studentGenerate.html'
+            for addClasses in addClass:
+                class_period = addClass.class_period
+                day, break_time = class_period.split(' ')
+                start_time, end_time = break_time.split('-')
+                for student_break in breaks:
+                    if start_time > breaks.break_start_time or start_time < breaks.break_end_time:
+                        flash('A desired course is between your break.', 'alert-danger')
+                        return render_template(page_template)
+                    else:
+                        generate_schedule = GeneratedSchedules(
+                            course_title=addClass.course_title,
+                            course_id=addClass.course_id,
+                            dept_id=addClass.dept_id,
+                            sect_id=addClass.sect_id,
+                            instructor=addClass.instructor,
+                            class_period=addClass.class_period
+                        )
+                        db.session.add(generate_schedule)
+                        db.session.commit()
+            return render_template(page_template)
 
 
 # Route for student schedule viewer
