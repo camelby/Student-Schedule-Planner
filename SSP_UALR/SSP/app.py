@@ -1,11 +1,15 @@
 # Library Imports
+import random
+
+import flask
+import wtforms.widgets
 from flask import Flask, render_template, flash, request, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 from flask_mail import Mail, Message
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SelectField, SubmitField
+from wtforms import StringField, PasswordField, SelectField, SubmitField, SelectMultipleField
 from wtforms.validators import DataRequired, Email, Length, EqualTo
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -96,6 +100,24 @@ class Break(db.Model):
     break_end_time = db.Column(db.String(64))
 
 
+class GeneratedSchedules(db.Model):
+    __tablenamme__ = 'generated_schedules'
+    user_id = db.Column(db.String(64), db.ForeignKey('users.id'), primary_key=True)
+    course_title = db.Column(db.String(64))
+    course_id = db.Column(db.Integer)
+    dept_id = db.Column(db.String(64))
+    sect_id = db.Column(db.String(64))
+    instructor = db.Column(db.String(64))
+    class_period = db.Column(db.String(64))
+    break_name = db.Column(db.String(64), primary_key=True)
+    reserved_time = Break(
+        break_name=db.Column(db.String(64), primary_key=True),
+        break_day=db.Column(db.String(64)),
+        break_start_time=db.Column(db.String(64)),
+        break_end_time=db.Column(db.String(64))
+    )
+
+
 class FinalSchedule(db.Model):
     __tablenamme__ = 'final_schedule'
     user_id = db.Column(db.String(64), db.ForeignKey('users.id'), primary_key=True)
@@ -174,8 +196,10 @@ class BreakForm(FlaskForm):
                     ('13:00', '13:00'), ('13:30', '13:30'), ('14:00', '14:00'), ('14:30', '14:30'), ('15:00', '15:00'),
                     ('15:30', '15:30'), ('16:00', '16:00'), ('16:30', '16:30'), ('17:00', '17:00'), ('17:30', '17:30'),
                     ('18:00', '18:00'), ('18:30', '18:30'), ('19:00', '19:00'), ('19:30', '19:30'), ('20:00', '20:00')]
+    day_choices = [('M', 'Monday'), ('T', 'Tuesday'), ('W', 'Wednesday'), ('R', 'Thursday'), ('F', 'Friday'),
+                   ('S', 'Saturday'), ('Su', 'Sunday')]
     break_name = StringField('Break Name', validators=[DataRequired()])
-    break_day = StringField('Days', validators=[DataRequired()])
+    break_day = SelectMultipleField('Days', choices=day_choices, validators=[DataRequired()])
     break_start_time = SelectField('Start Time: HH:MM (UTC)', choices=time_choices, validators=[DataRequired()])
     break_end_time = SelectField('End Time: HH:MM (UTC)', choices=time_choices, validators=[DataRequired()])
     submit = SubmitField('Add')
@@ -595,7 +619,7 @@ def studentPlanner():
                 add_break = Break(
                     user_id=current_user.id,
                     break_name=break_form.break_name.data,
-                    break_day=break_form.break_day.data,
+                    break_day=''.join(break_form.break_day.data),
                     break_start_time=break_form.break_start_time.data,
                     break_end_time=break_form.break_end_time.data
                 )
@@ -620,7 +644,7 @@ def break_update():
                 breaks = Break.query.filter_by(break_name=query).first_or_404()
                 if request.form.get('edit_button'):
                     breaks.break_name = request.form['break_name']
-                    breaks.break_day = request.form['break_day']
+                    breaks.break_day = ''.join(request.form.getlist('break_day'))
                     breaks.break_start_time = request.form['break_start_time']
                     breaks.break_end_time = request.form['break_end_time']
                     flash('Break was successfully edited', 'alert-success')
@@ -708,6 +732,7 @@ def public():
 def studentGenerate():
     if current_user.is_authenticated:
         if current_user.access == 'STUDENT':
+
             page_template = 'studentGenerate.html'
             return render_template(page_template)
         else:
