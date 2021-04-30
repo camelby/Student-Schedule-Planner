@@ -1,7 +1,4 @@
 # Library Imports
-import random
-
-import flask
 from flask import Flask, render_template, flash, request, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
@@ -492,7 +489,7 @@ def upload_files():
 
 
 # POST route for course CSV file upload
-@app.route("/upload_course_file", methods=['POST'])
+@app.route("/upload_course_files", methods=['POST'])
 @login_required
 def upload_course_files():
     if current_user.is_authenticated:
