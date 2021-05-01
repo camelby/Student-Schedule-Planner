@@ -556,6 +556,14 @@ def sections_catalog():
                 if section is not None:
                     flash('Section already exists!', 'alert-danger')
                 else:
+                    check_class_st = military_time_converter(rt_sect_add_form.class_start_time.data)
+                    check_class_et = military_time_converter(rt_sect_add_form.class_end_time.data)
+                    if check_class_et == check_class_st:
+                        flash('Class times must be different.', 'alert-danger')
+                        return redirect(url_for('sections_catalog'))
+                    if check_class_st > check_class_et:
+                        flash('Start time must be less than End time.', 'alert-danger')
+                        return redirect(url_for('sections_catalog'))
                     rt_add_section = Section(
                         course_title=rt_sect_add_form.course_title.data,
                         course_id=rt_sect_add_form.course_id.data,
@@ -616,12 +624,12 @@ def studentPlanner():
             if break_form.validate_on_submit():
                 check_break_name = Break.query.filter_by(break_name=break_form.break_name.data).first()
                 if check_break_name is not None:
-                    flash('break_name already exists.', 'alert-danger')
+                    flash('Break name already exists.', 'alert-danger')
                     return redirect(url_for('studentPlanner'))
                 check_break_st = military_time_converter(break_form.break_start_time.data)
                 check_break_et = military_time_converter(break_form.break_end_time.data)
                 if check_break_et == check_break_st:
-                    flash('break_period must be different.', 'alert-danger')
+                    flash('Break times must be different.', 'alert-danger')
                     return redirect(url_for('studentPlanner'))
                 if check_break_st > check_break_et:
                     flash('Start time must be less than End time.', 'alert-danger')
