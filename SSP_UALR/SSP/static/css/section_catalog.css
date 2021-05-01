@@ -76,7 +76,6 @@ span {
    border:none;
    background: #485676;
 }
-
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
@@ -354,7 +353,8 @@ h5 {
     background: #485676;
 }
 
-#course_title, #course_id, #dept_id, #sect_id, #instructor, #class_period {
+
+#course_title, #course_id, #dept_id, #sect_id, #instructor, #class_day, #class_start_time, #class_end_time{
     display: block;
     width: 100%;
     padding: .375rem .75rem;

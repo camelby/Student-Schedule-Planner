@@ -110,13 +110,11 @@ class GeneratedSchedules(db.Model):
     sect_id = db.Column(db.String(64))
     instructor = db.Column(db.String(64))
     class_period = db.Column(db.String(64))
-    break_name = db.Column(db.String(64))
-    reserved_time = Break(
-        break_name=db.Column(db.String(64)),
-        break_day=db.Column(db.String(64)),
-        break_start_time=db.Column(db.String(64)),
-        break_end_time=db.Column(db.String(64))
-    )
+    break_name = db.Column(db.String(64), primary_key=True)
+    break_day = db.Column(db.String(64))
+    break_start_time = db.Column(db.String(64))
+    break_end_time = db.Column(db.String(64))
+
 
 
 class FinalSchedule(db.Model):
@@ -175,12 +173,22 @@ class LoginForm(FlaskForm):
 
 
 class SectionForm(FlaskForm):
+    time_choices = [('8:00', '08:00'), ('8:30', '08:30'), ('9:00', '09:00'), ('9:30', '09:30'), ('10:00', '10:00'),
+                    ('10:30', '10:30'), ('11:00', '11:00'), ('11:30', '11:30'), ('12:00', '12:00'), ('12:30', '12:30'),
+                    ('13:00', '13:00'), ('13:30', '13:30'), ('14:00', '14:00'), ('14:30', '14:30'), ('15:00', '15:00'),
+                    ('15:30', '15:30'), ('16:00', '16:00'), ('16:30', '16:30'), ('17:00', '17:00'), ('17:30', '17:30'),
+                    ('18:00', '18:00'), ('18:30', '18:30'), ('19:00', '19:00'), ('19:30', '19:30'), ('20:00', '20:00')]
+    day_choices = [('M', 'Monday'), ('T', 'Tuesday'), ('W', 'Wednesday'), ('R', 'Thursday'), ('F', 'Friday'),
+                   ('S', 'Saturday'), ('Su', 'Sunday')]
     course_title = StringField('Course Title', validators=[DataRequired()])
     course_id = StringField('Course ID', validators=[DataRequired()])
     dept_id = StringField('Department ID', validators=[DataRequired()])
     sect_id = StringField('Section ID', validators=[DataRequired()])
     instructor = StringField('Instructor', validators=[DataRequired()])
-    class_period = StringField('Class Period -- MWF or TR HH:MM - HH:MM (UTC)', validators=[DataRequired()])
+    class_day = SelectMultipleField('Days', choices=day_choices, validators=[DataRequired()])
+    class_start_time = SelectField('Start Time: HH:MM (UTC)', choices=time_choices, validators=[DataRequired()])
+    class_end_time = SelectField('End Time: HH:MM (UTC)', choices=time_choices, validators=[DataRequired()])
+    #class_period = StringField('Class Period -- MWF or TR HH:MM - HH:MM (UTC)', validators=[DataRequired()])
     submit = SubmitField('Add')
 
 
@@ -554,7 +562,8 @@ def sections_catalog():
                         dept_id=rt_sect_add_form.dept_id.data,
                         sect_id=rt_sect_add_form.sect_id.data,
                         instructor=rt_sect_add_form.instructor.data,
-                        class_period=rt_sect_add_form.class_period.data
+                        class_period=''.join(rt_sect_add_form.class_day.data) + ' ' + rt_sect_add_form.class_start_time.data
+                                     + '-' + rt_sect_add_form.class_end_time.data
                     )
                     db.session.add(rt_add_section)
                     db.session.commit()
@@ -580,7 +589,7 @@ def update_section():
                     section.dept_id = request.form['dept_id']
                     section.sect_id = request.form['sect_id']
                     section.instructor = request.form['instructor']
-                    section.class_period = request.form['class_period']
+                    section.class_period = ''.join(request.form.getlist('class_day')) + ' ' + request.form['class_start_time'] + '-' + request.form['class_end_time']
                     db.session.commit()
                     flash('Section successfully edited!', 'alert-success')
                     return redirect(url_for('sections_catalog'))
@@ -625,17 +634,6 @@ def studentPlanner():
                     break_end_time=break_form.break_end_time.data
                 )
                 db.session.add(add_break)
-                db.session.commit()
-                generate_schedule = generate_schedules(
-                    user_id=current_user.id,
-                    reserved_time=Break(
-                        break_name=break_form.break_name.data,
-                        break_day=''.join(break_form.break_day.data),
-                        break_start_time=break_form.break_start_time.data,
-                        break_end_time=break_form.break_end_time.data
-                    )
-                )
-                db.session.add(generate_schedule)
                 db.session.commit()
                 flash('Break was successfully Added', 'alert-success')
                 return redirect(url_for('studentPlanner'))
@@ -744,7 +742,6 @@ def public():
 def studentGenerate():
     if current_user.is_authenticated:
         if current_user.access == 'STUDENT':
-            if request.method == 'POST':
                 page_template = 'studentGenerate.html'
                 return render_template(page_template)
         else:
@@ -754,7 +751,7 @@ def studentGenerate():
 @app.route("/generate_schedule", methods=['POST'])
 def generate_schedules():
     if current_user.is_authenticated:
-         if current_user.access == 'STUDENT':
+        if current_user.access == 'STUDENT':
             query = current_user.id
             breaks = Break.query.filter_by(user_id=query).all()
             addClass = AddClass.query.filter_by(user_id=query).all()
@@ -781,8 +778,9 @@ def generate_schedules():
                         )
                         db.session.add(generate_schedule)
                         db.session.commit()
-
-            return render_template(page_template)
+            generated_schedule = GeneratedSchedules.query.filter_by(user_id=query).all()
+            flash('Courses was added to the schedules.', 'alert-success')
+            return render_template(page_template, generated_schedule=generated_schedule)
 
 
 # Route for student schedule viewer
