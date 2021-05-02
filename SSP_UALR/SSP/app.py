@@ -766,21 +766,23 @@ def generate_schedules():
                     check_break_et = military_time_converter(student_break.break_end_time)
                     check_class_st = military_time_converter(start_time)
                     check_class_et = military_time_converter(end_time)
-                    if check_class_st <= check_break_et and check_class_et >= check_break_st:
-                        flash('A desired course is between your break.', 'alert-danger')
-                        return render_template(page_template)
-                    else:
-                        generate_schedule = GeneratedSchedules(
-                            user_id=current_user.id,
-                            course_title=addClasses.course_title,
-                            course_id=addClasses.course_id,
-                            dept_id=addClasses.dept_id,
-                            sect_id=addClasses.sect_id,
-                            instructor=addClasses.instructor,
-                            class_period=addClasses.class_period
-                        )
-                        db.session.add(generate_schedule)
-                        db.session.commit()
+                    for x in day:
+                        if x in student_break.break_day:
+                            if check_class_st <= check_break_et and check_class_et >= check_break_st:
+                                flash('A desired course is between your break.', 'alert-danger')
+                                return render_template(page_template)
+                            else:
+                                generate_schedule = GeneratedSchedules(
+                                    user_id=current_user.id,
+                                    course_title=addClasses.course_title,
+                                    course_id=addClasses.course_id,
+                                    dept_id=addClasses.dept_id,
+                                    sect_id=addClasses.sect_id,
+                                    instructor=addClasses.instructor,
+                                    class_period=addClasses.class_period
+                                )
+                                db.session.add(generate_schedule)
+                                db.session.commit()
             generated_schedules = GeneratedSchedules.query.filter_by(user_id=query).all()
             flash('Courses was added to the schedules.', 'alert-success')
             return render_template(page_template, generated_schedules=generated_schedules)
