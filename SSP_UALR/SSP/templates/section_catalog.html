@@ -89,6 +89,7 @@
                     {% endfor %}
                     {% endif %}
                     {% endwith %}
+                    <label>Note: To select multiple days, use CTRL for PC, or ⌘ for Mac</label>
                     <table class="table table-hover table-bordered">
                         <thead class="table-primary">
                             <tr>
@@ -163,14 +164,12 @@
                                 </div>
                                 <div class="form-group">
                                      <label>Class Day</label>
-                                    <select style="margin-bottom: 10px;" name = "class_day" id="class_day"  multiple size = 7 required>
+                                    <select style="margin-bottom: 10px;" name = "class_day" id="class_day"  multiple size = 5 required>
                                         <option value = "M">Monday</option>
                                         <option value = "T">Tuesday</option>
                                         <option value = "W">Wednesday</option>
                                         <option value = "R">Thursday</option>
                                         <option value = "F">Friday</option>
-                                        <option value = "S">Saturday</option>
-                                        <option value = "Su">Sunday</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
