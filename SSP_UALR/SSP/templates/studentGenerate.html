@@ -68,10 +68,13 @@
             <div class="subtitle-Heading">Student Planner</div>
             <hr class="solid" style="position:relative; top:-40px;">
             <h2>Generated Schedules</h2>
-            <form action="/generate_schedule" method="POST">
-                <button type="submit" class="button-generate" ><i class="fas fa-sync"></i>
-                Generate Schedule</button>
-            </form>
+            <div>
+                <form action="/generate_schedule" method="POST">
+                    <button type="submit" class="button-generate" ><i class="fas fa-sync"></i>
+                    Generate Schedule</button>
+                </form>
+                <button style="margin-top: -85px;" type="button" class="button-save">Save Schedule</button>
+            </div>
             {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                         {% for category, message in messages %}
@@ -79,17 +82,32 @@
                         {% endfor %}
                     {% endif %}
             {% endwith %}
-            <button type="button" class="button-save">Save Selected</button>
             <!--errors begin here-->
-            {% for generate_schedule in generated_schedules %}
-                <div>
-               <input type="checkbox" id="schedule1" name="" value="">
-                <p class="schedule_heading">
-                    {% for generate_schedule in generated_schedules %}
-                        {{ generate_schedule.course_title }}
-                    {% endfor %}</p>
-                </div>
-            {% endfor %}
+            <table class="table table-hover table-bordered">
+                <thead class="table-primary">
+                <tr>
+                    <th scope="col">Course Title</th>
+                    <th scope="col">Course ID</th>
+                    <th scope="col">Department ID</th>
+                    <th scope="col">Section ID</th>
+                    <th scope="col">Instructor</th>
+                    <th scope="col">Class Period</th>
+                </tr>
+                </thead>
+                {% for generate_schedule in generated_schedules %}
+                    <tbody>
+                    <tr>
+                        <td>{{ generate_schedule.course_title }}</td>
+                        <td>{{ generate_schedule.course_id }}</td>
+                        <td>{{ generate_schedule.dept_id }}</td>
+                        <td>{{ generate_schedule.sect_id }}</td>
+                        <td>{{ generate_schedule.instructor }}</td>
+                        <td>{{ generate_schedule.class_period }}</td>
+                    </tr>
+                    </tbody>
+                {% endfor %}
+            </table>
+
             <h5>Schedule View</h5>
 
             <!--INSERT CONTENT HERE------------------------------------------------------------------------------------->
