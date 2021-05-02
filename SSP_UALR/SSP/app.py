@@ -772,7 +772,7 @@ def generate_schedules():
                                 flash('A desired course is between your break.', 'alert-danger')
                                 return render_template(page_template)
                             else:
-                                generate = GeneratedSchedules.query.filter_by(user_id=query).all()
+                                GeneratedSchedules.query.filter_by(user_id=query).all()
                                 db.session.delete(generate_schedule)
                                 db.session.commit()
                                 generate_schedule = GeneratedSchedules(
@@ -788,7 +788,8 @@ def generate_schedules():
                                 db.session.commit()
             generated_schedules = GeneratedSchedules.query.filter_by(user_id=query).all()
             flash('Courses was added to the schedules.', 'alert-success')
-            return render_template(page_template, generated_schedules=generated_schedules, fresh_generate=generate)
+            return render_template(page_template, generated_schedules=generated_schedules)
+
 
 # Route for student schedule viewer
 @app.route('/studentcur')
