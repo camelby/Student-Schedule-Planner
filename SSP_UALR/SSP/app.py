@@ -110,10 +110,6 @@ class GeneratedSchedules(db.Model):
     sect_id = db.Column(db.String(64))
     instructor = db.Column(db.String(64))
     class_period = db.Column(db.String(64))
-    break_name = db.Column(db.String(64), primary_key=True)
-    break_day = db.Column(db.String(64))
-    break_start_time = db.Column(db.String(64))
-    break_end_time = db.Column(db.String(64))
 
 
 
@@ -187,7 +183,6 @@ class SectionForm(FlaskForm):
     class_day = SelectMultipleField('Days', choices=day_choices, validators=[DataRequired()])
     class_start_time = SelectField('Start Time: HH:MM (UTC)', choices=time_choices, validators=[DataRequired()])
     class_end_time = SelectField('End Time: HH:MM (UTC)', choices=time_choices, validators=[DataRequired()])
-    #class_period = StringField('Class Period -- MWF or TR HH:MM - HH:MM (UTC)', validators=[DataRequired()])
     submit = SubmitField('Add')
 
 
@@ -774,22 +769,21 @@ def generate_schedules():
                     if check_class_st <= check_break_et and check_class_et >= check_break_st:
                         flash('A desired course is between your break.', 'alert-danger')
                         return render_template(page_template)
-                    ##REMOVE COMMENTS TESTING THE OVERLAPS
-                    #else:
-                     #   generate_schedule = GeneratedSchedules(
-                      #      course_title=addClasses.course_title,
-                       #     course_id=addClasses.course_id,
-                        #    dept_id=addClasses.dept_id,
-                         #   sect_id=addClasses.sect_id,
-                          #  instructor=addClasses.instructor,
-                           # class_period=addClasses.class_period
-                        #)
-                        #db.session.add(generate_schedule)
-                        #db.session.commit()
-           # generated_schedule = GeneratedSchedules.query.filter_by(user_id=query).all()
+                    else:
+                        generate_schedule = GeneratedSchedules(
+                            user_id=current_user.id,
+                            course_title=addClasses.course_title,
+                            course_id=addClasses.course_id,
+                            dept_id=addClasses.dept_id,
+                            sect_id=addClasses.sect_id,
+                            instructor=addClasses.instructor,
+                            class_period=addClasses.class_period
+                        )
+                        db.session.add(generate_schedule)
+                        db.session.commit()
+            generated_schedules = GeneratedSchedules.query.filter_by(user_id=query).all()
             flash('Courses was added to the schedules.', 'alert-success')
-            #return render_template(page_template, generated_schedule=generated_schedule)
-            return render_template(page_template)
+            return render_template(page_template, generated_schedules=generated_schedules)
 
 # Route for student schedule viewer
 @app.route('/studentcur')

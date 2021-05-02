@@ -81,11 +81,14 @@
             {% endwith %}
             <button type="button" class="button-save">Save Selected</button>
             <!--errors begin here-->
-            {% for generate_schedule in generated_schedule %}
+            {% for generate_schedule in generated_schedules %}
                 <div>
-               <input type="radio" id="schedule1" name="" value="">
-                <p class="schedule_heading">{{ generate_schedule.course_title }} {{ generate_schedule.break_name }}</p>
-            </div>
+               <input type="checkbox" id="schedule1" name="" value="">
+                <p class="schedule_heading">
+                    {% for generate_schedule in generated_schedules %}
+                        {{ generate_schedule.course_title }}
+                    {% endfor %}</p>
+                </div>
             {% endfor %}
             <h5>Schedule View</h5>
 
