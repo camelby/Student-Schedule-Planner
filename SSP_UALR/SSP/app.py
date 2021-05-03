@@ -405,12 +405,6 @@ def rootAuth():
     return render_template(page_template, users=users)
 
 
-# elif current_user.access == 'ADMIN':
-#  return redirect(401)
-# elif current_user.access == 'STUDENT':
-#   return redirect(401)
-
-
 # POST route for root decision on privileged user requests
 @app.route('/root_auth_decision', methods=['POST'])
 def root_auth_decision():
@@ -753,39 +747,90 @@ def studentGenerate():
 def generate_schedules():
     if current_user.is_authenticated:
         if current_user.access == 'STUDENT':
+            # Get the current students ID
             query = current_user.id
+            # Filter by student's ID and select all added classes and breaks
             breaks = Break.query.filter_by(user_id=query).all()
-            addClass = AddClass.query.filter_by(user_id=query).all()
+            addClasses = AddClass.query.filter_by(user_id=query).all()
             page_template = 'studentGenerate.html'
+            # Delete unsaved generated schedules
             GeneratedSchedules.query.filter_by(user_id=current_user.id).delete()
             db.session.commit()
-            for addClasses in addClass:
-                class_period = addClasses.class_period
-                day, break_time = class_period.split(' ')
-                start_time, end_time = break_time.split('-')
-                for student_break in breaks:
-                    check_break_st = military_time_converter(student_break.break_start_time)
-                    check_break_et = military_time_converter(student_break.break_end_time)
-                    check_class_st = military_time_converter(start_time)
-                    check_class_et = military_time_converter(end_time)
-                    for x in day:
-                        if x in student_break.break_day:
-                            if check_class_st <= check_break_et and check_class_et >= check_break_st:
-                                flash('A desired course is between your break.', 'alert-danger')
-                                return render_template(page_template)
-                            else:
-
-                                generate_schedule = GeneratedSchedules(
-                                    user_id=current_user.id,
-                                    course_title=addClasses.course_title,
-                                    course_id=addClasses.course_id,
-                                    dept_id=addClasses.dept_id,
-                                    sect_id=addClasses.sect_id,
-                                    instructor=addClasses.instructor,
-                                    class_period=addClasses.class_period
-                                )
-                                db.session.add(generate_schedule)
-                                db.session.commit()
+            # For every class in student's designated courses check course dates and times for conflicts
+            for add_class in addClasses:
+                # If there are no breaks add class to generation table
+                if breaks is None:
+                    generate_schedule = GeneratedSchedules(
+                        user_id=current_user.id,
+                        course_title=add_class.course_title,
+                        course_id=add_class.course_id,
+                        dept_id=add_class.dept_id,
+                        sect_id=add_class.sect_id,
+                        instructor=add_class.instructor,
+                        class_period=add_class.class_period
+                    )
+                    db.session.add(generate_schedule)
+                    db.session.commit()
+                else:
+                    class_period = add_class.class_period
+                    # Split day and time (i.e 'MWF 10:00-12:00' -> 'MWF' '10:00-12:00')
+                    day, break_time = class_period.split(' ')
+                    # Split days into single day (i.e MWF -> 'M' 'W' 'F') and place in dictionary
+                    class_dictionary = {}
+                    if len(day) > 1:
+                        for i in range(1, len(day)+1):
+                            class_dictionary["class_day{0}".format(i)] = day[i-1:i]
+                    else:
+                        # If class is only one day don't split
+                        class_dictionary = {
+                            "class_day1": day
+                        }
+                    # For each student break check if there is a conflict with iterated class
+                    for student_break in breaks:
+                        # Split days into single day (i.e MWF -> 'M' 'W' 'F') and place in dictionary
+                        break_dictionary = {}
+                        if len(student_break.break_day) > 1:
+                            for i in range(1, len(student_break.break_day)+1):
+                                break_dictionary["break_day{0}".format(i)] = student_break.break_day[i-1:i]
+                        else:
+                            # If break is only one day don't split
+                            break_dictionary = {
+                                "break_day1": student_break.break_day
+                            }
+                        # Check if any break day matches class day
+                        for class_value in class_dictionary.values():
+                            for break_value in break_dictionary.values():
+                                # If there is break on a class day then check times
+                                if class_value == break_value:
+                                    # Split class start time and end time (i.e 10:00-12:00 -> '10:00' '12:00')
+                                    start_time, end_time = break_time.split('-')
+                                    # Convert class time string to integer using minute converter (i.e 13:00 -> 780)
+                                    check_class_st = military_time_converter(start_time)
+                                    check_class_et = military_time_converter(end_time)
+                                    # Convert break time string to integer using minute converter (i.e 13:00 -> 780)
+                                    check_break_st = military_time_converter(student_break.break_start_time)
+                                    check_break_et = military_time_converter(student_break.break_end_time)
+                                    # Check for time conflict
+                                    if check_class_st <= check_break_et and check_class_et >= check_break_st:
+                                        # Notify on conflict
+                                        flash('A desired course is between your break.', 'alert-danger')
+                                        print(class_period)
+                                        # Delete generated schedule with conflict
+                                        GeneratedSchedules.query.filter_by(user_id=current_user.id).delete()
+                                        db.session.commit()
+                                        return render_template(page_template)
+                    # No conflict so add to to generation table
+                    generate_schedule = GeneratedSchedules(
+                        user_id=current_user.id,
+                        course_title=add_class.course_title,
+                        course_id=add_class.course_id,
+                        dept_id=add_class.dept_id,
+                        sect_id=add_class.sect_id,
+                        instructor=add_class.instructor,
+                        class_period=add_class.class_period
+                    )
+                db.session.add(generate_schedule)
+                db.session.commit()
             generated_schedules = GeneratedSchedules.query.filter_by(user_id=query).all()
             flash('Courses was added to the schedules.', 'alert-success')
             return render_template(page_template, generated_schedules=generated_schedules)
