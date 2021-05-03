@@ -757,6 +757,8 @@ def generate_schedules():
             breaks = Break.query.filter_by(user_id=query).all()
             addClass = AddClass.query.filter_by(user_id=query).all()
             page_template = 'studentGenerate.html'
+            GeneratedSchedules.query.filter_by(user_id=current_user.id).delete()
+            db.session.commit()
             for addClasses in addClass:
                 class_period = addClasses.class_period
                 day, break_time = class_period.split(' ')
@@ -772,9 +774,7 @@ def generate_schedules():
                                 flash('A desired course is between your break.', 'alert-danger')
                                 return render_template(page_template)
                             else:
-                                # GeneratedSchedules.query.filter_by(user_id=query).all()
-                                # db.session.delete(generate_schedule)
-                                # db.session.commit()
+
                                 generate_schedule = GeneratedSchedules(
                                     user_id=current_user.id,
                                     course_title=addClasses.course_title,
