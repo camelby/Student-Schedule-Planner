@@ -19,7 +19,6 @@ import os
 import datetime
 import pandas as pd
 import time
-from datetime import datetime
 
 # Set application instance
 app = Flask(__name__)
