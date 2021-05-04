@@ -265,16 +265,16 @@ def send_email(to, subject, template):
 # Parse CSV file on upload
 def parseCSV(file_path):
     # CVS column names
-    col_names = ['course_title', 'course_id', 'dept_id', 'sect_id', 'instructor', 'class_period']
+    col_names = ['dept_id', 'course_id', 'course_title', 'sect_id', 'instructor', 'class_period']
     # Use Pandas to parse the CSV file
-    csv_data = pd.read_csv(file_path, names=col_names, header=None)
+    csv_data = pd.read_csv(file_path, names=col_names, header=0)
     # Loop through the rows and add them to the database
     for i, row in csv_data.iterrows():
         section = Section(
             course_title=csv_data.course_title[i],
             course_id=int(csv_data.course_id[i]),
-            dept_id=int(csv_data.dept_id[i]),
-            sect_id=int(csv_data.sect_id[i]),
+            dept_id=(csv_data.dept_id[i]),
+            sect_id=(csv_data.sect_id[i]),
             instructor=csv_data.instructor[i],
             class_period=csv_data.class_period[i]
         )
@@ -287,15 +287,15 @@ def parseCSV(file_path):
 # Parse CSV file on upload
 def parse_course_CSV(file_path):
     # CVS column names
-    col_names = ['course_title', 'dept_id', 'course_id']
+    col_names = ['dept_id', 'course_id', 'course_title']
     # Use Pandas to parse the CSV file
-    csv_data = pd.read_csv(file_path, names=col_names, header=None)
+    csv_data = pd.read_csv(file_path, names=col_names, header=0)
     # Loop through the rows and add them to the database
     for i, row in csv_data.iterrows():
         course = Course(
             course_title=csv_data.course_title[i],
             course_id=int(csv_data.course_id[i]),
-            dept_id=int(csv_data.dept_id[i])
+            dept_id=(csv_data.dept_id[i])
         )
         db.session.add(course)
         db.session.commit()
