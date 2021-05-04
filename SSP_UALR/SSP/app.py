@@ -833,7 +833,38 @@ def generate_schedules():
                 db.session.commit()
             generated_schedules = GeneratedSchedules.query.filter_by(user_id=query).all()
             flash('Courses was added to the schedules.', 'alert-success')
-            return render_template(page_template, generated_schedules=generated_schedules)
+            final_schedule = FinalSchedule.query.filter_by(user_id=current_user.id).all()
+            return render_template(page_template, generated_schedules=generated_schedules, final_schedules=final_schedule)
+
+
+@app.route('/save_generate', methods=['POST'])
+def saveGenerate():
+    if current_user.is_authenticated:
+        if current_user.access == 'STUDENT':
+        # Select all of the student's breaks based on their assigned ID
+            # Delete previously saved final schedules
+            #FinalSchedule.query.filter_by(user_id=current_user.id).delete()
+          #  db.session.commit()
+            if request.method == 'POST':
+                qry = request.form.get('index')
+                final = GeneratedSchedules.query.filter_by(user_id=qry).all()
+                if request.form.get('save_button'):
+                        final_schedule = FinalSchedule(
+                            user_id=current_user.id,
+                            rows_id=generate_schedules.row_id,
+                            course_title=generate_schedules.course_title,
+                            course_id=generate_schedules.course_id,
+                            dept_id=generate_schedules.dept_id,
+                            sect_id=generate_schedules.sect_id,
+                            instructor=generate_schedules.instructor,
+                            class_period=generate_schedules.class_period
+                        )
+                        db.session.add(final_schedule)
+                        db.session.commit()
+                        flash('Schedule was successfully saved', 'alert-success')
+                        return redirect(url_for('studentGenerate'))
+    else:
+        return redirect(url_for('unauthorized_error'))
 
 
 # Route for student schedule viewer

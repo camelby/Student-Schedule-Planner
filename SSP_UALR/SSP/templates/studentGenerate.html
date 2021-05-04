@@ -1,3 +1,4 @@
+{% import "bootstrap/wtf.html" as wtf %}
 {% block title %}<title>Student | Current Schedule</title>{% endblock %}
 {% block header %}
     <meta charset="utf-8">
@@ -33,7 +34,7 @@
           		<img class="img-responsive img-rounded" src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg" alt="User picture">
        	        </div>
                 <div class="user-info">
-          		<span class="user-name">{{current_user.username}}</span>
+          		<span class="user-name">{{current_user.first_name}} {{ current_user.last_name }}</span>
           		<span class="user-role">{{current_user.access}}</span>
                 </div>
             </div>
@@ -73,7 +74,7 @@
                     <button type="submit" class="button-generate" ><i class="fas fa-sync"></i>
                     Generate Schedule</button>
                 </form>
-                <button style="margin-top: -85px;" type="button" class="button-save">Save Schedule</button>
+                <button href="#SaveScheduleModal" style="margin-top: -85px;" type="button" data-toggle="modal" class="button-save">Save Schedule</button>
             </div>
             {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
@@ -244,9 +245,31 @@
   </div> <!-- .cd-schedule -->
 
     <!--INSERT CONTENT HERE------------------------------------------------------------------------------------->
-
         </div>
     </div>
+
+    <!-- Save Schedules -->
+<div id="SaveScheduleModal" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="/save_generate" method="POST">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Save Generated Schedule</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to save this Schedule?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" id="index" name="index" value="">
+                            <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                            <input type="submit" name=“save_button" class="btn btn-danger" value=“Save”>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
 
     <!-- jQuery CDN - Slim version (=without AJAX) -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -264,6 +287,10 @@
                 $('#sidebar').toggleClass('active');
             });
         });
+        {#$(document).on("click", ".save-dialog", function () {
+    let userID = $(this).data('id');
+    $(".modal-footer #index").val( userID );
+});#}
     </script>
 
 {% endblock %}

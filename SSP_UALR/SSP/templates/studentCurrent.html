@@ -67,36 +67,33 @@
             <div class="subtitle-Heading">Student Planner</div>
             <hr class="solid" style="position:relative; top:-40px;">
             <h2>Current Schedule</h2>
-            <button type="button" class="button-edit"><i class="fas fa-pencil-alt"></i>
-                Edit or Drop</button>
+            {#<button type="button" class="button-edit"><i class="fas fa-pencil-alt"></i>
+                Edit or Drop</button>#}
             <div class="container">
                 <div class="card-body">
                     <table class="table table-hover table-bordered">
                         <thead class="table-primary">
-                        <tr>
-                            <th scope="col">Status</th>
-                            <th scope="col">Subject</th>
-                            <th scope="col">Course</th>
-                            <th scope="col">Section</th>
-                            <th scope="col">Class Period</th>
-                        </tr>
+                            <tr>
+                                <th scope="col">Course Title</th>
+                                <th scope="col">Course ID</th>
+                                <th scope="col">Department ID</th>
+                                <th scope="col">Section ID</th>
+                                <th scope="col">Instructor</th>
+                                <th scope="col">Class Period</th>
+                            </tr>
                         </thead>
+                        {% for final_schedule in final_schedules %}
                         <tbody>
-                        <tr data-id="1">
-                            <td>Enrolled</td>
-                            <td>ARST</td>
-                            <td>3385</td>
-                            <td>9S1</td>
-                            <td>MWF time-time</td>
-                        </tr>
-                        <tr data-id="2">
-                            <td>Break Time</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>MWF time-time</td>
-                        </tr>
+                            <tr>
+                                <td>{{ final_schedule.course_title }}</td>
+                                <td>{{ final_schedule.course_id }}</td>
+                                <td>{{ final_schedule.dept_id }}</td>
+                                <td>{{ final_schedule.sect_id }}</td>
+                                <td>{{ final_schedule.instructor }}</td>
+                                <td>{{ final_schedule.class_period }}</td>
+                            </tr>
                         </tbody>
+                        {% endfor %}
                     </table>
                 </div>
             </div>
@@ -122,11 +119,6 @@
                     <li><span>16:00</span></li>
                     <li><span>16:30</span></li>
                     <li><span>17:00</span></li>
-                      <li><span>17:30</span></li>
-                      <li><span>18:00</span></li>
-                      <li><span>19:00</span></li>
-                      <li><span>19:30</span></li>
-                      <li><span>20:00</span></li>
                   </ul>
                 </div> <!-- .cd-schedule__timeline -->
 
