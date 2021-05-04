@@ -1,0 +1,111 @@
+deptID,courseNumber,courseTitle
+ACOM,1300,Intro to Communication
+ACOM,3300,Interpersonal Communication
+ACOM,3320,Persuasive Presentations
+ACOM,3330,Professional Communication
+ACOM,4300,Senior Capstone Project
+ACOM,4312,Intercultural Communication
+ACOM,4313,SM:Listening & Civil Discourse
+ACOM,4314,Comm Skill Ctr Internship
+ANTH,1415,Physical Anthropology
+ANTH,2316,Understanding Cultures
+ANTH,3312,North American Indians
+ANTH,3320,"Buried Cities, Ancient Lives"
+ANTH,3381,Social Stat
+ANTH,4316,Linguistic Anthropology
+ANTH,4312,Religion Soc & Culture
+ARHA,2305,Intro to Visual Art
+ARHA,2310,Art History Survey I
+ARHA,2311,Art History Survey II
+ARHA,2312,Survey of Non-Western Art
+ARHA,4307,18th/18th Europe
+ARHA,4310,ST: African American Art
+BINS,3305,Mgmt Info Systems
+BINS,3307,Systems Develop Method
+BINS,3352,Data Analysis/Visualization
+BINS,3380,Business Communication
+BINS,4312,Object-Oriented Programming
+BINS,3414,Advanced Programming
+BINS,4350,Bus Data Mgmt Systems
+BINS,4351,Data Analysis and Reporting
+BINS,4352,Big Data Analytics Tools
+BIOL,1102,Intro Biology Lab
+BIOL,1111,Intro A&P II Laboratory
+BIOL,1112,Intro A&P I Laboratory
+BIOL,1400,Evol & Envir Biology
+BIOL,1401,Science of Biology
+BIOL,1402,Biological Concepts I
+BIOL,1402,Biological Concepts I Lab
+BIOL,1411,Intro Human Anat & Physiol I
+BIOL,1411,Intro Huam A&P I Lab
+BIOL,1412,Intro Human Anat & Physiol II
+BIOL,1412,Intro Huam A&P II Lab
+BIOL,1433,Essentials Anatomy&Physiology
+BIOL,1433,Essentials Anat & Phys Lab
+BIOL,2401,Microbiology
+BIOL,2401,Microbiology Lab
+BIOL,2403,Zoology
+BIOL,3402,Human Anatomy
+BIOL,4305,Animal Behavior
+BIOL,4315,Toxicology
+CPSC,1105,FYE for Computing Majors
+CPSC,1370,Computer Literacy
+CPSC,1375,Programming I
+CPSC,2376,Programming II
+CPSC,2377,Intro to Game Programming
+CPSC,2380,Algorithms
+CPSC,2482,Computer Organization
+CPSC,3396,Computer Sys & Assembly
+CPSC,3375,Database Concepts
+CPSC,3380,Operating Systems
+CPSC,3383,Programming Languages
+CPSC,4367,Mobile Apps Development
+CPSC,4373,Software Engineering
+CPSC,4376,Applied Cryptography
+CPSC,4383,Artificial Intelligence
+CPSC,4387,Distributed Computing
+CPSC,4392,Capstone Project
+CSEC,1310,Intro to Cybersecurity
+CSEC,3300,Digital Forensics
+ENGL,2336,Intro to Creative Writing
+ENGL,2337,World Literature
+ENGL,2339,Mythology
+ENGL,3312,"Grammer, Morphology & Syntax"
+ENGL,3330,Approaches To Lit
+ENGL,3348,School Books
+ENGL,4303,Teaching English
+HIST,1311,Hist Of Civilization I
+HIST,1312,Hist Of Civilization II
+HIST,2311,US History To 1877
+HIST,2312,US History Since 1877
+HIST,2312,US History Since 1878
+HIST,3303,Hellenistic Age
+HIST,3353,New Republic: U.S. 1787-1848
+IFSC,1105,FYE for Computing Majors
+IFSC,1202,Intro to Obj-Oriented Tech
+IFSC,1310,Web Technologies
+IFSC,2300,Object-Oriented Technology
+IFSC,2305,Computer Systems
+IFSC,3300,Web Client Applications
+IFSC,3320,Database Concepts
+IFSC,3360,System Analysis and Design
+IFSC,4325,Data Mining concepts & Tech
+IFSC,4330,Database Security
+IFSC,4345,Information Visualization
+IFSC,4365,Web Server Applications
+MATH,102,College Algebra Lab
+MATH,121,Quant & Math Reasoning Lab
+MATH,332,Foundations of College Algebra
+MATH,1223,Intro to Math Software
+MATH,1302,College Algebra
+MATH,1303,Trigonometry
+MATH,1321,Quant & Athmtl Reasoning
+MATH,1342,App Cal I - Bus/ET/Life Sc
+MATH,1343,App Cal II - Bus/ET/Life Sc
+MATH,1451,Calculus I
+MATH,1452,Calculus II
+MATH,2310,Discete Mathematics
+MATH,2453,Calculus III
+MATH,3312,Linear Algebra
+MATH,3322,Intro Differ Equatns
+MATH,3382,Math II for Elementarty Educ

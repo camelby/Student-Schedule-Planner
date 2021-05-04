@@ -84,7 +84,7 @@ class User(UserMixin, db.Model):
 class AddClass(db.Model):
     __tablename__ = 'add_class'
     user_id = db.Column(db.String(64), db.ForeignKey('users.id'))
-    rows_id = db.Column(db.Integer,  primary_key=True) #db.ForeignKey('section.row_id'),
+    rows_id = db.Column(db.Integer,  primary_key=True)
     course_title = db.Column(db.String(64))
     course_id = db.Column(db.Integer)
     dept_id = db.Column(db.String(64))
@@ -117,7 +117,8 @@ class GeneratedSchedules(db.Model):
 
 class FinalSchedule(db.Model):
     __tablenamme__ = 'final_schedule'
-    user_id = db.Column(db.String(64), db.ForeignKey('users.id'), primary_key=True)
+    user_id = db.Column(db.String(64), db.ForeignKey('users.id'))
+    row_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     course_title = db.Column(db.String(64))
     course_id = db.Column(db.Integer)
     dept_id = db.Column(db.String(64))
@@ -855,30 +856,59 @@ def generate_schedules():
 def saveGenerate():
     if current_user.is_authenticated:
         if current_user.access == 'STUDENT':
-        # Select all of the student's breaks based on their assigned ID
+            # Select all of the student's breaks based on their assigned ID
             # Delete previously saved final schedules
-            #FinalSchedule.query.filter_by(user_id=current_user.id).delete()
-          #  db.session.commit()
+            # FinalSchedule.query.filter_by(user_id=current_user.id).delete()
+            # db.session.commit()
             if request.method == 'POST':
-                qry = request.form.get('index')
-                final = GeneratedSchedules.query.filter_by(user_id=qry).all()
-                if request.form.get('save_button'):
-                        final_schedule = FinalSchedule(
-                            user_id=current_user.id,
-                            rows_id=generate_schedules.row_id,
-                            course_title=generate_schedules.course_title,
-                            course_id=generate_schedules.course_id,
-                            dept_id=generate_schedules.dept_id,
-                            sect_id=generate_schedules.sect_id,
-                            instructor=generate_schedules.instructor,
-                            class_period=generate_schedules.class_period
-                        )
-                        db.session.add(final_schedule)
-                        db.session.commit()
-                        flash('Schedule was successfully saved', 'alert-success')
-                        return redirect(url_for('studentGenerate'))
-    else:
-        return redirect(url_for('unauthorized_error'))
+                query = current_user.id
+                # Filter by student's ID and select all added classes and breaks
+                generate = GeneratedSchedules.query.filter_by(user_id=query).all()
+                finalCheck = FinalSchedule.query.filter_by(user_id=query).all()
+                # Delete unsaved generated schedules
+                if finalCheck is not None:
+                    FinalSchedule.query.filter_by(user_id=query).delete()
+                    db.session.commit()
+                # For every class in student's designated courses check course dates and times for conflicts
+                for save_generate in generate:
+                    final_schedule = FinalSchedule(
+                        user_id=current_user.id,
+                        course_title=save_generate.course_title,
+                        course_id=save_generate.course_id,
+                        dept_id=save_generate.dept_id,
+                        sect_id=save_generate.sect_id,
+                        instructor=save_generate.instructor,
+                        class_period=save_generate.class_period
+                    )
+                    db.session.add(final_schedule)
+                    db.session.commit()
+                # flash('Schedule was successfully saved', 'alert-success')
+                return redirect(url_for('studentCurrent'))
+
+
+
+
+    #
+    #
+    #
+    #             qry = request.form.get('index')
+    #             generate = GeneratedSchedules.query.filter_by(user_id=qry).all()
+    #             if request.form.get('save_button'):
+    #                 final_schedule = FinalSchedule(
+    #                     user_id=current_user.id,
+    #                     course_title=generate.course_title,
+    #                     course_id=generate.course_id,
+    #                     dept_id=generate.dept_id,
+    #                     sect_id=generate.sect_id,
+    #                     instructor=generate.instructor,
+    #                     class_period=generate.class_period
+    #                 )
+    #                 db.session.add(final_schedule)
+    #                 db.session.commit()
+    #             #flash('Schedule was successfully saved', 'alert-success')
+    #             return redirect(url_for('studentCurrent'))
+    # else:
+    #     return redirect(url_for('unauthorized_error'))
 
 
 # Route for student schedule viewer
@@ -887,7 +917,8 @@ def studentCurrent():
     if current_user.is_authenticated:
         if current_user.access == 'STUDENT':
             page_template = 'studentCurrent.html'
-            return render_template(page_template)
+            final_schedule = FinalSchedule.query.filter_by(user_id=current_user.id).all()
+            return render_template(page_template, final_schedules=final_schedule)
         else:
             return redirect(url_for('unauthorized_error'))
 

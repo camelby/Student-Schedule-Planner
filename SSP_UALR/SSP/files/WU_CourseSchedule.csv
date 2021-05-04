@@ -1,0 +1,151 @@
+deptID,courseNumber,courseTitle,sectionID,instructor,periods
+ACOM,1300,Intro to Communication,1,Sollars,MWF 09:00am-09:50am
+ACOM,1300,Intro to Communication,2,Rogers,MWF 10:00am-10:50am
+ACOM,1300,Intro to Communication,3,Rogers,MWF 11:00am-11:50am
+ACOM,1300,Intro to Communication,4,Johnston,TR 08:00am-09:15am
+ACOM,1300,Intro to Communication,5,Johnston,TR 09:25am-10:40am
+ACOM,1300,Intro to Communication,6,Johnston,TR 010:50am-11:05pm
+ACOM,3300,Interpersonal Communication,1,Mirivel,TR 09:25am-10:40am
+ACOM,3320,Persuasive Presentations,1,McIntyre,MWF 10:00am-10:50am
+ACOM,3330,Professional Communication,1,Mirivel,TR 08:00am-09:15am
+ACOM,4300,Senior Capstone Project,9S1,McIntyre,MWF 11:00am-11:50am
+ACOM,4312,Intercultural Communication,9H1,Driskill,T 10:50am-12:05pm
+ACOM,4313,SM:Listening & Civil Discourse,9H3,Chatham-Carpenter,MW 09:00am-09:50am
+ACOM,4314,Comm Skill Ctr Internship,9S1,McIntyre,M 12:00pm-12:50pm
+ANTH,1415,Physical Anthropology,1,Amsler,MWF 09:00am-09:50am
+ANTH,2316,Understanding Cultures,1,Flinn,TR 10:50am-12:05pm
+ANTH,3312,North American Indians,1,Flinn,MWF 10:00am-10:50am
+ANTH,3320,"Buried Cities, Ancient Lives",1,Lewis,MW 1:40pm-02:55pm
+ANTH,3381,Social Stat,1,Lopez,MWF 09:00am-09:50am
+ANTH,4316,Linguistic Anthropology,1,Flinn,TR 12:15pm-2:55pm
+ANTH,4312,Religion Soc & Culture,1,Hale,TR 09:25am-10:40am
+ARHA,2305,Intro to Visual Art,1,Lee,TR 10:50am-12:05pm
+ARHA,2310,Art History Survey I,9S1,Miller,TR 09:25am-10:40am
+ARHA,2311,Art History Survey II,1,Nunnally,MWF 11:00am-11:50am
+ARHA,2312,Survey of Non-Western Art,9S1,Larsen,T 06:00pm-08:40pm
+ARHA,4307,18th/18th Europe,9S1,Martin,TR 09:25am-10:40am
+ARHA,4310,ST: African American Art,9S2,Larsen,TR 01:40pm-02:55pm
+BINS,3305,Mgmt Info Systems,1,Dunaway,TR 09:25am-10:40am
+BINS,3305,Mgmt Info Systems,2,Woolridge,TR 10:50am-12:05pm
+BINS,3305,Mgmt Info Systems,3,Chachere,M 06:00pm-08:40pm
+BINS,3307,Systems Develop Method,1,Kim,R 06:00pm-08:40pm
+BINS,3352,Data Analysis/Visualization,1,Chachere,TR 08:00am-09:15am
+BINS,3352,Data Analysis/Visualization,2,Kumi,TR 12:15pm-1:30pm
+BINS,3352,Data Analysis/Visualization,3,Wang,M 06:00pm-08:40pm
+BINS,3380,Business Communication,1,Reed,R 06:00pm-08:40pm
+BINS,3380,Business Communication,2,Clements,MW 11:00am-12:15pm
+BINS,4312,Object-Oriented Programming,1,Kumi,T 06:00pm-08:40pm
+BINS,3414,Advanced Programming,1,Wang,TR 09:25am-10:40am
+BINS,4350,Bus Data Mgmt Systems,1,Kim,TR 12:15pm-01:30pm
+BINS,4351,Data Analysis and Reporting,1,Woolridge,T 06:00pm-08:40pm
+BINS,4352,Big Data Analytics Tools,1,Woolridge,T 06:00pm-08:40pm
+BIOL,1102,Intro Biology Lab,10,null,M 01:40pm-04:20pm
+BIOL,1111,Intro A&P II Laboratory,10,null,W 01:40pm-04:20pm
+BIOL,1112,Intro A&P I Laboratory,10,null,R 10:50am-12:05pm
+BIOL,1400,Evol & Envir Biology,10,Woolbright,"TR 10:50am-12:05pm, T 12:15am-02:05pm"
+BIOL,1401,Science of Biology,10,null,"TR 09:25am-10:40am, T 10:50am-12:40pm"
+BIOL,1402,Biological Concepts I,10,Leacock,MWF 09:00am-09:50am
+BIOL,1402,Biological Concepts I Lab,10L,null,M 01:40pm-04:20pm
+BIOL,1402,Biological Concepts I Lab,12L,null,T 01:40pm-04:20pm
+BIOL,1402,Biological Concepts I Lab,11L,null,W 01:40pm-04:20pm
+BIOL,1402,Biological Concepts I,20,Leacock,MWF 12:15am-01:05pm
+BIOL,1411,Intro Human Anat & Physiol I,10,Landers,MWF 12:15am-01:05pm
+BIOL,1411,Intro Huam A&P I Lab,11L,Landers,M 09:00am-11:50am
+BIOL,1411,Intro Huam A&P I Lab,12L,null,W 09:00am-11:50am
+BIOL,1411,Intro Huam A&P I Lab,13L,null,W 01:40pm-04:20pm
+BIOL,1412,Intro Human Anat & Physiol II,10,Landers,TR 09:25am-10:40am
+BIOL,1412,Intro Huam A&P II Lab,11L,Landers,T 10:50am-01:30pm
+BIOL,1412,Intro Huam A&P II Lab,12L,Landers,R 10:50am-01:30pm
+BIOL,1433,Essentials Anatomy&Physiology,10,Hearnberger,TR 06:00pm-07:15pm
+BIOL,1433,Essentials Anat & Phys Lab,11L,null,T 07:25pm-10:05pm
+BIOL,2401,Microbiology,10,Ali,TR 12:15pm-01:30pm
+BIOL,2401,Microbiology Lab,11L,Ali,TR 01:40pm-02:55pm
+BIOL,2401,Microbiology Lab,12L,null,TR 03:05pm-04:20pm
+BIOL,2401,Microbiology Lab,13L,null,MW 07:25pm-08:40pm
+BIOL,2401,Microbiology,20,null,MW 06:00pm-07:15pm
+BIOL,2403,Zoology,20,Grace,MWF 10:00am-10:50am
+BIOL,3402,Human Anatomy,10,Allen,TR 09:25am-12:05pm
+BIOL,4305,Animal Behavior,10,Sikes,TR 09:25am-10:40am
+BIOL,4315,Toxicology,10,Stapleton,TR 10:50am-12:05pm
+CPSC,1105,FYE for Computing Majors,1,Bullwinkle,TR 01:40pm-02:55pm
+CPSC,1370,Computer Literacy,1,Bolt,MW 01:40pm-02:55pm
+CPSC,1375,Programming I,1,Orme,TR 09:25am-10:40am
+CPSC,1375,Programming I,2,Orme,TR 04:30pm-05:45pm
+CPSC,2376,Programming II,1,Orme,TR 10:50am-12:05pm
+CPSC,2377,Intro to Game Programming,1,Rodriguez,TR 03:05pm-04:20pm
+CPSC,2380,Algorithms,1,Chiang,TR 10:50am-12:05pm
+CPSC,2482,Computer Organization,1,Vieira,TR 12:15pm-01:30pm
+CPSC,3396,Computer Sys & Assembly,1,Orme,TR 03:05pm-04:20pm
+CPSC,3375,Database Concepts,1,null,TR 01:40pm-02:55pm
+CPSC,3380,Operating Systems,1,Bolt,MW 10:50am-12:05pm
+CPSC,3383,Programming Languages,1,Springer,TR 04:30pm-05:45pm
+CPSC,4367,Mobile Apps Development,1,Rodriguez,MW 04:30pm-05:45pm
+CPSC,4373,Software Engineering,1,Keltch,TR 03:05pm-04:20pm
+CPSC,4376,Applied Cryptography,1,Chiang,MW 01:40pm-02:55pm
+CPSC,4383,Artificial Intelligence,1,Milanova,MW 12:15pm-01:30pm
+CPSC,4387,Distributed Computing,1,Huff,MW 12:15pm-01:30pm
+CPSC,4392,Capstone Project,1,Bullwinkle,TR 09:25am-10:40am
+CSEC,1310,Intro to Cybersecurity,1,Huff,TR 12:15pm-01:30pm
+CSEC,3300,Digital Forensics,1,Passmore,TR 06:00pm-07:15pm
+ENGL,2336,Intro to Creative Writing,1,Hummel Ecke,TR 10:50am-12:05pm
+ENGL,2337,World Literature,9S2,Minnick,MW 01:40pm-02:55pm
+ENGL,2339,Mythology,1,Ecke,MWF 11:00am-11:50am
+ENGL,2339,Mythology,2,Hunter,TR 12:15pm-01:30pm
+ENGL,3312,"Grammer, Morphology & Syntax",9S1,Minnick,MWF 11:00am-11:50am
+ENGL,3330,Approaches To Lit,1,McAbee,TR 09:25am-10:40am
+ENGL,3348,School Books,9S1,Minnick,T 04:30pm-07:10pm
+ENGL,4303,Teaching English,1,Crutcher,MW 06:00pm-07:15pm
+HIST,1311,Hist Of Civilization I,1,Anson,MWF 11:00am-11:50am
+HIST,1311,Hist Of Civilization I,2,Yeaw,MW 12:15pm-01:30pm
+HIST,1311,Hist Of Civilization I,3,Yeaw,MW 01:40pm-02:55pm
+HIST,1312,Hist Of Civilization II,1,Marvin,MW 12:15pm-01:30pm
+HIST,1312,Hist Of Civilization II,2,Marvin,MW 01:40pm-02:55pm
+HIST,2311,US History To 1877,1,Mann,TR 12:15pm-01:30pm
+HIST,2312,US History Since 1877,1,Mitchell,TR 10:50am-12:05pm
+HIST,2312,US History Since 1878,2,Mitchell,TR 12:15pm-01:30pm
+HIST,3303,Hellenistic Age,1,Anson,MWF 10:00am-10:50am
+HIST,3353,New Republic: U.S. 1787-1848,1,Ross,TR 12:15pm-01:30pm
+IFSC,1105,FYE for Computing Majors,1,Lierce,TR 01:40pm-02:55pm
+IFSC,1202,Intro to Obj-Oriented Tech,1,Bauer,MW 09:00am-10:50am
+IFSC,1310,Web Technologies,1,Wallace,MW 01:40pm-02:55pm
+IFSC,1310,Web Technologies,2,Wallace,TR 09:25am-10:40am
+IFSC,2300,Object-Oriented Technology,1,Tudoreanu,MW 09:00am-10:50am
+IFSC,2305,Computer Systems,1,Dagtas,MW 11:00am-12:15pm
+IFSC,3300,Web Client Applications,1,Berleant,MW 01:40pm-02:55pm
+IFSC,3320,Database Concepts,1,Wu,TR 09:25am-10:40am
+IFSC,3360,System Analysis and Design,1,Agarwal,TR 10:50am-12:05pm
+IFSC,4325,Data Mining concepts & Tech,1,Xu,TR 03:05pm-04:20pm
+IFSC,4330,Database Security,1,Wu,TR 01:40pm-02:55pm
+IFSC,4345,Information Visualization,1,Tudoreanu,T 06:00pm-08:40pm
+IFSC,4365,Web Server Applications,1,Dagtas,MW 09:00am-10:15am
+MATH,102,College Algebra Lab,9H1,null,F 10:00am-10:50am
+MATH,102,College Algebra Lab,9H2,null,R 09:50am-10:40am
+MATH,102,College Algebra Lab,9H3,null,T 01:40pm-04:20pm
+MATH,121,Quant & Math Reasoning Lab,9H1,null,M 10:00am-10:50am
+MATH,332,Foundations of College Algebra,9H1,Shaw,MWF 09:00am-09:50am
+MATH,332,Foundations of College Algebra,9H2,Umphers,MWF 11:00am-11:50am
+MATH,332,Foundations of College Algebra,9H3,Umphers,MWF 01:40pm-02:55pm
+MATH,332,Foundations of College Algebra,9H4,Embry,TR 09:25am-10:40am
+MATH,1223,Intro to Math Software,9H1,Barker,MW 10:00am-10:50am
+MATH,1302,College Algebra,9H1,Deng,MWF 09:00am-09:50am
+MATH,1302,College Algebra,9H2,Deng,TR 10:50am-12:05pm
+MATH,1302,College Algebra,9H3,Streett,TR 12:15pm-01:30pm
+MATH,1302,College Algebra,9H4,Famuyiwa,MWF 11:00am-11:50am
+MATH,1302,College Algebra,9H5,Hardeman,TR 10:50am-12:05pm
+MATH,1302,College Algebra,9H6,Streett,MW 01:30pm-02:55pm
+MATH,1303,Trigonometry,9H1,Umphers,MWF 09:00am-09:50am
+MATH,1303,Trigonometry,9H3,Jackson,TR 12:15pm-01:30pm
+MATH,1321,Quant & Athmtl Reasoning,9H2,Hardeman,TR 01:40pm-02:55pm
+MATH,1321,Quant & Athmtl Reasoning,9H3,Turner,MWF 09:00am-09:50am
+MATH,1342,App Cal I - Bus/ET/Life Sc,9H1,Umphers,MWF 10:00am-10:50am
+MATH,1342,App Cal I - Bus/ET/Life Sc,9H2,Famuyiwa,MW 03:05pm-04:20pm
+MATH,1342,App Cal I - Bus/ET/Life Sc,9H3,Umphers,TR 12:15pm-01:30pm
+MATH,1343,App Cal II - Bus/ET/Life Sc,9H1,Jackson,TR 10:50am-12:05pm
+MATH,1451,Calculus I,9H1,Jones,MWF 10:00am-10:50am
+MATH,1451,Calculus I,9H2,Wang,TR 09:00am-10:40am
+MATH,1452,Calculus II,9H1,Fulmer,MW 01:40pm-02:55pm
+MATH,2310,Discete Mathematics,9H1,Embry,MW 04:30pm-05:45pm
+MATH,2453,Calculus III,9H1,Kaufmann,MWF 10:00am-10:50am
+MATH,3312,Linear Algebra,9H1,Wang,TR 12:15pm-01:30pm
+MATH,3322,Intro Differ Equatns,9H1,Kosmatov,TR 12:15pm-01:30pm
+MATH,3382,Math II for Elementarty Educ,9H1,Lu,TR 09:00am-10:40am

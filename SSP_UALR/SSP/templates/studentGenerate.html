@@ -74,7 +74,9 @@
                     <button type="submit" class="button-generate" ><i class="fas fa-sync"></i>
                     Generate Schedule</button>
                 </form>
-                <button href="#SaveScheduleModal" style="margin-top: -85px;" type="button" data-toggle="modal" class="button-save">Save Schedule</button>
+                <form action="/save_generate" method="POST">
+                <button style="margin-top: -85px;" type="submit" class="button-save">Save Schedule</button>
+                </form>
             </div>
             {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
@@ -249,7 +251,7 @@
     </div>
 
     <!-- Save Schedules -->
-<div id="SaveScheduleModal" class="modal fade">
+{#<div id="SaveScheduleModal" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form action="/save_generate" method="POST">
@@ -263,12 +265,12 @@
                         <div class="modal-footer">
                             <input type="hidden" id="index" name="index" value="">
                             <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                            <input type="submit" name=“save_button" class="btn btn-danger" value=“Save”>
+                            <input type="submit" name="save_button" class="btn btn-danger" value="Save">
                         </div>
                     </form>
                 </div>
             </div>
-        </div>
+        </div>#}
 
 
     <!-- jQuery CDN - Slim version (=without AJAX) -->
@@ -287,7 +289,7 @@
                 $('#sidebar').toggleClass('active');
             });
         });
-        {#$(document).on("click", ".save-dialog", function () {
+       {# $(document).on("click", ".save-dialog", function () {
     let userID = $(this).data('id');
     $(".modal-footer #index").val( userID );
 });#}
