@@ -14,10 +14,12 @@ from wtforms.validators import DataRequired, Email, Length, EqualTo
 from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 import os
 import datetime
 import pandas as pd
 import time
+from datetime import datetime
 
 # Set application instance
 app = Flask(__name__)
@@ -169,11 +171,11 @@ class LoginForm(FlaskForm):
 
 
 class SectionForm(FlaskForm):
-    time_choices = [('8:00', '08:00'), ('8:30', '08:30'), ('9:00', '09:00'), ('9:30', '09:30'), ('10:00', '10:00'),
-                    ('10:30', '10:30'), ('11:00', '11:00'), ('11:30', '11:30'), ('12:00', '12:00'), ('12:30', '12:30'),
-                    ('13:00', '13:00'), ('13:30', '13:30'), ('14:00', '14:00'), ('14:30', '14:30'), ('15:00', '15:00'),
-                    ('15:30', '15:30'), ('16:00', '16:00'), ('16:30', '16:30'), ('17:00', '17:00'), ('17:30', '17:30'),
-                    ('18:00', '18:00'), ('18:30', '18:30'), ('19:00', '19:00'), ('19:30', '19:30'), ('20:00', '20:00')]
+    time_choices = [('8:00AM', '08:00AM'), ('8:30AM', '08:30AM'), ('9:00AM', '09:00AM'), ('9:30AM', '09:30AM'), ('10:00AM', '10:00AM'),
+                    ('10:30AM', '10:30AM'), ('11:00AM', '11:00AM'), ('11:30AM', '11:30AM'), ('12:00PM', '12:00PM'), ('12:30PM', '12:30PM'),
+                    ('1:00PM', '1:00PM'), ('1:30PM', '1:30PM'), ('2:00PM', '2:00PM'), ('2:30PM', '2:30PM'), ('3:00PM', '3:00PM'),
+                    ('3:30PM', '3:30PM'), ('4:00PM', '4:00PM'), ('4:30PM', '4:30PM'), ('5:00PM', '5:00PM'), ('5:30PM', '5:30PM'),
+                    ('6:00PM', '6:00PM'), ('6:30PM', '6:30PM'), ('7:00PM', '7:00PM'), ('7:30PM', '7:30PM'), ('8:00', '8:00PM')]
     day_choices = [('M', 'Monday'), ('T', 'Tuesday'), ('W', 'Wednesday'), ('R', 'Thursday'), ('F', 'Friday')]
     course_title = StringField('Course Title', validators=[DataRequired()])
     course_id = StringField('Course ID', validators=[DataRequired()])
@@ -181,8 +183,8 @@ class SectionForm(FlaskForm):
     sect_id = StringField('Section ID', validators=[DataRequired()])
     instructor = StringField('Instructor', validators=[DataRequired()])
     class_day = SelectMultipleField('Days', choices=day_choices, validators=[DataRequired()])
-    class_start_time = SelectField('Start Time: HH:MM (UTC)', choices=time_choices, validators=[DataRequired()])
-    class_end_time = SelectField('End Time: HH:MM (UTC)', choices=time_choices, validators=[DataRequired()])
+    class_start_time = SelectField('Start Time: HH:MM ', choices=time_choices, validators=[DataRequired()])
+    class_end_time = SelectField('End Time: HH:MM ', choices=time_choices, validators=[DataRequired()])
     submit = SubmitField('Add')
 
 
@@ -194,16 +196,16 @@ class CourseForm(FlaskForm):
 
 
 class BreakForm(FlaskForm):
-    time_choices = [('8:00', '08:00'), ('8:30', '08:30'), ('9:00', '09:00'), ('9:30', '09:30'), ('10:00', '10:00'),
-                    ('10:30', '10:30'), ('11:00', '11:00'), ('11:30', '11:30'), ('12:00', '12:00'), ('12:30', '12:30'),
-                    ('13:00', '13:00'), ('13:30', '13:30'), ('14:00', '14:00'), ('14:30', '14:30'), ('15:00', '15:00'),
-                    ('15:30', '15:30'), ('16:00', '16:00'), ('16:30', '16:30'), ('17:00', '17:00'), ('17:30', '17:30'),
-                    ('18:00', '18:00'), ('18:30', '18:30'), ('19:00', '19:00'), ('19:30', '19:30'), ('20:00', '20:00')]
+    time_choices =  [('8:00AM', '08:00AM'), ('8:30AM', '08:30AM'), ('9:00AM', '09:00AM'), ('9:30AM', '09:30AM'), ('10:00AM', '10:00AM'),
+                    ('10:30AM', '10:30AM'), ('11:00AM', '11:00AM'), ('11:30AM', '11:30AM'), ('12:00PM', '12:00PM'), ('12:30PM', '12:30PM'),
+                    ('1:00PM', '1:00PM'), ('1:30PM', '1:30PM'), ('2:00PM', '2:00PM'), ('2:30PM', '2:30PM'), ('3:00PM', '3:00PM'),
+                    ('3:30PM', '3:30PM'), ('4:00PM', '4:00PM'), ('4:30PM', '4:30PM'), ('5:00PM', '5:00PM'), ('5:30PM', '5:30PM'),
+                    ('6:00PM', '6:00PM'), ('6:30PM', '6:30PM'), ('7:00PM', '7:00PM'), ('7:30PM', '7:30PM'), ('8:00', '8:00PM')]
     day_choices = [('M', 'Monday'), ('T', 'Tuesday'), ('W', 'Wednesday'), ('R', 'Thursday'), ('F', 'Friday')]
     break_name = StringField('Break Name', validators=[DataRequired()])
     break_day = SelectMultipleField('Days', choices=day_choices, validators=[DataRequired()])
-    break_start_time = SelectField('Start Time: HH:MM (UTC)', choices=time_choices, validators=[DataRequired()])
-    break_end_time = SelectField('End Time: HH:MM (UTC)', choices=time_choices, validators=[DataRequired()])
+    break_start_time = SelectField('Start Time: HH:MM ', choices=time_choices, validators=[DataRequired()])
+    break_end_time = SelectField('End Time: HH:MM ', choices=time_choices, validators=[DataRequired()])
     submit = SubmitField('Add')
 
 
@@ -223,9 +225,13 @@ class ChangePasswordForm(FlaskForm):
     )
 
 
+# Covert "HH:MM AM/PM to HH:MM UTC"
+def standard_to_military(standard_time):
+    return datetime.strptime(standard_time, '%I:%M%p').strftime('%H:%M')
+
+
 # Convert HH:MM to minutes
 def military_time_converter(new_time):
-    x = new_time
     t = time.strptime(new_time, "%H:%M")
     minutes = t.tm_hour * 60 + t.tm_min
     return minutes
@@ -543,8 +549,10 @@ def sections_catalog():
                 if section is not None:
                     flash('Section already exists!', 'alert-danger')
                 else:
-                    check_class_st = military_time_converter(rt_sect_add_form.class_start_time.data)
-                    check_class_et = military_time_converter(rt_sect_add_form.class_end_time.data)
+                    military_time_st = standard_to_military(rt_sect_add_form.class_start_time.data)
+                    military_time_et = standard_to_military(rt_sect_add_form.class_end_time.data)
+                    check_class_st = military_time_converter(military_time_st)
+                    check_class_et = military_time_converter(military_time_et)
                     if check_class_et == check_class_st:
                         flash('Class times must be different.', 'alert-danger')
                         return redirect(url_for('sections_catalog'))
@@ -613,8 +621,10 @@ def studentPlanner():
                 if check_break_name is not None:
                     flash('Break name already exists.', 'alert-danger')
                     return redirect(url_for('studentPlanner'))
-                check_break_st = military_time_converter(break_form.break_start_time.data)
-                check_break_et = military_time_converter(break_form.break_end_time.data)
+                military_time_st = standard_to_military(break_form.break_start_time.data)
+                military_time_et = standard_to_military(break_form.break_end_time.data)
+                check_break_st = military_time_converter(military_time_st)
+                check_break_et = military_time_converter(military_time_et)
                 if check_break_et == check_break_st:
                     flash('Break times must be different.', 'alert-danger')
                     return redirect(url_for('studentPlanner'))
@@ -805,11 +815,15 @@ def generate_schedules():
                                     # Split class start time and end time (i.e 10:00-12:00 -> '10:00' '12:00')
                                     start_time, end_time = break_time.split('-')
                                     # Convert class time string to integer using minute converter (i.e 13:00 -> 780)
-                                    check_class_st = military_time_converter(start_time)
-                                    check_class_et = military_time_converter(end_time)
+                                    class_military_st = standard_to_military(start_time)
+                                    class_military_et = standard_to_military(end_time)
+                                    check_class_st = military_time_converter(class_military_st)
+                                    check_class_et = military_time_converter(class_military_et)
                                     # Convert break time string to integer using minute converter (i.e 13:00 -> 780)
-                                    check_break_st = military_time_converter(student_break.break_start_time)
-                                    check_break_et = military_time_converter(student_break.break_end_time)
+                                    break_military_st = standard_to_military(student_break.break_start_time)
+                                    break_military_et = standard_to_military(student_break.break_end_time)
+                                    check_break_st = military_time_converter(break_military_st)
+                                    check_break_et = military_time_converter(break_military_et)
                                     # Check for time conflict
                                     if check_class_st <= check_break_et and check_class_et >= check_break_st:
                                         # Notify on conflict
