@@ -171,11 +171,11 @@ class LoginForm(FlaskForm):
 
 
 class SectionForm(FlaskForm):
-    time_choices = [('8:00AM', '08:00AM'), ('8:30AM', '08:30AM'), ('9:00AM', '09:00AM'), ('9:30AM', '09:30AM'), ('10:00AM', '10:00AM'),
+    time_choices = [('08:00AM', '08:00AM'), ('08:30AM', '08:30AM'), ('09:00AM', '09:00AM'), ('09:30AM', '09:30AM'), ('10:00AM', '10:00AM'),
                     ('10:30AM', '10:30AM'), ('11:00AM', '11:00AM'), ('11:30AM', '11:30AM'), ('12:00PM', '12:00PM'), ('12:30PM', '12:30PM'),
-                    ('1:00PM', '1:00PM'), ('1:30PM', '1:30PM'), ('2:00PM', '2:00PM'), ('2:30PM', '2:30PM'), ('3:00PM', '3:00PM'),
-                    ('3:30PM', '3:30PM'), ('4:00PM', '4:00PM'), ('4:30PM', '4:30PM'), ('5:00PM', '5:00PM'), ('5:30PM', '5:30PM'),
-                    ('6:00PM', '6:00PM'), ('6:30PM', '6:30PM'), ('7:00PM', '7:00PM'), ('7:30PM', '7:30PM'), ('8:00', '8:00PM')]
+                    ('01:00PM', '01:00PM'), ('01:30PM', '01:30PM'), ('02:00PM', '02:00PM'), ('02:30PM', '02:30PM'), ('03:00PM', '03:00PM'),
+                    ('03:30PM', '03:30PM'), ('04:00PM', '04:00PM'), ('04:30PM', '04:30PM'), ('05:00PM', '05:00PM'), ('05:30PM', '05:30PM'),
+                    ('06:00PM', '06:00PM'), ('06:30PM', '06:30PM'), ('07:00PM', '07:00PM'), ('07:30PM', '07:30PM'), ('08:00PM', '08:00PM')]
     day_choices = [('M', 'Monday'), ('T', 'Tuesday'), ('W', 'Wednesday'), ('R', 'Thursday'), ('F', 'Friday')]
     course_title = StringField('Course Title', validators=[DataRequired()])
     course_id = StringField('Course ID', validators=[DataRequired()])
@@ -196,11 +196,11 @@ class CourseForm(FlaskForm):
 
 
 class BreakForm(FlaskForm):
-    time_choices =  [('8:00AM', '08:00AM'), ('8:30AM', '08:30AM'), ('9:00AM', '09:00AM'), ('9:30AM', '09:30AM'), ('10:00AM', '10:00AM'),
+    time_choices =  [('08:00AM', '08:00AM'), ('08:30AM', '08:30AM'), ('09:00AM', '09:00AM'), ('09:30AM', '09:30AM'), ('10:00AM', '10:00AM'),
                     ('10:30AM', '10:30AM'), ('11:00AM', '11:00AM'), ('11:30AM', '11:30AM'), ('12:00PM', '12:00PM'), ('12:30PM', '12:30PM'),
-                    ('1:00PM', '1:00PM'), ('1:30PM', '1:30PM'), ('2:00PM', '2:00PM'), ('2:30PM', '2:30PM'), ('3:00PM', '3:00PM'),
-                    ('3:30PM', '3:30PM'), ('4:00PM', '4:00PM'), ('4:30PM', '4:30PM'), ('5:00PM', '5:00PM'), ('5:30PM', '5:30PM'),
-                    ('6:00PM', '6:00PM'), ('6:30PM', '6:30PM'), ('7:00PM', '7:00PM'), ('7:30PM', '7:30PM'), ('8:00', '8:00PM')]
+                    ('01:00PM', '01:00PM'), ('01:30PM', '01:30PM'), ('02:00PM', '02:00PM'), ('02:30PM', '02:30PM'), ('03:00PM', '03:00PM'),
+                    ('03:30PM', '03:30PM'), ('04:00PM', '04:00PM'), ('04:30PM', '04:30PM'), ('05:00PM', '05:00PM'), ('05:30PM', '05:30PM'),
+                    ('06:00PM', '06:00PM'), ('06:30PM', '06:30PM'), ('07:00PM', '07:00PM'), ('07:30PM', '07:30PM'), ('08:00PM', '08:00PM')]
     day_choices = [('M', 'Monday'), ('T', 'Tuesday'), ('W', 'Wednesday'), ('R', 'Thursday'), ('F', 'Friday')]
     break_name = StringField('Break Name', validators=[DataRequired()])
     break_day = SelectMultipleField('Days', choices=day_choices, validators=[DataRequired()])
@@ -233,7 +233,7 @@ def convert24(str1):
         return "00" + str1[2:-2]
 
     # remove the AM
-    elif str1[-2:] == "AM":
+    elif str1[-2:] == "AM" or str1[-2:] == "am":
         return str1[:-2]
 
     # Checking if last two elements of time
