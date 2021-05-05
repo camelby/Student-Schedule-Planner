@@ -19,7 +19,6 @@ import os
 import datetime
 import pandas as pd
 import time
-from datetime import datetime
 
 # Set application instance
 app = Flask(__name__)
@@ -226,9 +225,25 @@ class ChangePasswordForm(FlaskForm):
     )
 
 
-# Covert "HH:MM AM/PM to HH:MM UTC"
-def standard_to_military(standard_time):
-    return datetime.strptime(standard_time, '%I:%M%p').strftime('%H:%M')
+# Convert standard time to 24 military time
+def convert24(str1):
+    # Checking if last two elements of time
+    # is AM and first two elements are 12
+    if (str1[-2:] == "AM" or str1[-2:] == "am") and str1[:2] == "12":
+        return "00" + str1[2:-2]
+
+    # remove the AM
+    elif str1[-2:] == "AM":
+        return str1[:-2]
+
+    # Checking if last two elements of time
+    # is PM and first two elements are 12
+    elif (str1[-2:] == "PM" or str1[-2:] == "pm") and str1[:2] == "12":
+        return str1[:-2]
+
+    else:
+        # add 12 to hours and remove PM
+        return str(int(str1[:2]) + 12) + str1[2:5]
 
 
 # Convert HH:MM to minutes
@@ -550,8 +565,8 @@ def sections_catalog():
                 if section is not None:
                     flash('Section already exists!', 'alert-danger')
                 else:
-                    military_time_st = standard_to_military(rt_sect_add_form.class_start_time.data)
-                    military_time_et = standard_to_military(rt_sect_add_form.class_end_time.data)
+                    military_time_st = convert24(rt_sect_add_form.class_start_time.data)
+                    military_time_et = convert24(rt_sect_add_form.class_end_time.data)
                     check_class_st = military_time_converter(military_time_st)
                     check_class_et = military_time_converter(military_time_et)
                     if check_class_et == check_class_st:
@@ -622,8 +637,8 @@ def studentPlanner():
                 if check_break_name is not None:
                     flash('Break name already exists.', 'alert-danger')
                     return redirect(url_for('studentPlanner'))
-                military_time_st = standard_to_military(break_form.break_start_time.data)
-                military_time_et = standard_to_military(break_form.break_end_time.data)
+                military_time_st = convert24(break_form.break_start_time.data)
+                military_time_et = convert24(break_form.break_end_time.data)
                 check_break_st = military_time_converter(military_time_st)
                 check_break_et = military_time_converter(military_time_et)
                 if check_break_et == check_break_st:
@@ -816,13 +831,13 @@ def generate_schedules():
                                     # Split class start time and end time (i.e 10:00-12:00 -> '10:00' '12:00')
                                     start_time, end_time = break_time.split('-')
                                     # Convert class time string to integer using minute converter (i.e 13:00 -> 780)
-                                    class_military_st = standard_to_military(start_time)
-                                    class_military_et = standard_to_military(end_time)
+                                    class_military_st = convert24(start_time)
+                                    class_military_et = convert24(end_time)
                                     check_class_st = military_time_converter(class_military_st)
                                     check_class_et = military_time_converter(class_military_et)
                                     # Convert break time string to integer using minute converter (i.e 13:00 -> 780)
-                                    break_military_st = standard_to_military(student_break.break_start_time)
-                                    break_military_et = standard_to_military(student_break.break_end_time)
+                                    break_military_st = convert24(student_break.break_start_time)
+                                    break_military_et = convert24(student_break.break_end_time)
                                     check_break_st = military_time_converter(break_military_st)
                                     check_break_et = military_time_converter(break_military_et)
                                     # Check for time conflict
