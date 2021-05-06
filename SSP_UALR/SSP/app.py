@@ -1,8 +1,4 @@
 # Library Imports
-import random
-
-import flask
-import wtforms.widgets
 from flask import Flask, render_template, flash, request, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
@@ -415,45 +411,47 @@ def confirm_email(token):
     return redirect(url_for('login'))
 
 
-# TODO set @login_required for all routes for root auth
 @app.route('/root', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def rootAuth():
-    # if current_user.is_authenticated:
-    # if current_user.access == 'ROOT':
-    page_template = 'rootAuth.html'
-    # Query all users in database to be used in Jinja2
-    users = User.query.all()
-    return render_template(page_template, users=users)
+    if current_user.is_authenticated:
+       if current_user.access == 'ROOT':
+            page_template = 'rootAuth.html'
+            # Query all users in database to be used in Jinja2
+            users = User.query.all()
+            return render_template(page_template, users=users)
 
 
 # POST route for root decision on privileged user requests
 @app.route('/root_auth_decision', methods=['POST'])
+@login_required
 def root_auth_decision():
-    if request.method == 'POST':
-        query = request.form.get('index')
-        user = User.query.filter_by(email=query).first_or_404()
-        if request.form.get('accept_button'):
-            # Confirm and send notification email
-            user.confirmed = True
-            user.confirmed_on = datetime.datetime.now()
-            # Generate confirmation token and url
-            html = render_template('approveRoot.html', first_name=user.first_name)
-            subject = "Your privileged request has been approved"
-            send_email(user.email, subject, html)
-            db.session.add(user)
-            db.session.commit()
-            flash('User request has been approved', 'alert-success')
-            return redirect(url_for('rootAuth'))
-        if request.form.get('deny_button'):
-            # Send user a message then yeet them
-            html = render_template('denyRoot.html', first_name=user.first_name)
-            subject = "Your privileged request has been denied"
-            send_email(user.email, subject, html)
-            db.session.delete(user)
-            db.session.commit()
-            flash('User request has been denied', 'alert-danger')
-            return redirect(url_for('rootAuth'))
+    if current_user.is_authenticated:
+        if current_user.access == 'ROOT':
+            if request.method == 'POST':
+                query = request.form.get('index')
+                user = User.query.filter_by(email=query).first_or_404()
+                if request.form.get('accept_button'):
+                    # Confirm and send notification email
+                    user.confirmed = True
+                    user.confirmed_on = datetime.datetime.now()
+                    # Generate confirmation token and url
+                    html = render_template('approveRoot.html', first_name=user.first_name)
+                    subject = "Your privileged request has been approved"
+                    send_email(user.email, subject, html)
+                    db.session.add(user)
+                    db.session.commit()
+                    flash('User request has been approved', 'alert-success')
+                    return redirect(url_for('rootAuth'))
+                if request.form.get('deny_button'):
+                    # Send user a message then yeet them
+                    html = render_template('denyRoot.html', first_name=user.first_name)
+                    subject = "Your privileged request has been denied"
+                    send_email(user.email, subject, html)
+                    db.session.delete(user)
+                    db.session.commit()
+                    flash('User request has been denied', 'alert-danger')
+                    return redirect(url_for('rootAuth'))
 
 
 # Route for root or admin to view, add, or edit courses
@@ -526,8 +524,6 @@ def upload_files():
                 parseCSV(file_path)
                 flash('File imported successfully!', 'alert-success')
                 return redirect(url_for('sections_catalog'))
-        # else:
-        #     return redirect(url_for('unauthorized_error'))
 
 
 # POST route for course CSV file upload
@@ -693,10 +689,10 @@ def break_update():
 @app.route('/plan_course')
 def plan_course():
     if current_user.is_authenticated:
-         if current_user.access == 'STUDENT':
-             page_template = 'studentSection.html'
-             sections = Section.query.all()
-             return render_template(page_template, sections=sections)
+        if current_user.access == 'STUDENT':
+            page_template = 'studentSection.html'
+            sections = Section.query.all()
+            return render_template(page_template, sections=sections)
     else:
         return redirect(url_for('unauthorized_error'))
 
@@ -721,7 +717,7 @@ def plan_course_update():
 def plan_add_course():
     if current_user.is_authenticated:
         if current_user.access == 'STUDENT':
-        # Select all of the student's breaks based on their assigned ID
+            # Select all of the student's breaks based on their assigned ID
             if request.method == 'POST':
                 qry = request.form.get('index')
                 section = Section.query.filter_by(row_id=qry).first_or_404()
@@ -763,8 +759,8 @@ def public():
 def studentGenerate():
     if current_user.is_authenticated:
         if current_user.access == 'STUDENT':
-                page_template = 'studentGenerate.html'
-                return render_template(page_template)
+            page_template = 'studentGenerate.html'
+            return render_template(page_template)
         else:
             return redirect(url_for('unauthorized_error'))
 
