@@ -897,33 +897,8 @@ def saveGenerate():
                     )
                     db.session.add(final_schedule)
                     db.session.commit()
-                # flash('Schedule was successfully saved', 'alert-success')
+                flash('Schedule was successfully saved', 'alert-success')
                 return redirect(url_for('studentCurrent'))
-
-
-
-
-    #
-    #
-    #
-    #             qry = request.form.get('index')
-    #             generate = GeneratedSchedules.query.filter_by(user_id=qry).all()
-    #             if request.form.get('save_button'):
-    #                 final_schedule = FinalSchedule(
-    #                     user_id=current_user.id,
-    #                     course_title=generate.course_title,
-    #                     course_id=generate.course_id,
-    #                     dept_id=generate.dept_id,
-    #                     sect_id=generate.sect_id,
-    #                     instructor=generate.instructor,
-    #                     class_period=generate.class_period
-    #                 )
-    #                 db.session.add(final_schedule)
-    #                 db.session.commit()
-    #             #flash('Schedule was successfully saved', 'alert-success')
-    #             return redirect(url_for('studentCurrent'))
-    # else:
-    #     return redirect(url_for('unauthorized_error'))
 
 
 # Route for student schedule viewer
